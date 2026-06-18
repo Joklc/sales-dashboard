@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+secrets.toml
+*.xlsx
+*.xls
+*.xlsm
+Home_test.py
+*.parquet
