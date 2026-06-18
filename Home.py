@@ -46,5 +46,19 @@ mtd_page   = st.Page("page_mtd.py",    title="Realtime MTD Sale",   icon=":mater
 kam_page   = st.Page("page_kam_mtd.py",title="KAM_MTD realtime",    icon=":material/groups:")
 auto_page  = st.Page("page_auto.py",   title="Auto Dashboard",      icon=":material/autorenew:")
 
-pg = st.navigation([sales_page, pnl_page, mtd_page, kam_page, auto_page])
+# ==================================================
+# Tự nhận biết môi trường: chỉ hiện Auto Dashboard khi thấy ổ X (máy nội bộ)
+# Trên cloud không có ổ X -> tự động giấu trang này đi
+# ==================================================
+import os
+co_o_X = os.path.exists(r"X:\Monthly Reporting")   # True nếu máy thấy ổ X
+
+# Danh sách trang cơ bản (luôn hiện)
+ds_trang = [sales_page, pnl_page, mtd_page, kam_page]
+
+# Chỉ thêm Auto Dashboard khi đang chạy ở máy có ổ X
+if co_o_X:
+    ds_trang.append(auto_page)
+
+pg = st.navigation(ds_trang)
 pg.run()
