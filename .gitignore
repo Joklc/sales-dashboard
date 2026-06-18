@@ -6,4 +6,3 @@ secrets.toml
 *.xls
 *.xlsm
 Home_test.py
-*.parquet
