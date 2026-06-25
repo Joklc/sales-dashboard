@@ -25,6 +25,8 @@ if "seb_dark" not in pio.templates:
 pio.templates.default = "seb_dark"
 
 # ── Config ────────────────────────────────────────────────────
+# Dung o X: (da map san tren may nay). Neu chay may khac chua map X:,
+# doi lai thanh duong dan day du \\hcv01it\AFV\Department\...
 DATA_DIR = r"X:\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data"
 
 def fp(filename: str) -> str:
@@ -237,6 +239,15 @@ st.sidebar.markdown("---")
 # ── Load data ─────────────────────────────────────────────────
 with st.spinner("📥 Đang đọc file từ ổ X:\\..."):
     try:
+        if not os.path.isdir(DATA_DIR):
+            st.error(
+                "❌ Không vào được folder dữ liệu:\n\n"
+                f"`{DATA_DIR}`\n\n"
+                "Kiểm tra: (1) đã kết nối mạng công ty chưa, "
+                "(2) đường dẫn folder có đúng không. "
+                "Mở File Explorer, dán đường dẫn trên vào thanh địa chỉ để thử."
+            )
+            st.stop()
         df       = load_all()
         df_so, df_sq = load_pipeline()
         load_ts  = datetime.now().strftime("%H:%M  %d/%m/%Y")
