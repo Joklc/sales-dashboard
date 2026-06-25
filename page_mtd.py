@@ -24,13 +24,18 @@ pio.templates.default = "seb_dark"
 
 st.markdown("""
 <style>
+    /* ===== Nen trang: xanh phia tren, mo dan xuong sang ===== */
+    [data-testid="stAppViewContainer"], .stApp {
+        background-color: #f4f7fb;
+        background-image: linear-gradient(180deg, #1e3a8a 0px, #2563eb 320px, rgba(244,247,251,0) 600px);
+        background-repeat: no-repeat;
+    }
     /* ===== HERO BANNER (gradient xanh, KPI ben trong) ===== */
     .hero {
-        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+        background: transparent;
         border-radius: 18px;
-        padding: 26px 30px 22px 30px;
-        box-shadow: 0 10px 24px rgba(30,64,175,0.28);
-        margin-bottom: 22px;
+        padding: 18px 6px 16px 6px;
+        margin-bottom: 14px;
     }
     .hero-title { color: #ffffff; font-size: 28px; font-weight: 800; margin: 0; line-height: 1.1; }
     .hero-sub   { color: #c7dbff; font-size: 13px; margin: 6px 0 18px 0; }
