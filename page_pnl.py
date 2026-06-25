@@ -142,6 +142,13 @@ sel_pl    = st.sidebar.selectbox("Product Line", ["All"] + o["pl"])
 sel_cat   = st.sidebar.selectbox("Key CAT", ["All"] + o["cat"])
 sel_dist  = st.sidebar.selectbox("Distributor", ["All"] + o["dist"])
 
+st.sidebar.markdown("---")
+fx = st.sidebar.number_input(
+    "FX → VND (1 = giữ nguyên đơn vị gốc)",
+    min_value=0.0, value=1.0, step=1.0, format="%.4f",
+    help="Nhập tỷ giá để quy số liệu ra VND. Vd dữ liệu đang theo triệu VND thì nhập 1000000. Để 1 nếu giữ nguyên."
+)
+
 # ==================================================
 # FILTER
 # ==================================================
@@ -158,6 +165,13 @@ if sel_cat != "All":
 if sel_dist != "All":
     mask &= df["Distributor"] == sel_dist
 dff = df[mask]
+
+# Quy doi sang VND theo FX (neu fx != 1)
+if fx != 1.0:
+    dff = dff.copy()
+    for _c in ["Actual N", "Budget N", "Actual N-1", "Forecast 5+7"]:
+        if _c in dff.columns:
+            dff[_c] = dff[_c] * fx
 
 # ==================================================
 # BUILD P&L TABLE (cached)
@@ -176,7 +190,7 @@ def build_pnl(_d, key):
     t["Var LY"]  = t["ACT"] - t["LY"]
     return t
 
-cache_key = f"{sel_month}|{sel_biz}|{sel_pl}|{sel_cat}|{sel_dist}"
+cache_key = f"{sel_month}|{sel_biz}|{sel_pl}|{sel_cat}|{sel_dist}|{fx}"
 pnl = build_pnl(dff, cache_key)
 
 # ==================================================
@@ -210,7 +224,7 @@ def stat_card(col, icon, icon_bg, icon_fg, label, value):
 _sales_var = safe_pct(get_val('Sales','Var BUD'), get_val('Sales','BUD'))
 st.markdown(f"""
 <div class="hero">
-  <div class="hero-title">💵 P&L Dashboard</div>
+  <div class="hero-title">💵 ROPA</div>
   <div class="hero-sub">Actual N vs Budget vs Last Year</div>
   <div class="hero-kpis">
     <div class="hero-tile"><div class="lbl">Sales</div><div class="val">{fmt_abbr(sales_act)}</div><div class="sub">{_sales_var:+.1f}% vs BUD</div></div>
@@ -232,8 +246,9 @@ st.markdown("<br>", unsafe_allow_html=True)
 # TABS
 # ==================================================
 
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📋 P&L Statement", "💧 Waterfall", "📦 By Category", "🏢 By Business Type"
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📋 P&L Statement", "💧 Waterfall", "📦 By Category", "🏢 By Business Type",
+    "🔀 Local vs Allocated"
 ])
 
 # ---- TAB 1: P&L full table ----
@@ -362,3 +377,88 @@ with tab4:
         )
     else:
         st.info("Không có cột Business Type.")
+
+
+# ---- TAB 5: Local vs Allocated ----
+with tab5:
+    st.subheader("P&L — Local vs Allocated (Actual N-1 · Budget · Actual N)")
+
+    if "Type" not in dff.columns:
+        st.info("Không có cột Type (Local/Allocated) trong dữ liệu.")
+    else:
+        view_mode = st.radio(
+            "Hiển thị:",
+            ["VND value", "% of Sales", "% split (Local/Allocated)"],
+            horizontal=True
+        )
+
+        la = (dff.groupby(["PnL lines", "Type"], observed=True)
+              .agg(ACT=("Actual N", "sum"), BUD=("Budget N", "sum"), LY=("Actual N-1", "sum"))
+              .reset_index())
+
+        def _split(metric):
+            w = la.pivot(index="PnL lines", columns="Type", values=metric)
+            for t in ["Local", "Allocated"]:
+                if t not in w.columns:
+                    w[t] = 0
+            return w[["Local", "Allocated"]].reindex(PNL_ORDER).fillna(0)
+
+        act, bud, ly = _split("ACT"), _split("BUD"), _split("LY")
+
+        # Bang gia tri goc (VND)
+        val = pd.DataFrame(index=PNL_ORDER)
+        val["N-1 Local"]     = ly["Local"]
+        val["N-1 Allocated"] = ly["Allocated"]
+        val["BUD Local"]     = bud["Local"]
+        val["BUD Allocated"] = bud["Allocated"]
+        val["ACT Local"]     = act["Local"]
+        val["ACT Allocated"] = act["Allocated"]
+        val["Total ACT"]     = val["ACT Local"] + val["ACT Allocated"]
+
+        # Sales tong moi nhom (mau so cho % of Sales)
+        def _sales_total(d):
+            return (d.loc["Sales", "Local"] + d.loc["Sales", "Allocated"]) if "Sales" in d.index else 0
+        sales_ly, sales_bud, sales_act = _sales_total(ly), _sales_total(bud), _sales_total(act)
+
+        if view_mode == "VND value":
+            tbl = val.copy()
+            fmt = {c: "{:,.0f}" for c in tbl.columns}
+            cap = "Local = chi phí phát sinh tại thị trường · Allocated = chi phí phân bổ từ tập đoàn." \
+                  + ("  |  Đơn vị: VND (đã quy theo FX)." if fx != 1.0 else "")
+
+        elif view_mode == "% of Sales":
+            # Moi o chia cho Sales tong cua nhom do
+            tbl = pd.DataFrame(index=PNL_ORDER)
+            tbl["N-1 Local"]     = val["N-1 Local"]     / sales_ly  * 100 if sales_ly  else 0
+            tbl["N-1 Allocated"] = val["N-1 Allocated"] / sales_ly  * 100 if sales_ly  else 0
+            tbl["BUD Local"]     = val["BUD Local"]     / sales_bud * 100 if sales_bud else 0
+            tbl["BUD Allocated"] = val["BUD Allocated"] / sales_bud * 100 if sales_bud else 0
+            tbl["ACT Local"]     = val["ACT Local"]     / sales_act * 100 if sales_act else 0
+            tbl["ACT Allocated"] = val["ACT Allocated"] / sales_act * 100 if sales_act else 0
+            tbl["Total ACT"]     = val["Total ACT"]     / sales_act * 100 if sales_act else 0
+            fmt = {c: "{:.1f}%" for c in tbl.columns}
+            cap = "Mỗi ô = % so với Sales của cùng nhóm (Actual N-1 / Budget / Actual N)."
+
+        else:  # % split Local/Allocated trong tung dong
+            tbl = pd.DataFrame(index=PNL_ORDER)
+            for grp, dd in [("N-1", ly), ("BUD", bud), ("ACT", act)]:
+                tot = dd["Local"] + dd["Allocated"]
+                tot = tot.where(tot != 0, other=pd.NA)
+                tbl[f"{grp} Local %"]     = (dd["Local"]     / tot * 100)
+                tbl[f"{grp} Allocated %"] = (dd["Allocated"] / tot * 100)
+            tbl = tbl.fillna(0)
+            fmt = {c: "{:.1f}%" for c in tbl.columns}
+            cap = "Mỗi dòng: tỷ trọng Local và Allocated cộng lại = 100% (xét trong từng dòng P&L)."
+
+        tbl = tbl.reindex(PNL_ORDER).reset_index().rename(columns={"index": "P&L Line"})
+
+        def _hl_la(row):
+            if row["P&L Line"] in SUBTOTAL_LINES:
+                return ["font-weight: bold; background-color: rgba(59,130,246,0.12)"] * len(row)
+            return [""] * len(row)
+
+        st.dataframe(
+            tbl.style.apply(_hl_la, axis=1).format(fmt),
+            use_container_width=True, hide_index=True, height=680
+        )
+        st.caption(cap)
