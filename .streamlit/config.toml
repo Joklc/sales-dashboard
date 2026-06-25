@@ -1,8 +1,7 @@
 [theme]
-# Tông xám đậm professional (charcoal / slate)
-base = "dark"
-primaryColor = "#3b82f6"
-backgroundColor = "#1a1d24"
-secondaryBackgroundColor = "#23272f"
-textColor = "#e8eaed"
+base = "light"
+primaryColor = "#2563eb"
+backgroundColor = "#f4f7fb"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#0f172a"
 font = "sans serif"

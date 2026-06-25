@@ -20,9 +20,9 @@ pio.templates["seb_dark"] = go.layout.Template(
     layout=dict(
         paper_bgcolor="rgba(0,0,0,0)",   # trong suốt, ăn theo nền app
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#e8eaed", size=12),
-        xaxis=dict(gridcolor="#33373f", zerolinecolor="#33373f"),
-        yaxis=dict(gridcolor="#33373f", zerolinecolor="#33373f"),
+        font=dict(color="#0f172a", size=12),
+        xaxis=dict(gridcolor="#cdd9e8", zerolinecolor="#cdd9e8"),
+        yaxis=dict(gridcolor="#cdd9e8", zerolinecolor="#cdd9e8"),
         legend=dict(bgcolor="rgba(0,0,0,0)"),
         colorway=["#3b82f6", "#9ca3af", "#f59e0b", "#22d3ee", "#a78bfa", "#16a34a"],
     )
@@ -35,101 +35,31 @@ pio.templates.default = "seb_dark"
 
 st.markdown("""
 <style>
-    /* KPI Card styling */
-    [data-testid="stMetric"] {
-        background: linear-gradient(180deg, #eceff3 0%, #dfe3e9 100%);
-        border: 1px solid #e0e4ea;
-        border-left: 4px solid #2563eb;
-        border-radius: 10px;
-        padding: 16px 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-        height: 130px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
+    .hero {
+        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+        border-radius: 18px; padding: 26px 30px 22px 30px;
+        box-shadow: 0 10px 24px rgba(30,64,175,0.28); margin-bottom: 22px;
     }
-    /* Căn cột KPI cho khít theo chiều cao */
-    [data-testid="stColumn"] > div > [data-testid="stVerticalBlock"] {
-        gap: 0 !important;
+    .hero-title { color: #ffffff; font-size: 28px; font-weight: 800; margin: 0; line-height: 1.1; }
+    .hero-sub   { color: #c7dbff; font-size: 13px; margin: 6px 0 18px 0; }
+    .hero-kpis  { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-tile  {
+        flex: 1; min-width: 150px; background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 14px 16px;
+        backdrop-filter: blur(4px);
     }
-    [data-testid="stMetric"]:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    .hero-tile .lbl { color: #dbe7ff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+    .hero-tile .val { color: #ffffff; font-size: 22px; font-weight: 800; margin-top: 4px; }
+    .hero-tile .sub { color: #b9d0ff; font-size: 11px; margin-top: 2px; }
+    .statcard {
+        background: #ffffff; border: 1px solid #e8edf5; border-radius: 16px;
+        padding: 18px 18px 16px 18px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        height: 118px; display: flex; flex-direction: column; justify-content: space-between;
     }
-    /* Delta styling — luôn neo xuống đáy ô để thẳng hàng */
-    [data-testid="stMetricDelta"] {
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        margin-top: auto !important;
-        padding-top: 8px;
-    }
-    [data-testid="stMetric"] label {
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        color: #6b7280 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    [data-testid="stMetricValue"] {
-        font-size: 22px !important;
-        font-weight: 700 !important;
-        color: #111827 !important;
-    }
-    /* Warning badge */
-    .under-budget {
-        background: #fff3cd;
-        border: 1px solid #ffc107;
-        border-radius: 8px;
-        padding: 10px 16px;
-        margin-bottom: 8px;
-        color: #856404;
-        font-size: 14px;
-    }
-    .alert-critical {
-        background: #f8d7da;
-        border: 1px solid #f5c2c7;
-        border-radius: 8px;
-        padding: 10px 16px;
-        margin-bottom: 8px;
-        color: #842029;
-        font-size: 14px;
-    }
-    /* Section header */
-    h3 { margin-top: 2rem !important; }
-    /* ── Sidebar dark theme ── */
-    [data-testid="stSidebar"] {
-        background: #15181e !important;
-    }
-    [data-testid="stSidebar"] *:not(svg):not(path) {
-        color: #e0e0e0 !important;
-    }
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3,
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] span {
-        color: #e0e0e0 !important;
-    }
-    [data-testid="stSidebar"] [data-baseweb="select"] > div {
-        background: #23272f !important;
-        border-color: #33373f !important;
-        color: #e0e0e0 !important;
-    }
-    [data-baseweb="popover"] [data-baseweb="menu"] {
-        background: #23272f !important;
-    }
-    [data-baseweb="popover"] [role="option"] {
-        background: #23272f !important;
-        color: #e0e0e0 !important;
-    }
-    [data-baseweb="popover"] [role="option"]:hover {
-        background: #33373f !important;
-    }
-    [data-testid="stSidebar"] hr {
-        border-color: #33373f !important;
-    }
+    .statcard .top { display: flex; align-items: center; justify-content: space-between; }
+    .statcard .icon { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .statcard .val { font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px; }
+    .statcard .lbl { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -348,7 +278,7 @@ aggs = compute_aggs(_cache_key, df_filtered, has_sgm)
 # ==================================================
 
 period_label = selected_month if selected_month != "YTD" else "Year-to-Date"
-st.title(f"📊 Sales Dashboard — {period_label}")
+# Tieu de + KPI nam trong hero banner phia duoi (sau khi tinh KPI)
 
 # Export buttons — chỉ tạo file Excel khi người dùng bấm (tránh chạy mỗi lần rerun)
 col_ex1, col_ex2, col_ex3 = st.columns([1.2, 1, 6])
@@ -385,37 +315,43 @@ growth_ly    = safe_pct(ns_act - ns_ly,  ns_ly)
 # Compare values
 cmp_act = df_compare["NS_ACT"].sum() if df_compare is not None else None
 
-st.subheader("Net Sales KPIs")
-c1, c2, c3, c4, c5, c6 = st.columns(6)
-c1.metric("NS Actual", f"{ns_act:,.0f}",
-          delta=f"{variance_bud:+.1f}% vs BUD")
-c2.metric("NS Budget", f"{ns_bud:,.0f}")
-c3.metric("NS Last Year", f"{ns_ly:,.0f}",
-          delta=f"{growth_ly:+.1f}% YoY")
-c4.metric("Achievement %", f"{achievement:.1f}%",
-          delta=f"{achievement - 100:+.1f}pp vs target")
-c5.metric("Variance vs BUD", f"{variance_bud:+.1f}%",
-          delta=f"{ns_act - ns_bud:+,.0f}")
-c6.metric("Growth vs LY", f"{growth_ly:+.1f}%",
-          delta=f"{ns_act - ns_ly:+,.0f}")
 
-# SGM% KPIs ngay dưới Net Sales
-if has_sgm:
-    sgm_act = aggs["sgm_act"]
-    sgm_bud = aggs["sgm_bud"]
-    sgm_ly  = aggs["sgm_ly"]
-    sgm_pct_act = safe_pct(sgm_act, ns_act)
-    sgm_pct_bud = safe_pct(sgm_bud, ns_bud)
-    sgm_pct_ly  = safe_pct(sgm_ly,  ns_ly)
+def fmt_abbr(v):
+    v = float(v)
+    if abs(v) >= 1e9: return f"{v/1e9:.2f}B"
+    if abs(v) >= 1e6: return f"{v/1e6:.1f}M"
+    return f"{v:,.0f}"
 
-    st.subheader("SGM% KPIs")
-    s1, s2, s3, s4 = st.columns(4)
-    s1.metric("SGM% Actual", f"{sgm_pct_act:.1f}%",
-              delta=f"{sgm_pct_act - sgm_pct_bud:+.1f}pp vs BUD")
-    s2.metric("SGM% Budget", f"{sgm_pct_bud:.1f}%")
-    s3.metric("SGM% Last Year", f"{sgm_pct_ly:.1f}%",
-              delta=f"{sgm_pct_act - sgm_pct_ly:+.1f}pp YoY")
-    s4.metric("SGM Value (ACT)", f"{sgm_act:,.0f}")
+def stat_card(col, icon, icon_bg, icon_fg, label, value):
+    col.markdown(f"""
+    <div class="statcard"><div class="top">
+        <div class="icon" style="background:{icon_bg};color:{icon_fg}">{icon}</div>
+    </div><div>
+        <div class="val">{value}</div><div class="lbl">{label}</div>
+    </div></div>
+    """, unsafe_allow_html=True)
+
+_sgm_act = aggs["sgm_act"]
+_sgm_pct = safe_pct(_sgm_act, ns_act) if has_sgm else 0
+st.markdown(f"""
+<div class="hero">
+  <div class="hero-title">📊 Sales Dashboard — {period_label}</div>
+  <div class="hero-sub">Net Sales — Actual vs Budget vs Last Year</div>
+  <div class="hero-kpis">
+    <div class="hero-tile"><div class="lbl">NS Actual</div><div class="val">{fmt_abbr(ns_act)}</div><div class="sub">{variance_bud:+.1f}% vs BUD</div></div>
+    <div class="hero-tile"><div class="lbl">NS Budget</div><div class="val">{fmt_abbr(ns_bud)}</div><div class="sub">target</div></div>
+    <div class="hero-tile"><div class="lbl">NS Last Year</div><div class="val">{fmt_abbr(ns_ly)}</div><div class="sub">{growth_ly:+.1f}% YoY</div></div>
+    <div class="hero-tile"><div class="lbl">Achievement</div><div class="val">{achievement:.1f}%</div><div class="sub">{achievement-100:+.1f}pp vs target</div></div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+q1, q2, q3, q4 = st.columns(4)
+stat_card(q1, "📈", "#eff4ff", "#2563eb", "Variance vs BUD", f"{variance_bud:+.1f}%")
+stat_card(q2, "🚀", "#eafaf1", "#16a34a", "Growth vs LY", f"{growth_ly:+.1f}%")
+stat_card(q3, "💰", "#f3eefe", "#7c3aed", "SGM% Actual", f"{_sgm_pct:.1f}%" if has_sgm else "—")
+stat_card(q4, "🧾", "#fef3e8", "#ea7a0c", "SGM Value", fmt_abbr(_sgm_act) if has_sgm else "—")
+st.markdown("<br>", unsafe_allow_html=True)
 
 # ==================================================
 # UNDER-BUDGET ALERTS

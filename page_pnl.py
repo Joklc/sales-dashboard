@@ -20,9 +20,9 @@ if "seb_dark" not in pio.templates:
         layout=dict(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#e8eaed", size=12),
-            xaxis=dict(gridcolor="#33373f", zerolinecolor="#33373f"),
-            yaxis=dict(gridcolor="#33373f", zerolinecolor="#33373f"),
+            font=dict(color="#0f172a", size=12),
+            xaxis=dict(gridcolor="#cdd9e8", zerolinecolor="#cdd9e8"),
+            yaxis=dict(gridcolor="#cdd9e8", zerolinecolor="#cdd9e8"),
             legend=dict(bgcolor="rgba(0,0,0,0)"),
             colorway=["#3b82f6", "#9ca3af", "#f59e0b", "#22d3ee", "#a78bfa", "#16a34a"],
         )
@@ -31,19 +31,31 @@ pio.templates.default = "seb_dark"
 
 st.markdown("""
 <style>
-    [data-testid="stMetric"] {
-        background: linear-gradient(180deg, #eceff3 0%, #dfe3e9 100%);
-        border: 1px solid #e0e4ea;
-        border-left: 4px solid #2563eb;
-        border-radius: 10px;
-        padding: 14px 18px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-        height: 120px;
-        display: flex; flex-direction: column; justify-content: flex-start;
+    .hero {
+        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+        border-radius: 18px; padding: 26px 30px 22px 30px;
+        box-shadow: 0 10px 24px rgba(30,64,175,0.28); margin-bottom: 22px;
     }
-    [data-testid="stMetricDelta"] { font-size: 12px !important; margin-top: auto !important; }
-    [data-testid="stMetricValue"] { font-size: 20px !important; font-weight: 700 !important; color: #111827 !important; }
-    [data-testid="stMetric"] label { font-size: 11px !important; font-weight: 600 !important; color: #6b7280 !important; text-transform: uppercase; }
+    .hero-title { color: #ffffff; font-size: 28px; font-weight: 800; margin: 0; line-height: 1.1; }
+    .hero-sub   { color: #c7dbff; font-size: 13px; margin: 6px 0 18px 0; }
+    .hero-kpis  { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-tile  {
+        flex: 1; min-width: 150px; background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 14px 16px;
+        backdrop-filter: blur(4px);
+    }
+    .hero-tile .lbl { color: #dbe7ff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+    .hero-tile .val { color: #ffffff; font-size: 22px; font-weight: 800; margin-top: 4px; }
+    .hero-tile .sub { color: #b9d0ff; font-size: 11px; margin-top: 2px; }
+    .statcard {
+        background: #ffffff; border: 1px solid #e8edf5; border-radius: 16px;
+        padding: 18px 18px 16px 18px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        height: 118px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .statcard .top { display: flex; align-items: center; justify-content: space-between; }
+    .statcard .icon { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .statcard .val { font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px; }
+    .statcard .lbl { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -92,7 +104,7 @@ def load_pnl(path):
             df[c] = df[c].astype("category")
     return df
 
-st.title("💵 P&L Dashboard")
+# Tieu de + KPI nam trong hero banner phia duoi
 
 try:
     df = load_pnl(PNL_FILE)
@@ -178,18 +190,42 @@ gm_act    = get_val("Gross Margin", "ACT")
 ropa_act  = get_val("ROPA", "ACT")
 sgm_act   = get_val("Standard Gross Margin", "ACT")
 
-st.subheader("Key P&L Metrics")
-k1, k2, k3, k4 = st.columns(4)
-k1.metric("Sales", f"{sales_act:,.0f}",
-          delta=f"{safe_pct(get_val('Sales','Var BUD'), get_val('Sales','BUD')):+.1f}% vs BUD")
-k2.metric("Standard GM", f"{sgm_act:,.0f}",
-          delta=f"{safe_pct(sgm_act, sales_act):.1f}% of Sales")
-k3.metric("Gross Margin", f"{gm_act:,.0f}",
-          delta=f"{safe_pct(gm_act, sales_act):.1f}% of Sales")
-k4.metric("ROPA", f"{ropa_act:,.0f}",
-          delta=f"{safe_pct(ropa_act, sales_act):.1f}% of Sales")
 
-st.markdown("---")
+def fmt_abbr(v):
+    v = float(v)
+    if abs(v) >= 1e9: return f"{v/1e9:.2f}B"
+    if abs(v) >= 1e6: return f"{v/1e6:.1f}M"
+    return f"{v:,.0f}"
+
+def stat_card(col, icon, icon_bg, icon_fg, label, value):
+    col.markdown(f"""
+    <div class="statcard"><div class="top">
+        <div class="icon" style="background:{icon_bg};color:{icon_fg}">{icon}</div>
+    </div><div>
+        <div class="val">{value}</div><div class="lbl">{label}</div>
+    </div></div>
+    """, unsafe_allow_html=True)
+
+_sales_var = safe_pct(get_val('Sales','Var BUD'), get_val('Sales','BUD'))
+st.markdown(f"""
+<div class="hero">
+  <div class="hero-title">💵 P&L Dashboard</div>
+  <div class="hero-sub">Actual N vs Budget vs Last Year</div>
+  <div class="hero-kpis">
+    <div class="hero-tile"><div class="lbl">Sales</div><div class="val">{fmt_abbr(sales_act)}</div><div class="sub">{_sales_var:+.1f}% vs BUD</div></div>
+    <div class="hero-tile"><div class="lbl">Standard GM</div><div class="val">{fmt_abbr(sgm_act)}</div><div class="sub">{safe_pct(sgm_act, sales_act):.1f}% of Sales</div></div>
+    <div class="hero-tile"><div class="lbl">Gross Margin</div><div class="val">{fmt_abbr(gm_act)}</div><div class="sub">{safe_pct(gm_act, sales_act):.1f}% of Sales</div></div>
+    <div class="hero-tile"><div class="lbl">ROPA</div><div class="val">{fmt_abbr(ropa_act)}</div><div class="sub">{safe_pct(ropa_act, sales_act):.1f}% of Sales</div></div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+p1, p2, p3, p4 = st.columns(4)
+stat_card(p1, "💰", "#eff4ff", "#2563eb", "Std GM %", f"{safe_pct(sgm_act, sales_act):.1f}%")
+stat_card(p2, "📊", "#eafaf1", "#16a34a", "Gross Margin %", f"{safe_pct(gm_act, sales_act):.1f}%")
+stat_card(p3, "🎯", "#f3eefe", "#7c3aed", "ROPA %", f"{safe_pct(ropa_act, sales_act):.1f}%")
+stat_card(p4, "📈", "#fef3e8", "#ea7a0c", "Sales vs BUD", f"{_sales_var:+.1f}%")
+st.markdown("<br>", unsafe_allow_html=True)
 
 # ==================================================
 # TABS

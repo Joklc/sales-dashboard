@@ -24,19 +24,31 @@ pio.templates.default = "seb_dark"
 
 st.markdown("""
 <style>
-    [data-testid="stMetric"] {
-        background: linear-gradient(180deg, #1e40af 0%, #1d4ed8 100%);
-        border: 1px solid #1e3a8a;
-        border-left: 4px solid #93c5fd;
-        border-radius: 10px;
-        padding: 14px 18px;
-        box-shadow: 0 2px 6px rgba(30,64,175,0.25);
-        height: 120px;
-        display: flex; flex-direction: column; justify-content: flex-start;
+    .hero {
+        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+        border-radius: 18px; padding: 26px 30px 22px 30px;
+        box-shadow: 0 10px 24px rgba(30,64,175,0.28); margin-bottom: 22px;
     }
-    [data-testid="stMetricDelta"] { font-size: 12px !important; margin-top: auto !important; }
-    [data-testid="stMetricValue"] { font-size: 20px !important; font-weight: 700 !important; color: #ffffff !important; }
-    [data-testid="stMetric"] label { font-size: 11px !important; font-weight: 600 !important; color: #bfdbfe !important; text-transform: uppercase; }
+    .hero-title { color: #ffffff; font-size: 28px; font-weight: 800; margin: 0; line-height: 1.1; }
+    .hero-sub   { color: #c7dbff; font-size: 13px; margin: 6px 0 18px 0; }
+    .hero-kpis  { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-tile  {
+        flex: 1; min-width: 150px; background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 14px 16px;
+        backdrop-filter: blur(4px);
+    }
+    .hero-tile .lbl { color: #dbe7ff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+    .hero-tile .val { color: #ffffff; font-size: 22px; font-weight: 800; margin-top: 4px; }
+    .hero-tile .sub { color: #b9d0ff; font-size: 11px; margin-top: 2px; }
+    .statcard {
+        background: #ffffff; border: 1px solid #e8edf5; border-radius: 16px;
+        padding: 18px 18px 16px 18px; box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        height: 118px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .statcard .top { display: flex; align-items: center; justify-content: space-between; }
+    .statcard .icon { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .statcard .val { font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px; }
+    .statcard .lbl { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -72,8 +84,7 @@ except Exception as e:
 as_of = df["As_of"].iloc[0] if "As_of" in df.columns and len(df) else None
 as_of_str = pd.to_datetime(as_of).strftime("%d-%b-%Y %H:%M") if as_of is not None else "N/A"
 
-st.title("⚡ KAM_MTD realtime")
-st.caption(f"Data updated at: {as_of_str}")
+# Tieu de + KPI nam trong hero banner phia duoi
 
 # ==================================================
 # SIDEBAR: chọn góc nhìn KAM/FIN + filter
@@ -134,22 +145,41 @@ tot_ded   = tot_gross - tot_net
 sgm_pct   = safe_pct(tot_sgm, tot_net)
 ded_pct   = safe_pct(tot_ded, tot_gross)
 
-st.subheader(f"MTD Summary — {view} view")
-c1, c2, c3, c4, c5, c6 = st.columns(6)
-c1.metric("Gross Sales (MTD)", f"{tot_gross:,.0f}")
-c2.metric("Net Sales (MTD)", f"{tot_net:,.0f}")
-c3.metric("Sale Deduction", f"{tot_ded:,.0f}")
-c4.metric("Deduction %", f"{ded_pct:.1f}%")
-c5.metric(f"SGM ({view})", f"{tot_sgm:,.0f}")
-c6.metric(f"SGM % ({view})", f"{sgm_pct:.1f}%")
 
-c7, c8, c9, c10 = st.columns(4)
-c7.metric("No. of MLA", f"{dff['MLA'].nunique()}")
-c8.metric("No. of Items", f"{dff['Item code'].nunique()}")
-c9.metric("No. of Customers", f"{dff['Customer'].nunique()}")
-c10.metric("Total Qty", f"{dff['Qty'].sum():,.0f}")
+def fmt_abbr(v):
+    v = float(v)
+    if abs(v) >= 1e9: return f"{v/1e9:.2f}B"
+    if abs(v) >= 1e6: return f"{v/1e6:.1f}M"
+    return f"{v:,.0f}"
 
-st.markdown("---")
+def stat_card(col, icon, icon_bg, icon_fg, label, value):
+    col.markdown(f"""
+    <div class="statcard"><div class="top">
+        <div class="icon" style="background:{icon_bg};color:{icon_fg}">{icon}</div>
+    </div><div>
+        <div class="val">{value}</div><div class="lbl">{label}</div>
+    </div></div>
+    """, unsafe_allow_html=True)
+
+st.markdown(f"""
+<div class="hero">
+  <div class="hero-title">⚡ KAM_MTD realtime</div>
+  <div class="hero-sub">Data updated at: {as_of_str}  •  Costing view: {view}</div>
+  <div class="hero-kpis">
+    <div class="hero-tile"><div class="lbl">Gross Sales</div><div class="val">{fmt_abbr(tot_gross)}</div><div class="sub">{tot_gross:,.0f}</div></div>
+    <div class="hero-tile"><div class="lbl">Net Sales</div><div class="val">{fmt_abbr(tot_net)}</div><div class="sub">{tot_net:,.0f}</div></div>
+    <div class="hero-tile"><div class="lbl">SGM ({view})</div><div class="val">{fmt_abbr(tot_sgm)}</div><div class="sub">{tot_sgm:,.0f}</div></div>
+    <div class="hero-tile"><div class="lbl">SGM % ({view})</div><div class="val">{sgm_pct:.1f}%</div><div class="sub">of Net Sales</div></div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+s1, s2, s3, s4 = st.columns(4)
+stat_card(s1, "💸", "#eff4ff", "#2563eb", "Sale Deduction", f"{tot_ded:,.0f}")
+stat_card(s2, "📉", "#fef3e8", "#ea7a0c", "Deduction %", f"{ded_pct:.1f}%")
+stat_card(s3, "🏢", "#eafaf1", "#16a34a", "No. of MLA", f"{dff['MLA'].nunique()}")
+stat_card(s4, "📦", "#f3eefe", "#7c3aed", "No. of Items", f"{dff['Item code'].nunique()}")
+st.markdown("<br>", unsafe_allow_html=True)
 
 def agg_by(data, dim):
     t = (data.groupby(dim, as_index=False, observed=True)
