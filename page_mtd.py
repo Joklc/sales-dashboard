@@ -48,11 +48,11 @@ st.markdown("""
 
     /* ===== STAT CARD (the trang, icon nen mau nhat) ===== */
     .statcard {
-        background: #ffffff;
-        border: 1px solid #e8edf5;
+        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        border: 1px solid #1e3a8a;
         border-radius: 16px;
         padding: 18px 18px 16px 18px;
-        box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+        box-shadow: 0 6px 16px rgba(30,64,175,0.22);
         height: 118px;
         display: flex; flex-direction: column; justify-content: space-between;
     }
@@ -62,8 +62,9 @@ st.markdown("""
         display: flex; align-items: center; justify-content: center; font-size: 20px;
     }
     .statcard .pill { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
-    .statcard .val { font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px; }
-    .statcard .lbl { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
+    .statcard .val { font-size: 24px; font-weight: 800; color: #ffffff; margin-top: 6px; }
+    .statcard .lbl { font-size: 11px; font-weight: 600; color: #cfe0ff; text-transform: uppercase; letter-spacing: .03em; }
+    .statcard .icon { background: rgba(255,255,255,0.20) !important; }
 </style>
 """, unsafe_allow_html=True)
 
