@@ -49,22 +49,17 @@ st.markdown("""
     /* ===== STAT CARD (the trang, icon nen mau nhat) ===== */
     .statcard {
         background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-        border: 1px solid #1e3a8a;
-        border-radius: 16px;
-        padding: 18px 18px 16px 18px;
-        box-shadow: 0 6px 16px rgba(30,64,175,0.22);
-        height: 118px;
-        display: flex; flex-direction: column; justify-content: space-between;
+        border: 1px solid #1e3a8a; border-radius: 16px;
+        padding: 16px 18px 16px 18px; box-shadow: 0 6px 16px rgba(30,64,175,0.22);
+        height: 140px; display: flex; flex-direction: column;
     }
-    .statcard .top { display: flex; align-items: center; justify-content: space-between; }
     .statcard .icon {
-        width: 42px; height: 42px; border-radius: 11px;
-        display: flex; align-items: center; justify-content: center; font-size: 20px;
+        width: 40px; height: 40px; border-radius: 11px;
+        display: flex; align-items: center; justify-content: center; font-size: 19px;
+        background: rgba(255,255,255,0.20); margin-bottom: auto;
     }
-    .statcard .pill { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
-    .statcard .val { font-size: 24px; font-weight: 800; color: #ffffff; margin-top: 6px; }
-    .statcard .lbl { font-size: 11px; font-weight: 600; color: #cfe0ff; text-transform: uppercase; letter-spacing: .03em; }
-    .statcard .icon { background: rgba(255,255,255,0.20) !important; }
+    .statcard .val { font-size: 24px; font-weight: 800; color: #ffffff; line-height: 1.1; }
+    .statcard .lbl { font-size: 11px; font-weight: 600; color: #cfe0ff; text-transform: uppercase; letter-spacing: .03em; margin-top: 6px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -177,18 +172,14 @@ st.markdown(f"""
 def stat_card(col, icon, icon_bg, icon_fg, label, value):
     col.markdown(f"""
     <div class="statcard">
-      <div class="top">
-        <div class="icon" style="background:{icon_bg};color:{icon_fg}">{icon}</div>
-      </div>
-      <div>
-        <div class="val">{value}</div>
-        <div class="lbl">{label}</div>
-      </div>
+      <div class="icon">{icon}</div>
+      <div class="val">{value}</div>
+      <div class="lbl">{label}</div>
     </div>
     """, unsafe_allow_html=True)
 
 s1, s2, s3, s4 = st.columns(4)
-stat_card(s1, "💸", "#eff4ff", "#2563eb", "Sale Deduction", f"{tot_ded:,.0f}")
+stat_card(s1, "💸", "#eff4ff", "#2563eb", "Sale Deduction", fmt_abbr(tot_ded))
 stat_card(s2, "📉", "#fef3e8", "#ea7a0c", "Deduction %", f"{ded_pct:.1f}%")
 stat_card(s3, "🏢", "#eafaf1", "#16a34a", "No. of MLA", f"{dff['MLA'].nunique()}")
 stat_card(s4, "📦", "#f3eefe", "#7c3aed", "No. of Items", f"{dff['Item code'].nunique()}")
