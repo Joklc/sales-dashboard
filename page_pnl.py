@@ -254,22 +254,55 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # ---- TAB 1: P&L full table ----
 with tab1:
     st.subheader("P&L Statement — Actual vs Budget vs Last Year")
-    disp = pnl.reset_index()
-    disp.columns = ["P&L Line", "Actual N", "Budget N", "Actual N-1",
-                    "% Sales", "Var vs BUD", "Var vs LY"]
 
-    def highlight_subtotal(row):
-        if row["P&L Line"] in SUBTOTAL_LINES:
-            return ["font-weight: bold; background-color: rgba(59,130,246,0.12)"] * len(row)
-        return [""] * len(row)
+    col_tbl, col_chart = st.columns([3, 2], gap="medium")
 
-    styled = (disp.style
-              .apply(highlight_subtotal, axis=1)
-              .format({
-                  "Actual N": "{:,.0f}", "Budget N": "{:,.0f}", "Actual N-1": "{:,.0f}",
-                  "% Sales": "{:.1f}%", "Var vs BUD": "{:+,.0f}", "Var vs LY": "{:+,.0f}",
-              }))
-    st.dataframe(styled, use_container_width=True, hide_index=True, height=680)
+    with col_tbl:
+        disp = pnl.reset_index()
+        disp.columns = ["P&L Line", "Actual N", "Budget N", "Actual N-1",
+                        "% Sales", "Var vs BUD", "Var vs LY"]
+
+        def highlight_subtotal(row):
+            if row["P&L Line"] in SUBTOTAL_LINES:
+                return ["font-weight: bold; background-color: rgba(59,130,246,0.12)"] * len(row)
+            return [""] * len(row)
+
+        styled = (disp.style
+                  .apply(highlight_subtotal, axis=1)
+                  .format({
+                      "Actual N": "{:,.0f}", "Budget N": "{:,.0f}", "Actual N-1": "{:,.0f}",
+                      "% Sales": "{:.1f}%", "Var vs BUD": "{:+,.0f}", "Var vs LY": "{:+,.0f}",
+                  }))
+        st.dataframe(styled, use_container_width=True, hide_index=True, height=690)
+
+    with col_chart:
+        key_lines = ["Sales", "Standard Gross Margin", "Gross Margin", "ROPA"]
+        kd = pnl.reindex(key_lines)
+
+        # Chart 1: cac dong chinh — Actual vs Budget vs LY
+        fig_key = go.Figure()
+        fig_key.add_bar(y=key_lines, x=kd["LY"],  name="Actual N-1", orientation="h", marker_color=COLORS["LY"])
+        fig_key.add_bar(y=key_lines, x=kd["BUD"], name="Budget N",   orientation="h", marker_color=COLORS["BUD"])
+        fig_key.add_bar(y=key_lines, x=kd["ACT"], name="Actual N",   orientation="h", marker_color=COLORS["ACT"])
+        fig_key.update_layout(
+            barmode="group", height=330, margin=dict(t=34, b=10, l=4, r=4),
+            template="seb_dark", title="Key lines — ACT vs BUD vs LY",
+            yaxis=dict(autorange="reversed"),
+            legend=dict(orientation="h", y=-0.18, font=dict(size=10)),
+        )
+        st.plotly_chart(fig_key, use_container_width=True)
+
+        # Chart 2: % of Sales cua cac dong chinh
+        fig_pct = go.Figure(go.Bar(
+            x=key_lines, y=kd["% Sales"],
+            marker_color=["#2563eb", "#16a34a", "#22d3ee", "#a78bfa"],
+            text=[f"{v:.1f}%" for v in kd["% Sales"]], textposition="outside",
+        ))
+        fig_pct.update_layout(
+            height=300, margin=dict(t=34, b=10, l=4, r=4), template="seb_dark",
+            title="% of Sales", yaxis=dict(ticksuffix="%"), xaxis_tickangle=-15,
+        )
+        st.plotly_chart(fig_pct, use_container_width=True)
 
 # ---- TAB 2: Waterfall Sales -> GM -> ROPA ----
 with tab2:
