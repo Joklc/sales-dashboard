@@ -210,11 +210,6 @@ selected_family = st.sidebar.selectbox(
     ["All"] + opts["family"]
 )
 
-st.sidebar.markdown("---")
-budget_threshold = st.sidebar.slider(
-    "⚠️ Under-budget alert threshold (%)", -50, 0, -10
-)
-
 # ==================================================
 # FILTER FUNCTION
 # ==================================================
@@ -329,6 +324,10 @@ def fmt_abbr(v):
     if abs(v) >= 1e6: return f"{v/1e6:.1f}M"
     return f"{v:,.0f}"
 
+def fmt_full(v):
+    """Số đầy đủ có dấu phẩy ngăn cách, dùng cho các thẻ KPI đầu trang."""
+    return f"{float(v):,.0f}"
+
 def stat_card(col, icon, icon_bg, icon_fg, label, value):
     col.markdown(f"""
     <div class="statcard"><div class="top">
@@ -345,9 +344,9 @@ st.markdown(f"""
   <div class="hero-title">📊 Sales Dashboard — {period_label}</div>
   <div class="hero-sub">Net Sales — Actual vs Budget vs Last Year</div>
   <div class="hero-kpis">
-    <div class="hero-tile"><div class="lbl">NS Actual</div><div class="val">{fmt_abbr(ns_act)}</div><div class="sub">{variance_bud:+.1f}% vs BUD</div></div>
-    <div class="hero-tile"><div class="lbl">NS Budget</div><div class="val">{fmt_abbr(ns_bud)}</div><div class="sub">target</div></div>
-    <div class="hero-tile"><div class="lbl">NS Last Year</div><div class="val">{fmt_abbr(ns_ly)}</div><div class="sub">{growth_ly:+.1f}% YoY</div></div>
+    <div class="hero-tile"><div class="lbl">NS Actual</div><div class="val">{fmt_full(ns_act)}</div><div class="sub">{variance_bud:+.1f}% vs BUD</div></div>
+    <div class="hero-tile"><div class="lbl">NS Budget</div><div class="val">{fmt_full(ns_bud)}</div><div class="sub">target</div></div>
+    <div class="hero-tile"><div class="lbl">NS Last Year</div><div class="val">{fmt_full(ns_ly)}</div><div class="sub">{growth_ly:+.1f}% YoY</div></div>
     <div class="hero-tile"><div class="lbl">Achievement</div><div class="val">{achievement:.1f}%</div><div class="sub">{achievement-100:+.1f}pp vs target</div></div>
   </div>
 </div>
@@ -357,66 +356,68 @@ q1, q2, q3, q4 = st.columns(4)
 stat_card(q1, "📈", "#eff4ff", "#2563eb", "Variance vs BUD", f"{variance_bud:+.1f}%")
 stat_card(q2, "🚀", "#eafaf1", "#16a34a", "Growth vs LY", f"{growth_ly:+.1f}%")
 stat_card(q3, "💰", "#f3eefe", "#7c3aed", "SGM% Actual", f"{_sgm_pct:.1f}%" if has_sgm else "—")
-stat_card(q4, "🧾", "#fef3e8", "#ea7a0c", "SGM Value", fmt_abbr(_sgm_act) if has_sgm else "—")
+stat_card(q4, "🧾", "#fef3e8", "#ea7a0c", "SGM Value", fmt_full(_sgm_act) if has_sgm else "—")
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ==================================================
-# UNDER-BUDGET ALERTS
+# TOP MOVERS vs BUDGET — theo Product Line
 # ==================================================
 
-product_var = aggs["prod"][["Product Line","NS_ACT","NS_BUD"]].copy()
-product_var["VAR_%"] = product_var.apply(
+# ==================================================
+# TOP MOVERS vs BUDGET — theo Product Line (Above & Below)
+# ==================================================
+
+st.subheader("🚦 Top Movers vs Budget by Product Line (by value)")
+
+movers_pl = aggs["prod"][["Product Line", "NS_ACT", "NS_BUD"]].copy()
+movers_pl["GAP"] = movers_pl["NS_ACT"] - movers_pl["NS_BUD"]
+movers_pl["VAR_%"] = movers_pl.apply(
     lambda r: safe_pct(r.NS_ACT - r.NS_BUD, r.NS_BUD), axis=1
 )
-product_var["GAP"] = product_var["NS_ACT"] - product_var["NS_BUD"]
-alerts = product_var[product_var["VAR_%"] < budget_threshold].sort_values("VAR_%")
 
-if not alerts.empty:
-    total_gap = alerts["GAP"].sum()
-    with st.expander(
-        f"⚠️ {len(alerts)} Product Line dưới ngưỡng {budget_threshold}%  •  "
-        f"Tổng thiếu hụt: {total_gap:,.0f}",
-        expanded=True
-    ):
-        col_chart, col_tbl = st.columns([3, 2])
+def mover_label(gap, pct, bud):
+    """Nhãn trên thanh: giá trị gap + %. Nếu Budget = 0 thì ghi (no BUD) thay vì +0.0%."""
+    sign = "+" if gap >= 0 else ""
+    pct_txt = "no BUD" if bud == 0 else f"{pct:+.1f}%"
+    return f"{sign}{fmt_abbr(gap)} ({pct_txt})"
 
-        with col_chart:
-            ac = alerts.sort_values("VAR_%")
-            bar_colors = ["#dc2626" if v < budget_threshold * 2 else "#f59e0b"
-                          for v in ac["VAR_%"]]
-            fig_alert = go.Figure(go.Bar(
-                y=ac["Product Line"],
-                x=ac["VAR_%"],
-                orientation="h",
-                marker_color=bar_colors,
-                text=ac["VAR_%"].round(1).astype(str) + "%",
-                textposition="outside",
-                cliponaxis=False,
-            ))
-            fig_alert.add_vline(
-                x=budget_threshold, line_dash="dash",
-                line_color="#9ca3af", line_width=1
-            )
-            fig_alert.update_layout(
-                template="seb_dark",
-                height=max(220, len(ac) * 34),
-                margin=dict(t=10, b=10, l=10, r=40),
-                xaxis_title="Variance vs Budget (%)",
-                showlegend=False,
-            )
-            st.plotly_chart(fig_alert, use_container_width=True)
+def mover_chart(d, dim, color, side):
+    """Vẽ 1 chart horizontal bar cho top movers. side='up' hoặc 'down'."""
+    d = d.sort_values("GAP", ascending=(side == "up"))
+    labels = [mover_label(g, p, b) for g, p, b in zip(d["GAP"], d["VAR_%"], d["NS_BUD"])]
+    fig = go.Figure(go.Bar(
+        y=d[dim], x=d["GAP"], orientation="h",
+        marker_color=color, text=labels,
+        textposition="outside", cliponaxis=False,
+    ))
+    margin = dict(t=10, b=10, l=10, r=100) if side == "up" else dict(t=10, b=10, l=100, r=10)
+    fig.update_layout(template="seb_dark", height=280, margin=margin,
+                      xaxis_title="Gap vs Budget", showlegend=False)
+    return fig
 
-        with col_tbl:
-            tbl = alerts[["Product Line", "GAP", "VAR_%"]].copy()
-            tbl.columns = ["Product Line", "Gap", "Var %"]
-            st.dataframe(
-                tbl.style.format({"Gap": "{:,.0f}", "Var %": "{:.1f}%"}),
-                use_container_width=True,
-                hide_index=True,
-                height=max(220, len(tbl) * 34),
-            )
+col_up, col_down = st.columns(2)
 
-# ==================================================
+with col_up:
+    st.markdown("#### 🟢 Top 5 Above Budget")
+    top_up_pl = movers_pl[movers_pl["GAP"] > 0].sort_values("GAP", ascending=False).head(5)
+    if top_up_pl.empty:
+        st.info("No Product Line above budget.")
+    else:
+        st.plotly_chart(mover_chart(top_up_pl, "Product Line", COLORS["POS"], "up"),
+                        use_container_width=True)
+
+with col_down:
+    st.markdown("#### 🔴 Top 5 Below Budget")
+    top_dn_pl = movers_pl[movers_pl["GAP"] < 0].sort_values("GAP", ascending=True).head(5)
+    if top_dn_pl.empty:
+        st.info("No Product Line below budget.")
+    else:
+        st.plotly_chart(mover_chart(top_dn_pl, "Product Line", COLORS["NEG"], "down"),
+                        use_container_width=True)
+
+net_gap = movers_pl["GAP"].sum()
+st.caption(f"Net gap vs Budget (all Product Lines): {fmt_abbr(net_gap)}")
+
 # ==================================================
 # TREND CHART — NS monthly + SGM% (dual axis)
 # ==================================================
