@@ -162,6 +162,10 @@ def fmt_abbr(v):
     if abs(v) >= 1e6: return f"{v/1e6:.1f}M"
     return f"{v:,.0f}"
 
+def fmt_full(v):
+    """Số đầy đủ có dấu phẩy ngăn cách, dùng cho các thẻ KPI."""
+    return f"{float(v):,.0f}"
+
 def stat_card(col, icon, icon_bg, icon_fg, label, value):
     col.markdown(f"""
     <div class="statcard">
@@ -176,16 +180,16 @@ st.markdown(f"""
   <div class="hero-title">⚡ KAM_MTD realtime</div>
   <div class="hero-sub">Data updated at: {as_of_str}  •  Costing view: {view}</div>
   <div class="hero-kpis">
-    <div class="hero-tile"><div class="lbl">Gross Sales</div><div class="val">{fmt_abbr(tot_gross)}</div><div class="sub">{tot_gross:,.0f}</div></div>
-    <div class="hero-tile"><div class="lbl">Net Sales</div><div class="val">{fmt_abbr(tot_net)}</div><div class="sub">{tot_net:,.0f}</div></div>
-    <div class="hero-tile"><div class="lbl">SGM ({view})</div><div class="val">{fmt_abbr(tot_sgm)}</div><div class="sub">{tot_sgm:,.0f}</div></div>
+    <div class="hero-tile"><div class="lbl">Gross Sales</div><div class="val">{fmt_full(tot_gross)}</div><div class="sub">VND</div></div>
+    <div class="hero-tile"><div class="lbl">Net Sales</div><div class="val">{fmt_full(tot_net)}</div><div class="sub">VND</div></div>
+    <div class="hero-tile"><div class="lbl">SGM ({view})</div><div class="val">{fmt_full(tot_sgm)}</div><div class="sub">VND</div></div>
     <div class="hero-tile"><div class="lbl">SGM % ({view})</div><div class="val">{sgm_pct:.1f}%</div><div class="sub">of Net Sales</div></div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
 s1, s2, s3, s4 = st.columns(4)
-stat_card(s1, "💸", "#eff4ff", "#2563eb", "Sale Deduction", fmt_abbr(tot_ded))
+stat_card(s1, "💸", "#eff4ff", "#2563eb", "Sale Deduction", fmt_full(tot_ded))
 stat_card(s2, "📉", "#fef3e8", "#ea7a0c", "Deduction %", f"{ded_pct:.1f}%")
 stat_card(s3, "🏢", "#eafaf1", "#16a34a", "No. of MLA", f"{dff['MLA'].nunique()}")
 stat_card(s4, "📦", "#f3eefe", "#7c3aed", "No. of Items", f"{dff['Item code'].nunique()}")
