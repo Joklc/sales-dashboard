@@ -191,7 +191,8 @@ s1, s2, s3, s4 = st.columns(4)
 stat_card(s1, "💸", "#eff4ff", "#2563eb", "Sale Deduction", fmt_full(tot_ded))
 stat_card(s2, "📉", "#fef3e8", "#ea7a0c", "Deduction %", f"{ded_pct:.1f}%")
 stat_card(s3, "🏢", "#eafaf1", "#16a34a", "No. of MLA", f"{dff['MLA'].nunique()}")
-stat_card(s4, "📦", "#f3eefe", "#7c3aed", "No. of Items", f"{dff['Item code'].nunique()}")
+stat_card(s4, "📦", "#f3eefe", "#7c3aed", "Total Volume",
+          f"{dff['VOL'].sum():,.0f}" if "VOL" in dff.columns else "—")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
