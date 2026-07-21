@@ -726,6 +726,132 @@ with wl_tab3:
         st.plotly_chart(fig_pie, use_container_width=True)
 
 # ==================================================
+# SGM% GAP BRIDGE (Actual − Budget) — Mix effect vs SGM% effect
+# ==================================================
+
+if has_sgm and not aggs["fl2"].empty:
+    st.markdown("---")
+    st.subheader("🔬 SGM% Gap Bridge (Actual − Budget) — by Family Level 2")
+    st.caption(
+        "Tách chênh lệch SGM% tổng thành 2 nguyên nhân:  "
+        "**Mix effect** = do tỷ trọng doanh số dịch chuyển giữa các Family  •  "
+        "**SGM% effect** = do bản thân biên của từng Family thay đổi.  "
+        "Đơn vị: điểm phần trăm (pp)."
+    )
+
+    br = aggs["fl2"][["Family Level 2", "NS_ACT", "NS_BUD", "SGM_ACT", "SGM_BUD"]].copy()
+
+    tot_ns_act = br["NS_ACT"].sum()
+    tot_ns_bud = br["NS_BUD"].sum()
+
+    # SGM% từng dòng
+    br["SGM%_ACT"] = br.apply(lambda r: safe_pct(r["SGM_ACT"], r["NS_ACT"]), axis=1)
+    br["SGM%_BUD"] = br.apply(lambda r: safe_pct(r["SGM_BUD"], r["NS_BUD"]), axis=1)
+
+    # Tỷ trọng doanh số (contribution mix), tính theo phần trăm
+    br["MIX_ACT"] = br["NS_ACT"] / tot_ns_act * 100 if tot_ns_act else 0
+    br["MIX_BUD"] = br["NS_BUD"] / tot_ns_bud * 100 if tot_ns_bud else 0
+
+    # SGM% tổng của kỳ Budget — dùng làm mốc cho mix effect
+    sgm_pct_bud_total = safe_pct(br["SGM_BUD"].sum(), tot_ns_bud)
+
+    # Mix effect  = (tỷ trọng ACT − tỷ trọng BUD) × (SGM%_BUD của dòng − SGM%_BUD tổng) / 100
+    # SGM% effect = (SGM%_ACT − SGM%_BUD) × tỷ trọng ACT / 100
+    br["MIX_EFFECT"] = (br["MIX_ACT"] - br["MIX_BUD"]) * (br["SGM%_BUD"] - sgm_pct_bud_total) / 100
+    br["SGM_EFFECT"] = (br["SGM%_ACT"] - br["SGM%_BUD"]) * br["MIX_ACT"] / 100
+    br["TOTAL_IMPACT"] = br["MIX_EFFECT"] + br["SGM_EFFECT"]
+
+    br = br.sort_values("TOTAL_IMPACT")
+
+    # ----- Tóm tắt -----
+    sgm_pct_act_total = safe_pct(br["SGM_ACT"].sum(), tot_ns_act)
+    gap_total = sgm_pct_act_total - sgm_pct_bud_total
+    mix_total = br["MIX_EFFECT"].sum()
+    rate_total = br["SGM_EFFECT"].sum()
+
+    k1, k2, k3, k4 = st.columns(4)
+    k1.metric("SGM% Actual", f"{sgm_pct_act_total:.2f}%")
+    k2.metric("SGM% Budget", f"{sgm_pct_bud_total:.2f}%")
+    k3.metric("Gap", f"{gap_total:+.2f} pp")
+    k4.metric("Mix / SGM% effect", f"{mix_total:+.2f} / {rate_total:+.2f} pp")
+
+    bridge_tab1, bridge_tab2 = st.tabs(["📊 Waterfall", "📋 Bảng chi tiết"])
+
+    # ---- Waterfall ----
+    with bridge_tab1:
+        top_n_br = st.slider("Số Family hiển thị (theo mức tác động lớn nhất):",
+                             5, 30, 12, key="bridge_top")
+        br_rank = br.reindex(br["TOTAL_IMPACT"].abs().sort_values(ascending=False).index)
+        top_items = br_rank.head(top_n_br).sort_values("TOTAL_IMPACT")
+        others_impact = br_rank.iloc[top_n_br:]["TOTAL_IMPACT"].sum()
+
+        labels = ["SGM% Budget"] + top_items["Family Level 2"].tolist()
+        values = [sgm_pct_bud_total] + top_items["TOTAL_IMPACT"].tolist()
+        measures = ["absolute"] + ["relative"] * len(top_items)
+
+        if abs(others_impact) > 1e-9:
+            labels.append("Others")
+            values.append(others_impact)
+            measures.append("relative")
+
+        labels.append("SGM% Actual")
+        values.append(sgm_pct_act_total)
+        measures.append("total")
+
+        fig_br = go.Figure(go.Waterfall(
+            orientation="v",
+            measure=measures,
+            x=labels,
+            y=values,
+            text=[f"{v:+.2f}" if m == "relative" else f"{v:.2f}%"
+                  for v, m in zip(values, measures)],
+            textposition="outside",
+            connector=dict(line=dict(color="#9ca3af")),
+            increasing=dict(marker=dict(color=COLORS["POS"])),
+            decreasing=dict(marker=dict(color=COLORS["NEG"])),
+            totals=dict(marker=dict(color=COLORS["ACT"])),
+        ))
+        fig_br.update_layout(template="seb_dark", height=520,
+                             margin=dict(t=30, b=140),
+                             yaxis_title="SGM% (pp)",
+                             xaxis_tickangle=-40, showlegend=False)
+        st.plotly_chart(fig_br, use_container_width=True)
+
+    # ---- Bảng chi tiết ----
+    with bridge_tab2:
+        show_br = br[["Family Level 2", "NS_ACT", "SGM%_ACT", "MIX_ACT",
+                      "NS_BUD", "SGM%_BUD", "MIX_BUD",
+                      "MIX_EFFECT", "SGM_EFFECT", "TOTAL_IMPACT"]].copy()
+        show_br.columns = ["Family Level 2", "NS Actual", "SGM% Act", "Mix% Act",
+                           "NS Budget", "SGM% Bud", "Mix% Bud",
+                           "Mix effect", "SGM% effect", "Total impact"]
+
+        def color_impact(v):
+            """To mau do/xanh theo gia tri, khong can matplotlib."""
+            try:
+                v = float(v)
+            except (TypeError, ValueError):
+                return ""
+            if v > 0.001:
+                return "background-color: #dcfce7; color: #166534;"
+            if v < -0.001:
+                return "background-color: #fee2e2; color: #991b1b;"
+            return ""
+
+        st.dataframe(
+            show_br.style.format({
+                "NS Actual": "{:,.0f}", "NS Budget": "{:,.0f}",
+                "SGM% Act": "{:.2f}%", "SGM% Bud": "{:.2f}%",
+                "Mix% Act": "{:.2f}%", "Mix% Bud": "{:.2f}%",
+                "Mix effect": "{:+.3f}", "SGM% effect": "{:+.3f}",
+                "Total impact": "{:+.3f}",
+            }).map(color_impact, subset=["Mix effect", "SGM% effect", "Total impact"]),
+            use_container_width=True, hide_index=True, height=520
+        )
+        st.caption("Mix effect / SGM% effect / Total impact tính bằng điểm phần trăm (pp). "
+                   "Tổng cột Total impact = chênh lệch SGM% Actual vs Budget.")
+
+# ==================================================
 # DETAIL TABLE
 # ==================================================
 
