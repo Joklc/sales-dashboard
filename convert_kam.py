@@ -13,11 +13,21 @@ import pandas as pd
 import os
 import shutil
 
-INPUT_FILE    = r"C:\AI_KAM_rawdata\MTD_KAM.xlsx"
-OUTPUT_FILE   = r"C:\AI_KAM_rawdata\kam_cache.parquet"
+INPUT_FILE    = r"X:\Finance 2.Controlling\Dashboard\AI_KAM_rawdata\MTD_KAM.xlsx"
 DASHBOARD_DIR = r"C:\AI_Dashboard"
+OUTPUT_FILE   = os.path.join(DASHBOARD_DIR, "kam_cache.parquet")
 
-print("Doc file MTD_KAM.xlsx...")
+# Kiem tra ket noi o mang X truoc khi chay
+RAWDATA_DIR = os.path.dirname(INPUT_FILE)
+if not os.path.isdir(RAWDATA_DIR):
+    print("=" * 60)
+    print("KHONG TRUY CAP DUOC O MANG X!")
+    print(f"Duong dan: {RAWDATA_DIR}")
+    print("Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?")
+    print("=" * 60)
+    raise SystemExit
+
+print("Doc file MTD_KAM.xlsx tu o X...")
 
 if not os.path.exists(INPUT_FILE):
     print(f"KHONG tim thay file: {INPUT_FILE}")
@@ -88,10 +98,6 @@ print(f"[FIN] Net {df['Net_FIN'].sum():,.0f} | SGM% {pct(df['SGM_FIN'].sum(), df
 # ==================================================
 df.to_parquet(OUTPUT_FILE, index=False)
 print(f"\n  -> Da luu: {OUTPUT_FILE}")
-dest = os.path.join(DASHBOARD_DIR, "kam_cache.parquet")
-if os.path.isdir(DASHBOARD_DIR):
-    shutil.copy(OUTPUT_FILE, dest)
-    print(f"  -> Da copy sang: {dest}")
 
 print("\nXONG!")
 print("Buoc tiep: 1) Restart app  2) Upload kam_cache.parquet len GitHub")

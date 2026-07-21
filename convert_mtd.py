@@ -12,11 +12,20 @@ import os
 import shutil
 
 # Doi duong dan neu folder ban o cho khac
-FOLDER        = r"C:\AI_MTD_rawdata"
-OUTPUT_FILE   = r"C:\AI_MTD_rawdata\mtd_cache.parquet"
+FOLDER        = r"X:\Finance 2.Controlling\Dashboard\AI_MTD_rawdata"
 DASHBOARD_DIR = r"C:\AI_Dashboard"
+OUTPUT_FILE   = os.path.join(DASHBOARD_DIR, "mtd_cache.parquet")
 
-print("Doc file get_data...")
+# Kiem tra ket noi o mang X truoc khi chay
+if not os.path.isdir(FOLDER):
+    print("=" * 60)
+    print("KHONG TRUY CAP DUOC O MANG X!")
+    print(f"Duong dan: {FOLDER}")
+    print("Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?")
+    print("=" * 60)
+    raise SystemExit
+
+print("Doc file get_data tu o X...")
 
 # Tu dong tim file Excel co chu "get_data" trong ten
 INPUT_FILE = None
@@ -104,11 +113,6 @@ print(f"Tong SGM   : {s:,.0f}  (SGM% = {s/n*100 if n else 0:.1f}%)")
 # ==================================================
 df.to_parquet(OUTPUT_FILE, index=False)
 print(f"\n  -> Da luu: {OUTPUT_FILE}")
-
-dashboard_file = os.path.join(DASHBOARD_DIR, "mtd_cache.parquet")
-if os.path.isdir(DASHBOARD_DIR):
-    shutil.copy(OUTPUT_FILE, dashboard_file)
-    print(f"  -> Da copy sang: {dashboard_file}")
 
 print("\nXONG!")
 print("Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub")

@@ -7,11 +7,20 @@ import pandas as pd
 import os
 import shutil
 
-FOLDER_PATH   = r"C:\AI_PnL_rawdata"
-OUTPUT_FILE   = r"C:\AI_PnL_rawdata\pnl_cache.parquet"
+FOLDER_PATH   = r"X:\Finance 2.Controlling\Dashboard\AI_PnL_rawdata"
 DASHBOARD_DIR = r"C:\AI_Dashboard"
+OUTPUT_FILE   = os.path.join(DASHBOARD_DIR, "pnl_cache.parquet")
 
-print("Doc cac file Excel P&L...")
+# Kiem tra ket noi o mang X truoc khi chay
+if not os.path.isdir(FOLDER_PATH):
+    print("=" * 60)
+    print("KHONG TRUY CAP DUOC O MANG X!")
+    print(f"Duong dan: {FOLDER_PATH}")
+    print("Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?")
+    print("=" * 60)
+    raise SystemExit
+
+print("Doc cac file Excel P&L tu o X...")
 
 excel_files = [
     os.path.join(FOLDER_PATH, f)
@@ -44,11 +53,6 @@ print("Dang luu Parquet...")
 
 df.to_parquet(OUTPUT_FILE, index=False)
 print(f"  -> Da luu: {OUTPUT_FILE}")
-
-dashboard_file = os.path.join(DASHBOARD_DIR, "pnl_cache.parquet")
-if os.path.isdir(DASHBOARD_DIR):
-    shutil.copy(OUTPUT_FILE, dashboard_file)
-    print(f"  -> Da copy sang: {dashboard_file}")
 
 size_mb = os.path.getsize(OUTPUT_FILE) / 1024 / 1024
 print(f"\nXONG! Kich thuoc: {size_mb:.1f} MB")

@@ -7,11 +7,20 @@ import pandas as pd
 import os
 import shutil
 
-FOLDER_PATH   = r"C:\AI_Sale_rawdata"
-OUTPUT_FILE   = r"C:\AI_Sale_rawdata\data_cache.parquet"
+FOLDER_PATH   = r"X:\Finance 2.Controlling\Dashboard\AI_Sale_rawdata"
 DASHBOARD_DIR = r"C:\AI_Dashboard"
+OUTPUT_FILE   = os.path.join(DASHBOARD_DIR, "data_cache.parquet")
 
-print("Doc cac file Excel...")
+# Kiem tra ket noi o mang X truoc khi chay
+if not os.path.isdir(FOLDER_PATH):
+    print("=" * 60)
+    print("KHONG TRUY CAP DUOC O MANG X!")
+    print(f"Duong dan: {FOLDER_PATH}")
+    print("Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?")
+    print("=" * 60)
+    raise SystemExit
+
+print("Doc cac file Excel tu o X...")
 
 excel_files = [
     os.path.join(FOLDER_PATH, f)
@@ -43,15 +52,9 @@ if "MONTH" in df.columns:
 print(f"\nTong cong: {len(df):,} rows, {len(df.columns)} columns")
 print("Dang luu Parquet...")
 
-# Luu vao folder data
+# Luu thang vao folder code
 df.to_parquet(OUTPUT_FILE, index=False)
 print(f"  -> Da luu: {OUTPUT_FILE}")
-
-# Copy luon sang folder code (de app.py local doc duoc)
-dashboard_file = os.path.join(DASHBOARD_DIR, "data_cache.parquet")
-if os.path.isdir(DASHBOARD_DIR):
-    shutil.copy(OUTPUT_FILE, dashboard_file)
-    print(f"  -> Da copy sang: {dashboard_file}")
 
 size_mb = os.path.getsize(OUTPUT_FILE) / 1024 / 1024
 print(f"\nXONG! Kich thuoc: {size_mb:.1f} MB")
