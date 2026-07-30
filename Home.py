@@ -43,7 +43,7 @@ if not check_password():
 sales_page = st.Page("page_sales.py", title="Sales Dashboard", icon=":material/bar_chart:", default=True)
 pnl_page   = st.Page("page_pnl.py",   title="ROPA",   icon=":material/payments:")
 fc_page    = st.Page("page_forecast.py", title="Forecast vs Actual", icon=":material/insights:")
-kam_page   = st.Page("page_kam_mtd.py", title="KAM_MTD realtime", icon=":material/groups:")
+kam_page   = st.Page("page_kam_mtd.py", title="Sales_MTD realtime", icon=":material/groups:")
 
 # Trang "Realtime MTD Sale" da an khoi menu (khong dung nua).
 # Neu can dung lai: bo dau # o 2 dong duoi va them mtd_page vao st.navigation.

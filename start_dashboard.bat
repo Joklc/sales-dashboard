@@ -1,2 +1,29 @@
 @echo off
-python -m streamlit run "X:\Monthly Reporting\2026\Dashboard\AI_Dashboard\app.py" --server.port 8501 --server.headless true
+REM ============================================================
+REM  Mo SEB Dashboard (local)
+REM  Nhap dup file nay de mo dashboard, khong can go lenh.
+REM ============================================================
+
+title SEB Dashboard - DANG CHAY (dung dong cua so nay khi con xem dashboard)
+
+cd /d C:\AI_Dashboard
+
+echo ============================================================
+echo   Dang khoi dong SEB Dashboard...
+echo   Trinh duyet se tu mo sau vai giay.
+echo.
+echo   LUU Y:
+echo   - GIU cua so den nay mo trong luc xem dashboard.
+echo   - Bam nut "Refresh data" trong app de cap nhat so moi.
+echo   - Dong cua so nay (hoac bam Ctrl+C) khi muon tat dashboard.
+echo ============================================================
+echo.
+
+python -m streamlit run Home.py
+
+REM Neu streamlit thoat (loi hoac tat), giu cua so lai de doc thong bao
+echo.
+echo ============================================================
+echo   Dashboard da dung.
+echo ============================================================
+pause

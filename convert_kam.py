@@ -29,6 +29,7 @@ import os
 # DUONG DAN
 # ==================================================
 FOLDER        = r"X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data"
+DED_FOLDER    = r"X:\Finance 2.Controlling\Dashboard"   # rieng file deduction rate
 DASHBOARD_DIR = r"C:\AI_Dashboard"
 OUTPUT_FILE   = os.path.join(DASHBOARD_DIR, "kam_cache.parquet")
 
@@ -67,8 +68,15 @@ def need(name):
         raise SystemExit
 
 
-for fn in [F_ACT, F_SO, F_SQ, F_CUST, F_CMMF, F_PRSC_KAM, F_PRSC_FIN, F_DED]:
+# Duong dan day du cua file deduction rate (o folder rieng)
+DED_PATH = os.path.join(DED_FOLDER, F_DED)
+
+for fn in [F_ACT, F_SO, F_SQ, F_CUST, F_CMMF, F_PRSC_KAM, F_PRSC_FIN]:
     need(fn)
+
+if not os.path.exists(DED_PATH):
+    print(f"KHONG tim thay file deduction: {DED_PATH}")
+    raise SystemExit
 
 print("Doc cac bang tra cuu...")
 
@@ -93,7 +101,7 @@ pf = pd.read_excel(P(F_PRSC_FIN), sheet_name="PRSC_FIN", header=0)
 pf["K"] = clean_code(pf["Item code"])
 PRSC_F = pf.drop_duplicates("K").set_index("K")["PRSC - FIN"]
 
-ded = pd.read_excel(P(F_DED), sheet_name="MAPPING", header=1)
+ded = pd.read_excel(DED_PATH, sheet_name="MAPPING", header=1)
 ded["K"] = ded["DEALER NAME"].astype(str).str.strip().str.upper()
 DED_K = ded.drop_duplicates("K").set_index("K")["KAM"]
 DED_F = ded.drop_duplicates("K").set_index("K")["FIN"]

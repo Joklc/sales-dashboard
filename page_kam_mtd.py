@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import os
+import sys
+import subprocess
 import plotly.graph_objects as go
 import plotly.io as pio
 
@@ -102,6 +104,35 @@ as_of_str = pd.to_datetime(as_of).strftime("%d-%b-%Y %H:%M") if as_of is not Non
 
 st.sidebar.header("🔍 KAM MTD Filters")
 
+# ----- Nut Refresh: chay lai convert_kam.py de cap nhat so moi nhat -----
+CONVERT_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "convert_kam.py")
+
+if st.sidebar.button("🔄 Refresh data (chay lai mapping)", use_container_width=True):
+    if not os.path.exists(CONVERT_SCRIPT):
+        st.sidebar.error("Khong tim thay convert_kam.py")
+    else:
+        with st.spinner("Dang doc file moi va tinh lai... (co the mat 1-2 phut)"):
+            try:
+                result = subprocess.run(
+                    [sys.executable, CONVERT_SCRIPT],
+                    capture_output=True, text=True, timeout=600,
+                    cwd=os.path.dirname(CONVERT_SCRIPT),
+                )
+                if result.returncode == 0:
+                    load_kam.clear()          # xoa cache de doc parquet moi
+                    st.sidebar.success("Da cap nhat xong!")
+                    st.rerun()
+                else:
+                    st.sidebar.error("Co loi khi chay convert_kam.py")
+                    st.sidebar.code((result.stderr or result.stdout)[-1500:])
+            except subprocess.TimeoutExpired:
+                st.sidebar.error("Qua thoi gian cho (600s). Kiem tra ket noi o mang X.")
+            except Exception as e:
+                st.sidebar.error(f"Loi: {e}")
+
+st.sidebar.markdown("---")
+
+
 view = st.sidebar.radio("Costing view", ["KAM", "FIN"], horizontal=True,
                         help="KAM = Key Account view, FIN = Finance view. They differ in COGS → SGM.")
 NET = f"Net_{view}"
@@ -177,7 +208,7 @@ def stat_card(col, icon, icon_bg, icon_fg, label, value):
 
 st.markdown(f"""
 <div class="hero">
-  <div class="hero-title">⚡ KAM_MTD realtime</div>
+  <div class="hero-title">⚡ Sales_MTD realtime</div>
   <div class="hero-sub">Data updated at: {as_of_str}  •  Costing view: {view}</div>
   <div class="hero-kpis">
     <div class="hero-tile"><div class="lbl">Gross Sales</div><div class="val">{fmt_full(tot_gross)}</div><div class="sub">VND</div></div>
