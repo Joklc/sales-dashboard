@@ -204,7 +204,8 @@ df = pd.concat([ACT, SO, SQ], ignore_index=True)
 
 before = len(df)
 df = df[df["Channel"].astype(str).str.strip().str.upper() != "SEB"]
-print(f"  Bo Channel = SEB (noi bo): {before - len(df)} dong")
+df = df[df["MLA"].astype(str).str.strip().str.upper() != "SEB"]
+print(f"  Bo Channel = SEB / MLA = SEB (noi bo): {before - len(df)} dong")
 
 # ==================================================
 # TINH TOAN CUOI
