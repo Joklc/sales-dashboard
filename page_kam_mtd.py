@@ -104,13 +104,16 @@ as_of_str = pd.to_datetime(as_of).strftime("%d-%b-%Y %H:%M") if as_of is not Non
 
 st.sidebar.header("🔍 KAM MTD Filters")
 
-# ----- Nut Refresh: chay lai convert_kam.py de cap nhat so moi nhat -----
+# ----- Nut Refresh: CHI hien khi chay LOCAL (co convert_kam.py va vao duoc o mang) -----
+# Tren cloud: convert_kam.py van co nhung o mang X khong ton tai -> an nut de dong nghiep khong bam nham.
 CONVERT_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "convert_kam.py")
 
-if st.sidebar.button("🔄 Refresh data (chay lai mapping)", use_container_width=True):
-    if not os.path.exists(CONVERT_SCRIPT):
-        st.sidebar.error("Khong tim thay convert_kam.py")
-    else:
+# O mang chi ton tai o may local trong cong ty
+LOCAL_NETWORK_DRIVE = r"X:\Finance 2.Controlling"
+is_local = os.path.exists(CONVERT_SCRIPT) and os.path.isdir(LOCAL_NETWORK_DRIVE)
+
+if is_local:
+    if st.sidebar.button("🔄 Refresh data (chay lai mapping)", use_container_width=True):
         with st.spinner("Dang doc file moi va tinh lai... (co the mat 1-2 phut)"):
             try:
                 result = subprocess.run(
@@ -120,7 +123,7 @@ if st.sidebar.button("🔄 Refresh data (chay lai mapping)", use_container_width
                 )
                 if result.returncode == 0:
                     load_kam.clear()          # xoa cache de doc parquet moi
-                    st.sidebar.success("Da cap nhat xong!")
+                    st.sidebar.success("Da cap nhat xong! Nho git push de cloud cap nhat.")
                     st.rerun()
                 else:
                     st.sidebar.error("Co loi khi chay convert_kam.py")
@@ -129,8 +132,7 @@ if st.sidebar.button("🔄 Refresh data (chay lai mapping)", use_container_width
                 st.sidebar.error("Qua thoi gian cho (600s). Kiem tra ket noi o mang X.")
             except Exception as e:
                 st.sidebar.error(f"Loi: {e}")
-
-st.sidebar.markdown("---")
+    st.sidebar.markdown("---")
 
 
 view = st.sidebar.radio("Costing view", ["KAM", "FIN"], horizontal=True,
