@@ -1,103 +1,261 @@
 """
-Convert file MTD_KAM.xlsx (bang phang chi tiet, co 2 goc nhin KAM & FIN)
--> 1 file Parquet: kam_cache.parquet.
-Snapshot, khong theo thang. Moi lan co file moi, chay lai script nay.
+Convert 3 file Excel song tu SQL (ACT + SO + SQ) -> kam_cache.parquet
+TU DONG hoa toan bo buoc mapping (thay cho Power Query lam tay truoc day).
 
-Khac get_data: file nay co 2 bo so lieu costing
-  - KAM: Net + COGS + SGM theo goc Key Account
-  - FIN: Net + COGS + SGM theo goc Finance
-Net 2 goc gan nhu nhau, khac chu yeu o COGS -> SGM.
-Khong co Family 2, khong co ten khach (chi ma khach).
+Nguon (3 file tu SQL subscription, cap nhat moi 15 phut, nam trong o mang):
+  - Sales detail with COGS.xlsx   (ACT - da xuat hoa don)
+  - Sales Order Follow Up.xlsx     (SO  - don da dat, chua giao)
+  - Sales Quotation Status.xlsx    (SQ  - bao gia)
+
+Bang tra cuu (cung folder):
+  - Customer map.xlsx        : Customer code -> MLA NAME + CHANNEL NAME
+  - CMMF MAP.xlsx            : Item code -> Product Line
+  - PRSC_KAM-VAT.xlsx        : Item code -> PRSC KAM (don gia von)
+  - PRSC_FIN-VAT.xlsx        : Item code -> PRSC FIN
+  - Mapping deduction rate.xlsx : DEALER NAME -> rate KAM/FIN (dò theo MLA)
+
+Logic:
+  1. Moi file: gom nhom theo Customer + Item + Product Line (nhu PivotTable)
+  2. Map MLA/Channel (theo Customer), Product Line (theo Item), PRSC & deduction
+  3. SO & SQ: chi giu dong Net > 0 ; ACT: lay het
+  4. Ghep 3 file -> bo Channel = "SEB" (noi bo)
+  5. Tinh Net = Gross*(1-rate), COGS = PRSC*Qty, SGM = Net - COGS
+  6. Xuat kam_cache.parquet
 """
 import pandas as pd
 import os
-import shutil
 
-INPUT_FILE    = r"X:\Finance 2.Controlling\Dashboard\AI_KAM_rawdata\MTD_KAM.xlsx"
+# ==================================================
+# DUONG DAN
+# ==================================================
+FOLDER        = r"X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data"
 DASHBOARD_DIR = r"C:\AI_Dashboard"
 OUTPUT_FILE   = os.path.join(DASHBOARD_DIR, "kam_cache.parquet")
 
-# Kiem tra ket noi o mang X truoc khi chay
-RAWDATA_DIR = os.path.dirname(INPUT_FILE)
-if not os.path.isdir(RAWDATA_DIR):
+# Ten file nguon (doi o day neu ten file thay doi)
+F_ACT = "Sales detail with COGS.xlsx"
+F_SO  = "Sales Order Follow Up.xlsx"
+F_SQ  = "Sales Quotation Status.xlsx"
+F_CUST = "Customer map.xlsx"
+F_CMMF = "CMMF MAP.xlsx"
+F_PRSC_KAM = "PRSC_KAM-VAT.xlsx"
+F_PRSC_FIN = "PRSC_FIN-VAT.xlsx"
+F_DED = "Mapping deduction rate.xlsx"
+
+# Kiem tra ket noi o mang
+if not os.path.isdir(FOLDER):
     print("=" * 60)
     print("KHONG TRUY CAP DUOC O MANG X!")
-    print(f"Duong dan: {RAWDATA_DIR}")
+    print(f"Duong dan: {FOLDER}")
     print("Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?")
     print("=" * 60)
     raise SystemExit
 
-print("Doc file MTD_KAM.xlsx tu o X...")
 
-if not os.path.exists(INPUT_FILE):
-    print(f"KHONG tim thay file: {INPUT_FILE}")
-    raise SystemExit
+def P(name):
+    return os.path.join(FOLDER, name)
 
-# Header that o dong 6 (index 5), data tu dong 7
-raw = pd.read_excel(INPUT_FILE, sheet_name="Summary", header=5)
-raw = raw.dropna(axis=1, how="all")
+
+def clean_code(s):
+    """Chuan hoa ma so: bo .0 o duoi, bo khoang trang."""
+    return s.astype(str).str.strip().str.replace(r"\.0$", "", regex=True)
+
+
+def need(name):
+    if not os.path.exists(P(name)):
+        print(f"KHONG tim thay file: {name} trong {FOLDER}")
+        raise SystemExit
+
+
+for fn in [F_ACT, F_SO, F_SQ, F_CUST, F_CMMF, F_PRSC_KAM, F_PRSC_FIN, F_DED]:
+    need(fn)
+
+print("Doc cac bang tra cuu...")
 
 # ==================================================
-# LAM SACH: bo dong rong, dong header lap, dong toan so 0
+# BANG TRA CUU
 # ==================================================
-df = raw[raw["Item code"].notna()].copy()
-df = df[~df["Item code"].astype(str).isin(["Item code", "0", "0.0"])]
-df = df[~df["CHANNEL NAME"].astype(str).isin(["CHANNEL NAME", "0", "0.0"])]
+cust = pd.read_excel(P(F_CUST), header=0)
+cust["K"] = clean_code(cust["Customer code"])
+CUST_MLA = cust.drop_duplicates("K").set_index("K")["MLA NAME"]
+CUST_CH  = cust.drop_duplicates("K").set_index("K")["CHANNEL NAME"]
 
-# Doi ten cot ve chuan
-df = df.rename(columns={
-    "Customer code":                 "Customer",
-    "CHANNEL NAME":                  "Channel",
-    "MLA NAME":                      "MLA",
-    "Product Line":                  "Product Line",
-    "Item code":                     "Item code",
-    "Comm. code":                    "Comm code",
-    "Item name":                     "Item name",
-    "Sum of Quantity":               "Qty",
-    "Sum of Line Totalafter All DC": "Gross",
-    "NET SALE_KAM":                  "Net_KAM",
-    "COGS_KAM":                      "COGS_KAM",
-    "NET SALE_FIN":                  "Net_FIN",
-    "COGS_FIN":                      "COGS_FIN",
-})
+cmmf = pd.read_excel(P(F_CMMF), header=0)
+cmmf.columns = [str(c).strip() for c in cmmf.columns]
+cmmf["K"] = clean_code(cmmf["Item Code"])
+CMMF_PL = cmmf.drop_duplicates("K").set_index("K")["Product Line"]
 
-# Ep so
-for c in ["Qty", "Gross", "Net_KAM", "COGS_KAM", "Net_FIN", "COGS_FIN"]:
-    df[c] = pd.to_numeric(df[c], errors="coerce")
+pk = pd.read_excel(P(F_PRSC_KAM), sheet_name="PRSC_KAM", header=0)
+pk["K"] = clean_code(pk["Item code"])
+PRSC_K = pk.drop_duplicates("K").set_index("K")["PRSC -KAM"]
 
-# Tinh san SGM (so tien) cho ca 2 goc = Net - COGS
+pf = pd.read_excel(P(F_PRSC_FIN), sheet_name="PRSC_FIN", header=0)
+pf["K"] = clean_code(pf["Item code"])
+PRSC_F = pf.drop_duplicates("K").set_index("K")["PRSC - FIN"]
+
+ded = pd.read_excel(P(F_DED), sheet_name="MAPPING", header=1)
+ded["K"] = ded["DEALER NAME"].astype(str).str.strip().str.upper()
+DED_K = ded.drop_duplicates("K").set_index("K")["KAM"]
+DED_F = ded.drop_duplicates("K").set_index("K")["FIN"]
+
+
+# ==================================================
+# HAM XU LY 1 FILE NGUON
+# ==================================================
+def build_source(fname, sheet, header, col, net_gt0, cancel_col=None):
+    """Doc 1 file nguon, gom nhom, map, tra ve bang chuan.
+    cancel_col: neu co, chi giu dong co gia tri = 'N' (bo CANCELED Y/C)."""
+    df = pd.read_excel(P(fname), sheet_name=sheet, header=header)
+    df.columns = [str(c).strip() for c in df.columns]
+
+    # Bo dong Grand Total / dong tong / dong rong:
+    # cac dong nay thieu Customer code hoac Item code (NaN/rong)
+    cust_c, item_c = col["cust"], col["item"]
+    before_gt = len(df)
+    df = df[df[cust_c].notna() & df[item_c].notna()]
+    df = df[df[cust_c].astype(str).str.strip() != ""]
+    df = df[df[item_c].astype(str).str.strip() != ""]
+    # Phong truong hop chu "grand total" nam trong cot ten
+    for c in df.columns:
+        if df[c].dtype == object:
+            df = df[~df[c].astype(str).str.strip().str.lower().eq("grand total")]
+    removed_gt = before_gt - len(df)
+    if removed_gt:
+        print(f"    {fname}: bo {removed_gt} dong Grand Total / rong")
+
+    # Loc bo dong da huy (chi ap dung cho file co cot CANCELED, vd ACT)
+    if cancel_col and cancel_col in df.columns:
+        before = len(df)
+        df = df[df[cancel_col].astype(str).str.strip().str.upper() == "N"]
+        print(f"    {fname}: bo {before - len(df)} dong CANCELED (giu CANCELED = N)")
+
+    tmp = pd.DataFrame({
+        "Cust":  clean_code(df[col["cust"]]),
+        "Item":  clean_code(df[col["item"]]),
+        "Comm":  df[col["comm"]].astype(str).replace("nan", ""),
+        "Name":  df[col["name"]].astype(str).replace("nan", ""),
+        "Qty":   pd.to_numeric(df[col["qty"]], errors="coerce").fillna(0),
+        "Gross": pd.to_numeric(df[col["gross"]], errors="coerce").fillna(0),
+    })
+    # Product Line map theo Item code
+    tmp["PL"] = tmp["Item"].map(CMMF_PL)
+
+    # Gom nhom theo Customer + Item + Product Line (nhu PivotTable)
+    g = (tmp.groupby(["Cust", "Item", "PL"], observed=True, dropna=False)
+         .agg(Qty=("Qty", "sum"), Gross=("Gross", "sum"),
+              Comm=("Comm", "first"), Name=("Name", "first"))
+         .reset_index())
+
+    # Map MLA + Channel theo Customer
+    g["MLA"]     = g["Cust"].map(CUST_MLA)
+    g["Channel"] = g["Cust"].map(CUST_CH)
+
+    # Deduction rate theo MLA (dò vao DEALER NAME)
+    mkey = g["MLA"].astype(str).str.strip().str.upper()
+    g["rate_KAM"] = mkey.map(DED_K).fillna(0)
+    g["rate_FIN"] = mkey.map(DED_F).fillna(0)
+
+    # PRSC theo Item code
+    g["PRSC_KAM"] = g["Item"].map(PRSC_K).fillna(0)
+    g["PRSC_FIN"] = g["Item"].map(PRSC_F).fillna(0)
+
+    # Net KAM (dung de loc Net>0 cho SO/SQ)
+    g["Net_KAM"] = g["Gross"] * (1 - g["rate_KAM"])
+    if net_gt0:
+        g = g[g["Net_KAM"] > 0]
+
+    return g
+
+
+print("Doc & xu ly 3 file nguon (ACT + SO + SQ)...")
+
+ACT = build_source(
+    F_ACT, "Sales detail with COGS", 3,
+    dict(cust="Customer code", item="Item code", comm="Comm. code",
+         name="Item name", qty="Quantity", gross="Line Totalafter All DC"),
+    net_gt0=False, cancel_col="CANCELED")
+
+SO = build_source(
+    F_SO, "Sales Order Follow Up", 3,
+    dict(cust="Customer Code", item="Item Code", comm="Commerical code",
+         name="Item name", qty="SO Open Qty", gross="SO Actual Open Sum"),
+    net_gt0=True)
+
+SQ = build_source(
+    F_SQ, "Sales Quotation Status", 2,
+    dict(cust="Customer Code", item="Item Code", comm="Commerical code",
+         name="Item name", qty="Open Qty", gross="Actual Open Sum"),
+    net_gt0=True)
+
+print(f"  ACT: {len(ACT):,} dong | SO: {len(SO):,} dong | SQ: {len(SQ):,} dong")
+
+# ==================================================
+# GHEP 3 NGUON + BO CHANNEL = SEB
+# ==================================================
+df = pd.concat([ACT, SO, SQ], ignore_index=True)
+
+before = len(df)
+df = df[df["Channel"].astype(str).str.strip().str.upper() != "SEB"]
+print(f"  Bo Channel = SEB (noi bo): {before - len(df)} dong")
+
+# ==================================================
+# TINH TOAN CUOI
+# ==================================================
+df["Net_KAM"] = df["Gross"] * (1 - df["rate_KAM"])
+df["Net_FIN"] = df["Gross"] * (1 - df["rate_FIN"])
+df["COGS_KAM"] = df["PRSC_KAM"] * df["Qty"]
+df["COGS_FIN"] = df["PRSC_FIN"] * df["Qty"]
 df["SGM_KAM"] = df["Net_KAM"] - df["COGS_KAM"]
 df["SGM_FIN"] = df["Net_FIN"] - df["COGS_FIN"]
 
-# Cot text
-for c in ["Customer", "Channel", "MLA", "Product Line", "Item code", "Comm code", "Item name"]:
-    df[c] = df[c].astype(str).replace("nan", "")
+# Doi ten cot ve chuan ma page_kam_mtd.py can
+out = pd.DataFrame({
+    "Channel":      df["Channel"].astype(str).replace("nan", ""),
+    "MLA":          df["MLA"].astype(str).replace("nan", ""),
+    "Customer":     df["Cust"].astype(str),
+    "Product Line": df["PL"].astype(str).replace("nan", ""),
+    "Item code":    df["Item"].astype(str),
+    "Comm code":    df["Comm"].astype(str),
+    "Item name":    df["Name"].astype(str),
+    "Qty":          pd.to_numeric(df["Qty"], errors="coerce").fillna(0),
+    "Gross":        pd.to_numeric(df["Gross"], errors="coerce").fillna(0),
+    "Net_KAM":      df["Net_KAM"],
+    "SGM_KAM":      df["SGM_KAM"],
+    "Net_FIN":      df["Net_FIN"],
+    "SGM_FIN":      df["SGM_FIN"],
+})
 
-keep = ["Channel", "MLA", "Customer", "Product Line", "Item code", "Comm code",
-        "Item name", "Qty", "Gross", "Net_KAM", "SGM_KAM", "Net_FIN", "SGM_FIN"]
-df = df[keep].copy()
-
-# As of = thoi diem chay convert
 as_of = pd.Timestamp.now()
-df["As_of"] = as_of
+out["As_of"] = as_of
 
 # ==================================================
 # KIEM TRA NHANH
 # ==================================================
 def pct(n, d): return n / d * 100 if d else 0
-g = df["Gross"].sum()
-print(f"\nAs of: {as_of:%d-%b-%Y %H:%M}")
-print(f"So dong chi tiet: {len(df)}")
-print(f"So Channel: {df['Channel'].nunique()} | MLA: {df['MLA'].nunique()} | Item: {df['Item code'].nunique()}")
-print(f"Tong Gross  : {g:,.0f}")
-print(f"[KAM] Net {df['Net_KAM'].sum():,.0f} | SGM% {pct(df['SGM_KAM'].sum(), df['Net_KAM'].sum()):.2f}%")
-print(f"[FIN] Net {df['Net_FIN'].sum():,.0f} | SGM% {pct(df['SGM_FIN'].sum(), df['Net_FIN'].sum()):.2f}%")
+
+g = out["Gross"].sum()
+print("\n" + "=" * 60)
+print(f"As of: {as_of:%d-%b-%Y %H:%M}")
+print(f"So dong chi tiet: {len(out):,}")
+print(f"So Channel: {out['Channel'].nunique()} | MLA: {out['MLA'].nunique()} | Item: {out['Item code'].nunique()}")
+print(f"Tong Gross : {g:,.0f}")
+nk, sk = out["Net_KAM"].sum(), out["SGM_KAM"].sum()
+nf, sf = out["Net_FIN"].sum(), out["SGM_FIN"].sum()
+print(f"[KAM] Net {nk:,.0f} | SGM% {pct(sk, nk):.2f}%")
+print(f"[FIN] Net {nf:,.0f} | SGM% {pct(sf, nf):.2f}%")
+
+# Canh bao neu co dong khong map duoc
+n_no_mla = (out["MLA"] == "").sum() + out["MLA"].isna().sum()
+n_no_pl  = (out["Product Line"] == "").sum()
+if n_no_mla:
+    print(f"  ! Co {n_no_mla} dong khong map duoc MLA (kiem tra Customer map)")
+if n_no_pl:
+    print(f"  ! Co {n_no_pl} dong khong map duoc Product Line (kiem tra CMMF MAP)")
 
 # ==================================================
 # LUU
 # ==================================================
-df.to_parquet(OUTPUT_FILE, index=False)
+out.to_parquet(OUTPUT_FILE, index=False)
 print(f"\n  -> Da luu: {OUTPUT_FILE}")
-
 print("\nXONG!")
-print("Buoc tiep: 1) Restart app  2) Upload kam_cache.parquet len GitHub")
+print("Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)")
