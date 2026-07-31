@@ -44,6 +44,18 @@ st.markdown("""
     .hero-tile .lbl { color: #dbe7ff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
     .hero-tile .val { color: #ffffff; font-size: 22px; font-weight: 800; margin-top: 4px; }
     .hero-tile .sub { color: #b9d0ff; font-size: 11px; margin-top: 2px; }
+
+    /* Header cac bang st.dataframe: nen xam dam, chu trang */
+    [data-testid="stDataFrame"] thead tr th {
+        background-color: #475569 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+    [data-testid="stDataFrame"] [role="columnheader"] {
+        background-color: #475569 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 

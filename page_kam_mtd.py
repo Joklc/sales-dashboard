@@ -60,6 +60,18 @@ st.markdown("""
     }
     .statcard .val { font-size: 24px; font-weight: 800; color: #ffffff; line-height: 1.1; }
     .statcard .lbl { font-size: 11px; font-weight: 600; color: #cfe0ff; text-transform: uppercase; letter-spacing: .03em; margin-top: 6px; }
+
+    /* Header cac bang st.dataframe: nen xam dam, chu trang */
+    [data-testid="stDataFrame"] thead tr th {
+        background-color: #475569 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+    [data-testid="stDataFrame"] [role="columnheader"] {
+        background-color: #475569 !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
