@@ -25,8 +25,7 @@ pio.templates.default = "seb_dark"
 st.markdown("""
 <style>
     [data-testid="stAppViewContainer"], .stApp {
-        background-color: #f1f5f9;
-        background-image: linear-gradient(180deg, #334155 0px, #475569 220px, rgba(241,245,249,0) 480px);
+        background-color: #e2e8f0;
         background-repeat: no-repeat;
     }
     .hero {
@@ -34,12 +33,12 @@ st.markdown("""
         border-radius: 18px; padding: 18px 6px 16px 6px;
         margin-bottom: 14px;
     }
-    .hero-title { color: #ffffff; font-size: 28px; font-weight: 800; margin: 0; line-height: 1.1; }
-    .hero-sub   { color: #c7dbff; font-size: 13px; margin: 6px 0 18px 0; }
+    .hero-title { color: #1e293b; font-size: 28px; font-weight: 800; margin: 0; line-height: 1.1; }
+    .hero-sub   { color: #64748b; font-size: 13px; margin: 6px 0 18px 0; }
     .hero-kpis  { display: flex; gap: 14px; flex-wrap: wrap; }
     .hero-tile  {
-        flex: 1; min-width: 150px; background: rgba(255,255,255,0.13);
-        border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 14px 16px;
+        flex: 1; min-width: 150px; background: #3b82f6;
+        border: 1px solid #3b82f6; border-radius: 12px; padding: 14px 16px;
         backdrop-filter: blur(4px);
     }
     .hero-tile .lbl { color: #dbe7ff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
