@@ -244,10 +244,10 @@ st.markdown(f"""
   <div class="hero-title">💵 ROPA</div>
   <div class="hero-sub">Actual N vs Budget vs Last Year</div>
   <div class="hero-kpis">
-    <div class="hero-tile"><div class="lbl">Sales</div><div class="val">{fmt_abbr(sales_act)}</div><div class="sub">{_sales_var:+.1f}% vs BUD</div></div>
-    <div class="hero-tile"><div class="lbl">Standard GM</div><div class="val">{fmt_abbr(sgm_act)}</div><div class="sub">{safe_pct(sgm_act, sales_act):.1f}% of Sales</div></div>
-    <div class="hero-tile"><div class="lbl">Gross Margin</div><div class="val">{fmt_abbr(gm_act)}</div><div class="sub">{safe_pct(gm_act, sales_act):.1f}% of Sales</div></div>
-    <div class="hero-tile"><div class="lbl">ROPA</div><div class="val">{fmt_abbr(ropa_act)}</div><div class="sub">{safe_pct(ropa_act, sales_act):.1f}% of Sales</div></div>
+    <div class="hero-tile"><div class="lbl">Sales</div><div class="val">{fmt_abbr(sales_act)}</div><div class="sub">KEUR • {_sales_var:+.1f}% vs BUD</div></div>
+    <div class="hero-tile"><div class="lbl">Standard GM</div><div class="val">{fmt_abbr(sgm_act)}</div><div class="sub">KEUR • {safe_pct(sgm_act, sales_act):.1f}% of Sales</div></div>
+    <div class="hero-tile"><div class="lbl">Gross Margin</div><div class="val">{fmt_abbr(gm_act)}</div><div class="sub">KEUR • {safe_pct(gm_act, sales_act):.1f}% of Sales</div></div>
+    <div class="hero-tile"><div class="lbl">ROPA</div><div class="val">{fmt_abbr(ropa_act)}</div><div class="sub">KEUR • {safe_pct(ropa_act, sales_act):.1f}% of Sales</div></div>
   </div>
 </div>
 """, unsafe_allow_html=True)

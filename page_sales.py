@@ -355,9 +355,9 @@ st.markdown(f"""
   <div class="hero-title">📊 Sales Dashboard — {period_label}</div>
   <div class="hero-sub">Net Sales — Actual vs Budget vs Last Year</div>
   <div class="hero-kpis">
-    <div class="hero-tile"><div class="lbl">NS Actual</div><div class="val">{fmt_full(ns_act)}</div><div class="sub">{variance_bud:+.1f}% vs BUD</div></div>
-    <div class="hero-tile"><div class="lbl">NS Budget</div><div class="val">{fmt_full(ns_bud)}</div><div class="sub">target</div></div>
-    <div class="hero-tile"><div class="lbl">NS Last Year</div><div class="val">{fmt_full(ns_ly)}</div><div class="sub">{growth_ly:+.1f}% YoY</div></div>
+    <div class="hero-tile"><div class="lbl">NS Actual</div><div class="val">{fmt_full(ns_act)}</div><div class="sub">KVND • {variance_bud:+.1f}% vs BUD</div></div>
+    <div class="hero-tile"><div class="lbl">NS Budget</div><div class="val">{fmt_full(ns_bud)}</div><div class="sub">KVND • target</div></div>
+    <div class="hero-tile"><div class="lbl">NS Last Year</div><div class="val">{fmt_full(ns_ly)}</div><div class="sub">KVND • {growth_ly:+.1f}% YoY</div></div>
     <div class="hero-tile"><div class="lbl">Achievement</div><div class="val">{achievement:.1f}%</div><div class="sub">{achievement-100:+.1f}pp vs target</div></div>
   </div>
 </div>
@@ -367,7 +367,7 @@ q1, q2, q3, q4 = st.columns(4)
 stat_card(q1, "📈", "#eff4ff", "#2563eb", "Variance vs BUD", f"{variance_bud:+.1f}%")
 stat_card(q2, "🚀", "#eafaf1", "#16a34a", "Growth vs LY", f"{growth_ly:+.1f}%")
 stat_card(q3, "💰", "#f3eefe", "#7c3aed", "SGM% Actual", f"{_sgm_pct:.1f}%" if has_sgm else "—")
-stat_card(q4, "🧾", "#fef3e8", "#ea7a0c", "SGM Value", fmt_full(_sgm_act) if has_sgm else "—")
+stat_card(q4, "🧾", "#fef3e8", "#ea7a0c", "SGM Value (KVND)", fmt_full(_sgm_act) if has_sgm else "—")
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ==================================================
