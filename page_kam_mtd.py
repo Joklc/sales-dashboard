@@ -28,8 +28,8 @@ st.markdown("""
 <style>
     /* ===== Nen trang: xanh phia tren, mo dan xuong sang ===== */
     [data-testid="stAppViewContainer"], .stApp {
-        background-color: #f4f7fb;
-        background-image: linear-gradient(180deg, #1e3a8a 0px, #2563eb 320px, rgba(244,247,251,0) 600px);
+        background-color: #f1f5f9;
+        background-image: linear-gradient(180deg, #334155 0px, #475569 220px, rgba(241,245,249,0) 480px);
         background-repeat: no-repeat;
     }
     .hero {
@@ -41,8 +41,8 @@ st.markdown("""
     .hero-sub   { color: #c7dbff; font-size: 13px; margin: 6px 0 18px 0; }
     .hero-kpis  { display: flex; gap: 14px; flex-wrap: wrap; }
     .hero-tile  {
-        flex: 1; min-width: 150px; background: rgba(255,255,255,0.13);
-        border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 14px 16px;
+        flex: 1; min-width: 150px; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        border: 1px solid #1e3a8a; border-radius: 12px; padding: 14px 16px;
         backdrop-filter: blur(4px);
     }
     .hero-tile .lbl { color: #dbe7ff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
@@ -69,7 +69,8 @@ st.markdown("""
 # ==================================================
 
 KAM_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kam_cache.parquet")
-COLORS = {"ACT": "#2563eb", "BUD": "#9ca3af", "LY": "#f59e0b"}
+COLORS = {"ACT": "#2563eb", "BUD": "#9ca3af", "LY": "#f59e0b",
+          "POS": "#16a34a", "NEG": "#dc2626"}
 
 def safe_pct(num, den):
     return num / den * 100 if den else 0
@@ -78,7 +79,7 @@ def safe_pct(num, den):
 # LOAD DATA
 # ==================================================
 
-@st.cache_data(show_spinner="Loading KAM MTD data...")
+@st.cache_data(show_spinner="Loading Sales MTD data...")
 def load_kam(path):
     if not os.path.exists(path):
         return pd.DataFrame()
@@ -90,7 +91,7 @@ try:
         st.error("File kam_cache.parquet not found. Please run convert_kam.py first.")
         st.stop()
 except Exception as e:
-    st.error(f"Error reading KAM data: {e}")
+    st.error(f"Error reading Sales MTD data: {e}")
     st.stop()
 
 as_of = df["As_of"].iloc[0] if "As_of" in df.columns and len(df) else None
@@ -102,7 +103,7 @@ as_of_str = pd.to_datetime(as_of).strftime("%d-%b-%Y %H:%M") if as_of is not Non
 # SIDEBAR: chọn góc nhìn KAM/FIN + filter
 # ==================================================
 
-st.sidebar.header("🔍 KAM MTD Filters")
+st.sidebar.header("🔍 Sales MTD Filters")
 
 # ----- Nut Refresh: CHI hien khi chay LOCAL (co convert_kam.py va vao duoc o mang) -----
 # Tren cloud: convert_kam.py van co nhung o mang X khong ton tai -> an nut de dong nghiep khong bam nham.
@@ -135,7 +136,7 @@ if is_local:
     st.sidebar.markdown("---")
 
 
-view = st.sidebar.radio("Costing view", ["KAM", "FIN"], horizontal=True,
+view = st.sidebar.radio("View as", ["KAM", "FIN"], horizontal=True,
                         help="KAM = Key Account view, FIN = Finance view. They differ in COGS → SGM.")
 NET = f"Net_{view}"
 SGM = f"SGM_{view}"
@@ -245,8 +246,9 @@ fmt = {"Gross": "{:,.0f}", "Net": "{:,.0f}", "Deduction": "{:,.0f}",
 # TABS
 # ==================================================
 
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 By Channel", "👤 By MLA", "📦 By Product Line", "📋 Detail Table"
+tab1, tab2, tab3, tab5, tab4 = st.tabs([
+    "📊 By Channel", "👤 By MLA", "📦 By Product Line",
+    "🧩 Contribution Mix", "📋 Detail Table"
 ])
 
 # ---- By Channel ----
@@ -319,6 +321,170 @@ with tab3:
     with col_b:
         st.dataframe(pl[["Product Line", "Gross", "Net", "Deduction", "SGM", "SGM%"]]
                      .style.format(fmt), use_container_width=True, hide_index=True, height=380)
+
+# ---- Contribution Mix ----
+with tab5:
+    st.subheader(f"Contribution Mix — {view} view")
+    st.caption("Moi MLA dong gop bao nhieu Net vao tung Product Line, ty trong %, va SGM%.")
+
+    # ===== Bang MLA x Product Line (Actual) =====
+    piv_net = dff.pivot_table(index="MLA", columns="Product Line",
+                              values="Net", aggfunc="sum", observed=True).fillna(0)
+    piv_net["TOTAL"] = piv_net.sum(axis=1)
+    piv_net = piv_net.sort_values("TOTAL", ascending=False)
+
+    grand_total = piv_net["TOTAL"].sum()
+    piv_show = piv_net.copy()
+    piv_show["Mix %"] = piv_show["TOTAL"] / grand_total * 100 if grand_total else 0
+
+    st.markdown("#### Net Sales by MLA × Product Line")
+    num_cols = [c for c in piv_show.columns if c != "Mix %"]
+    fmt_piv = {c: "{:,.0f}" for c in num_cols}
+    fmt_piv["Mix %"] = "{:.1f}%"
+    st.dataframe(
+        piv_show.style.format(fmt_piv),
+        use_container_width=True, height=460
+    )
+
+    # ===== So sanh Product Line: Actual vs F5+7 =====
+    st.markdown("---")
+    st.markdown("#### Actual vs Forecast — by Product Line")
+
+    FC_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "forecast_cache.parquet")
+
+    if not os.path.exists(FC_FILE):
+        st.info("Chua co forecast_cache.parquet. Chay convert_forecast.py de so voi F5+7.")
+    else:
+        df_fc = pd.read_parquet(FC_FILE)
+        MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+        # Bang anh xa ten Product Line: Forecast (AND) -> Actual (&)
+        PL_MAP = {
+            "COOKWARE AND BAKEWARE":      "COOKWARE & BAKEWARE",
+            "KITCHENWARE AND DINNERWARE": "KITCHENWARE & DINNER",
+            "SPARE PARTS AND OTHERS":     "SPARE PARTS & OTHERS",
+        }
+
+        def norm_pl(s):
+            s = " ".join(str(s).strip().upper().split())
+            return PL_MAP.get(s, s)
+
+        fc_rounds = sorted(df_fc["Forecast"].dropna().unique())
+        fc_months = [m for m in MONTH_ORDER if m in df_fc["MONTH"].unique()]
+
+        c1, c2 = st.columns(2)
+        sel_round = c1.selectbox("Forecast round", fc_rounds,
+                                 index=fc_rounds.index("F5+7") if "F5+7" in fc_rounds else 0)
+        # Mac dinh thang moi nhat co forecast
+        sel_m = c2.selectbox("Month (so Actual MTD voi thang nay cua forecast)",
+                             fc_months, index=len(fc_months) - 1 if fc_months else 0)
+
+        fc = df_fc[(df_fc["Forecast"] == sel_round) & (df_fc["MONTH"] == sel_m)].copy()
+        # F5+7 theo KVND (nghin VND), KAM theo VND day du -> nhan forecast x 1000
+        FC_UNIT = 1000
+        fc_pl = (fc.groupby("Product Line", as_index=False, observed=True)
+                 .agg(NS_FC=("NS_FC", "sum"), SGM_FC=("SGM_FC", "sum")))
+        fc_pl["NS_FC"] = fc_pl["NS_FC"] * FC_UNIT
+        fc_pl["SGM_FC"] = fc_pl["SGM_FC"] * FC_UNIT
+        fc_pl["KEY"] = fc_pl["Product Line"].map(norm_pl)
+        # Gop lai neu nhieu ten forecast tro ve cung 1 ten chuan
+        fc_pl = fc_pl.groupby("KEY", as_index=False).agg(
+            NS_FC=("NS_FC", "sum"), SGM_FC=("SGM_FC", "sum"))
+
+        # Actual theo Product Line (tu KAM dang loc)
+        act_pl = (dff.groupby("Product Line", as_index=False, observed=True)
+                  .agg(NS_ACT=("Net", "sum"), SGM_ACT=("SGM", "sum")))
+        act_pl["KEY"] = act_pl["Product Line"].map(norm_pl)
+        act_pl = act_pl.groupby("KEY", as_index=False).agg(
+            NS_ACT=("NS_ACT", "sum"), SGM_ACT=("SGM_ACT", "sum"))
+
+        cmp = act_pl.merge(fc_pl, on="KEY", how="outer")
+        cmp["Product Line"] = cmp["KEY"].str.title()
+        for c in ["NS_ACT", "SGM_ACT", "NS_FC", "SGM_FC"]:
+            cmp[c] = pd.to_numeric(cmp[c], errors="coerce").fillna(0)
+        cmp = cmp[(cmp["NS_ACT"] != 0) | (cmp["NS_FC"] != 0)]
+
+        cmp["GAP"] = cmp["NS_ACT"] - cmp["NS_FC"]
+        cmp["VAR_%"] = cmp.apply(lambda r: safe_pct(r["NS_ACT"] - r["NS_FC"], r["NS_FC"]), axis=1)
+        cmp["SGM%_ACT"] = cmp.apply(lambda r: safe_pct(r["SGM_ACT"], r["NS_ACT"]), axis=1)
+        cmp["SGM%_FC"] = cmp.apply(lambda r: safe_pct(r["SGM_FC"], r["NS_FC"]), axis=1)
+        cmp = cmp.sort_values("NS_ACT", ascending=False)
+
+        show_cmp = cmp[["Product Line", "NS_ACT", "NS_FC", "GAP", "VAR_%",
+                        "SGM%_ACT", "SGM%_FC"]].copy()
+        show_cmp["SGM_GAP"] = show_cmp["SGM%_ACT"] - show_cmp["SGM%_FC"]
+        show_cmp.columns = ["Product Line", "NS Actual", f"NS {sel_round}", "Gap", "Var %",
+                            "SGM% Act", "SGM% FC", "SGM% gap"]
+
+        # ----- Dong Grand Total -----
+        t_act = cmp["NS_ACT"].sum()
+        t_fc  = cmp["NS_FC"].sum()
+        t_sgm_act = cmp["SGM_ACT"].sum()
+        t_sgm_fc  = cmp["SGM_FC"].sum()
+        gt_sgm_act = safe_pct(t_sgm_act, t_act)
+        gt_sgm_fc  = safe_pct(t_sgm_fc, t_fc)
+        grand = {
+            "Product Line": "GRAND TOTAL",
+            "NS Actual": t_act,
+            f"NS {sel_round}": t_fc,
+            "Gap": t_act - t_fc,
+            "Var %": safe_pct(t_act - t_fc, t_fc),
+            "SGM% Act": gt_sgm_act,
+            "SGM% FC": gt_sgm_fc,
+            "SGM% gap": gt_sgm_act - gt_sgm_fc,
+        }
+        show_cmp = pd.concat([show_cmp, pd.DataFrame([grand])], ignore_index=True)
+
+        def color_pn(v):
+            try:
+                v = float(v)
+            except (TypeError, ValueError):
+                return ""
+            if v > 0: return "color: #16a34a; font-weight: 700;"
+            if v < 0: return "color: #dc2626; font-weight: 700;"
+            return ""
+
+        def bold_total(row):
+            if str(row["Product Line"]).strip().upper() == "GRAND TOTAL":
+                return ["font-weight: 800; border-top: 2px solid #94a3b8;"] * len(row)
+            return [""] * len(row)
+
+        # ===== Bo tri 2 cot: bang trai, chart Gap ngang phai =====
+        col_tbl, col_chart = st.columns([1.25, 1])
+
+        with col_tbl:
+            st.dataframe(
+                show_cmp.style.format({
+                    "NS Actual": "{:,.0f}", f"NS {sel_round}": "{:,.0f}", "Gap": "{:,.0f}",
+                    "Var %": "{:+.1f}%", "SGM% Act": "{:.2f}%", "SGM% FC": "{:.2f}%",
+                    "SGM% gap": "{:+.2f}",
+                }).apply(bold_total, axis=1)
+                  .map(color_pn, subset=["Gap", "Var %", "SGM% gap"]),
+                use_container_width=True, hide_index=True, height=430
+            )
+
+        with col_chart:
+            gap_df = cmp.sort_values("GAP")   # am truoc, duong sau
+            bar_colors = [COLORS["POS"] if g >= 0 else COLORS["NEG"] for g in gap_df["GAP"]]
+            fig_gap = go.Figure(go.Bar(
+                y=gap_df["Product Line"], x=gap_df["GAP"], orientation="h",
+                marker_color=bar_colors,
+                text=[f"{g/1e9:+.1f}B" for g in gap_df["GAP"]],
+                textposition="outside", cliponaxis=False,
+            ))
+            fig_gap.add_vline(x=0, line_color="#94a3b8", line_width=1)
+            fig_gap.update_layout(
+                template="seb_dark", height=430,
+                margin=dict(t=40, b=20, l=10, r=60),
+                xaxis_title="Gap vs Forecast (Actual − F5+7)",
+                showlegend=False,
+                title=f"Gap vs {sel_round} ({sel_m}) by Product Line",
+            )
+            st.plotly_chart(fig_gap, use_container_width=True)
+
+        st.caption("Luu y: Forecast F5+7 khong chia theo MLA, nen phan so sanh nay gom ve Product Line.  "
+                   "Chart Gap: xanh = vuot forecast, do = hut forecast.")
 
 # ---- Detail Table ----
 with tab4:

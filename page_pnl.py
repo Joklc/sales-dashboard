@@ -33,8 +33,8 @@ st.markdown("""
 <style>
     /* ===== Nen trang: xanh phia tren, mo dan xuong sang ===== */
     [data-testid="stAppViewContainer"], .stApp {
-        background-color: #f4f7fb;
-        background-image: linear-gradient(180deg, #1e3a8a 0px, #2563eb 320px, rgba(244,247,251,0) 600px);
+        background-color: #f1f5f9;
+        background-image: linear-gradient(180deg, #334155 0px, #475569 220px, rgba(241,245,249,0) 480px);
         background-repeat: no-repeat;
     }
     .hero {
