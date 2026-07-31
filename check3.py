@@ -1,0 +1,10 @@
+﻿import pandas as pd
+d = pd.read_parquet('kam_cache.parquet')
+print("Kieu cot Product Line:", d['Product Line'].dtype)
+print("Tong Net_KAM (khong groupby):", f"{d['Net_KAM'].sum():,.0f}")
+d['PL2'] = d['Product Line'].astype(str).str.strip()
+g = d.groupby('PL2', observed=True)['Net_KAM'].sum()
+print("Tong sau khi ep string:", f"{g.sum():,.0f}")
+print("So nhom:", len(g))
+print("So PL goc unique:", d['Product Line'].nunique())
+print("So PL sau strip:", d['PL2'].nunique())
