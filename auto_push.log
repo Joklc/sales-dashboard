@@ -1,0 +1,1360 @@
+============================================================ 
+[31-Jul-26 21:51:07.91] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,891 dong | SO: 196 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 31-Jul-2026 21:51
+So dong chi tiet: 7,071
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 73,049,589,563
+[KAM] Net 58,907,187,289 | SGM% 27.06%
+[FIN] Net 58,616,828,883 | SGM% 37.61%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 01cdbf5] Auto update KAM 31-Jul-26 21:52:00.50
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   e46f58f..01cdbf5  main -> main
+[31-Jul-26 21:52:07.46] Xong 
+============================================================ 
+[31-Jul-26 21:52:23.78] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,891 dong | SO: 196 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 31-Jul-2026 21:53
+So dong chi tiet: 7,071
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 73,049,589,563
+[KAM] Net 58,907,187,289 | SGM% 27.06%
+[FIN] Net 58,616,828,883 | SGM% 37.61%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main b77ec92] Auto update KAM 31-Jul-26 21:53:05.66
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   01cdbf5..b77ec92  main -> main
+[31-Jul-26 21:53:12.15] Xong 
+============================================================ 
+[31-Jul-26 22:13:38.87] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,891 dong | SO: 196 dong | SQ: 24 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 31-Jul-2026 22:14
+So dong chi tiet: 7,087
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 75,053,558,233
+[KAM] Net 60,911,155,959 | SGM% 27.55%
+[FIN] Net 60,620,797,553 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 00eec73] Auto update KAM 31-Jul-26 22:14:29.53
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   b77ec92..00eec73  main -> main
+[31-Jul-26 22:14:37.48] Xong 
+============================================================ 
+[31-Jul-26 23:29:45.41] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 195 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 31-Jul-2026 23:30
+So dong chi tiet: 7,075
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 75,054,587,619
+[KAM] Net 60,912,185,345 | SGM% 27.55%
+[FIN] Net 60,621,826,939 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 4d8da86] Auto update KAM 31-Jul-26 23:30:10.79
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: remote helper 'https' aborted session
+^C============================================================ 
+[31-Jul-26 23:45:01.83] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 195 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 31-Jul-2026 23:45
+So dong chi tiet: 7,075
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 75,054,587,619
+[KAM] Net 60,912,185,345 | SGM% 27.55%
+[FIN] Net 60,621,826,939 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 880c34f] Auto update KAM 31-Jul-26 23:45:24.39
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   00eec73..880c34f  main -> main
+[31-Jul-26 23:45:29.85] Xong 
+============================================================ 
+[01-Aug-26  9:35:29.83] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[01-Aug-26  9:36:37.16] Khong co thay doi data - khong push 
+============================================================ 
+[01-Aug-26  9:45:02.03] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 195 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 01-Aug-2026 09:45
+So dong chi tiet: 7,075
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 75,054,587,619
+[KAM] Net 60,912,185,345 | SGM% 27.55%
+[FIN] Net 60,621,826,939 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 628b8c2] Auto update KAM 01-Aug-26  9:45:32.28
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   880c34f..628b8c2  main -> main
+[01-Aug-26  9:45:36.26] Xong 
+============================================================ 
+[01-Aug-26  9:50:26.87] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 195 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 01-Aug-2026 09:50
+So dong chi tiet: 7,075
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 75,054,587,619
+[KAM] Net 60,912,185,345 | SGM% 27.55%
+[FIN] Net 60,621,826,939 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 880c25d] Auto update KAM 01-Aug-26  9:50:48.40
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   628b8c2..880c25d  main -> main
+[01-Aug-26  9:50:52.16] Xong 
+============================================================ 
+[01-Aug-26 10:00:01.79] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 195 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 01-Aug-2026 10:00
+So dong chi tiet: 7,075
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 75,054,587,619
+[KAM] Net 60,912,185,345 | SGM% 27.55%
+[FIN] Net 60,621,826,939 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 64c27dd] Auto update KAM 01-Aug-26 10:00:33.83
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   880c25d..64c27dd  main -> main
+[01-Aug-26 10:00:37.84] Xong 
+============================================================ 
+[01-Aug-26 10:05:26.93] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 193 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 01-Aug-2026 10:05
+So dong chi tiet: 7,073
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 75,011,343,619
+[KAM] Net 60,868,941,345 | SGM% 27.56%
+[FIN] Net 60,578,582,939 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 765fb84] Auto update KAM 01-Aug-26 10:05:48.54
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   64c27dd..765fb84  main -> main
+[01-Aug-26 10:05:52.54] Xong 
+============================================================ 
+[01-Aug-26 10:15:02.95] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+Traceback (most recent call last):
+  File "C:\AI_Dashboard\convert_kam.py", line 180, in <module>
+    ACT = build_source(
+        F_ACT, "Sales detail with COGS", 3,
+        dict(cust="Customer code", item="Item code", comm="Comm. code",
+             name="Item name", qty="Quantity", gross="Line Totalafter All DC"),
+        net_gt0=False, cancel_col="CANCELED")
+  File "C:\AI_Dashboard\convert_kam.py", line 116, in build_source
+    df = pd.read_excel(P(fname), sheet_name=sheet, header=header)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 481, in read_excel
+    io = ExcelFile(
+        io,
+    ...<2 lines>...
+        engine_kwargs=engine_kwargs,
+    )
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 1621, in __init__
+    self._reader = self._engines[engine](
+                   ~~~~~~~~~~~~~~~~~~~~~^
+        self._io,
+        ^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 560, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        filepath_or_buffer,
+        ^^^^^^^^^^^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 554, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 579, in load_workbook
+    return load_workbook(
+        filepath_or_buffer,
+        **(default_kwargs | engine_kwargs),
+    )
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 303, in read
+    self.read_worksheets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 228, in read_worksheets
+    ws = ReadOnlyWorksheet(self.wb, sheet.name, rel.target, self.shared_strings)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_read_only.py", line 42, in __init__
+    self._get_size()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_read_only.py", line 49, in _get_size
+    dimensions = parser.parse_dimensions()
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_reader.py", line 178, in parse_dimensions
+    for _event, element in it:
+                           ^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\xml\etree\ElementTree.py", line 1262, in iterator
+    data = source.read(16 * 1024)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1105, in read
+    data = self._read1(n)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1173, in _read1
+    data += self._read2(n - len(data))
+            ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1205, in _read2
+    data = self._fileobj.read(n)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 924, in read
+    data = self._file.read(n)
+FileNotFoundError: [Errno 2] No such file or directory
+[01-Aug-26 10:15:51.54] LOI convert_kam.py - bo qua lan nay 
+============================================================ 
+[01-Aug-26 10:20:27.41] Bat dau 
+^C============================================================ 
+[01-Aug-26 10:30:02.43] Bat dau 
+^C============================================================ 
+[01-Aug-26 10:35:27.37] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 181 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 01-Aug-2026 10:36
+So dong chi tiet: 7,061
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,964,006,689
+[KAM] Net 60,831,612,480 | SGM% 27.55%
+[FIN] Net 60,541,254,073 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 15f584a] Auto update KAM 01-Aug-26 10:36:06.67
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   765fb84..15f584a  main -> main
+[01-Aug-26 10:36:11.12] Xong 
+============================================================ 
+[03-Aug-26  9:00:04.50] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 181 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 09:00
+So dong chi tiet: 7,061
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,962,925,068
+[KAM] Net 60,830,530,859 | SGM% 27.55%
+[FIN] Net 60,540,172,453 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main ff2c0cf] Auto update KAM 03-Aug-26  9:00:31.56
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   15f584a..ff2c0cf  main -> main
+[03-Aug-26  9:00:37.58] Xong 
+============================================================ 
+[03-Aug-26  9:15:02.37] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 7 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 09:15
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main dfcacf1] Auto update KAM 03-Aug-26  9:15:36.06
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   ff2c0cf..dfcacf1  main -> main
+[03-Aug-26  9:15:39.94] Xong 
+============================================================ 
+[03-Aug-26 11:18:45.65] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[03-Aug-26 11:18:54.98] Khong co thay doi data - khong push 
+============================================================ 
+[03-Aug-26 11:30:02.66] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 11:30
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 99bbf48] Auto update KAM 03-Aug-26 11:30:32.75
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   dfcacf1..99bbf48  main -> main
+[03-Aug-26 11:30:36.90] Xong 
+============================================================ 
+[03-Aug-26 11:45:14.59] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 11:45
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 1601860] Auto update KAM 03-Aug-26 11:45:46.87
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   99bbf48..1601860  main -> main
+[03-Aug-26 11:45:50.77] Xong 
+============================================================ 
+[03-Aug-26 12:00:02.29] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 12:00
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 2972524] Auto update KAM 03-Aug-26 12:00:36.42
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   1601860..2972524  main -> main
+[03-Aug-26 12:00:40.63] Xong 
+============================================================ 
+[03-Aug-26 12:15:02.26] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 12:15
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 92eae19] Auto update KAM 03-Aug-26 12:15:35.10
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   2972524..92eae19  main -> main
+[03-Aug-26 12:15:39.91] Xong 
+============================================================ 
+[03-Aug-26 12:30:02.23] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 12:30
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main f0a9443] Auto update KAM 03-Aug-26 12:30:31.14
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   92eae19..f0a9443  main -> main
+[03-Aug-26 12:30:35.17] Xong 
+============================================================ 
+[03-Aug-26 12:45:02.21] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 12:45
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main c721720] Auto update KAM 03-Aug-26 12:45:29.57
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   f0a9443..c721720  main -> main
+[03-Aug-26 12:45:33.61] Xong 
+============================================================ 
+[03-Aug-26 13:00:02.20] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 171 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 13:00
+So dong chi tiet: 7,051
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,918,958,673
+[KAM] Net 60,791,504,223 | SGM% 27.55%
+[FIN] Net 60,501,145,817 | SGM% 38.08%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 0bf9e16] Auto update KAM 03-Aug-26 13:00:30.17
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   c721720..0bf9e16  main -> main
+[03-Aug-26 13:00:34.16] Xong 
+============================================================ 
+[03-Aug-26 13:15:02.28] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[03-Aug-26 13:15:03.46] Khong co thay doi data - khong push 
+============================================================ 
+[03-Aug-26 13:30:02.21] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 167 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 13:31
+So dong chi tiet: 7,047
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,911,578,011
+[KAM] Net 60,784,123,561 | SGM% 27.56%
+[FIN] Net 60,493,765,155 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main c8089e2] Auto update KAM 03-Aug-26 13:31:41.08
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   0bf9e16..c8089e2  main -> main
+[03-Aug-26 13:31:45.12] Xong 
+============================================================ 
+[03-Aug-26 13:45:02.25] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+Traceback (most recent call last):
+  File "C:\AI_Dashboard\convert_kam.py", line 180, in <module>
+    ACT = build_source(
+        F_ACT, "Sales detail with COGS", 3,
+        dict(cust="Customer code", item="Item code", comm="Comm. code",
+             name="Item name", qty="Quantity", gross="Line Totalafter All DC"),
+        net_gt0=False, cancel_col="CANCELED")
+  File "C:\AI_Dashboard\convert_kam.py", line 116, in build_source
+    df = pd.read_excel(P(fname), sheet_name=sheet, header=header)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 481, in read_excel
+    io = ExcelFile(
+        io,
+    ...<2 lines>...
+        engine_kwargs=engine_kwargs,
+    )
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 1621, in __init__
+    self._reader = self._engines[engine](
+                   ~~~~~~~~~~~~~~~~~~~~~^
+        self._io,
+        ^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 560, in __init__
+    super().__init__(
+    ~~~~~~~~~~~~~~~~^
+        filepath_or_buffer,
+        ^^^^^^^^^^^^^^^^^^^
+        storage_options=storage_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        engine_kwargs=engine_kwargs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 554, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 579, in load_workbook
+    return load_workbook(
+        filepath_or_buffer,
+        **(default_kwargs | engine_kwargs),
+    )
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 348, in load_workbook
+    reader.read()
+    ~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 303, in read
+    self.read_worksheets()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\reader\excel.py", line 228, in read_worksheets
+    ws = ReadOnlyWorksheet(self.wb, sheet.name, rel.target, self.shared_strings)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_read_only.py", line 42, in __init__
+    self._get_size()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_read_only.py", line 49, in _get_size
+    dimensions = parser.parse_dimensions()
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_reader.py", line 178, in parse_dimensions
+    for _event, element in it:
+                           ^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\xml\etree\ElementTree.py", line 1262, in iterator
+    data = source.read(16 * 1024)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1105, in read
+    data = self._read1(n)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1173, in _read1
+    data += self._read2(n - len(data))
+            ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1205, in _read2
+    data = self._fileobj.read(n)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 924, in read
+    data = self._file.read(n)
+FileNotFoundError: [Errno 2] No such file or directory
+[03-Aug-26 13:46:41.12] LOI convert_kam.py - bo qua lan nay 
+============================================================ 
+[03-Aug-26 14:00:02.54] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 167 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 14:00
+So dong chi tiet: 7,047
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,911,578,011
+[KAM] Net 60,784,123,561 | SGM% 27.56%
+[FIN] Net 60,493,765,155 | SGM% 38.09%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main d5ad0a2] Auto update KAM 03-Aug-26 14:00:37.43
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   c8089e2..d5ad0a2  main -> main
+[03-Aug-26 14:00:43.08] Xong 
+============================================================ 
+[03-Aug-26 14:15:02.29] Bat dau 
+^C============================================================ 
+[03-Aug-26 14:16:35.61] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 159 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 14:17
+So dong chi tiet: 7,039
+So Channel: 11 | MLA: 38 | Item: 991
+Tong Gross : 74,878,762,969
+[KAM] Net 60,751,308,518 | SGM% 27.57%
+[FIN] Net 60,460,950,112 | SGM% 38.10%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main b4a780e] Auto update KAM 03-Aug-26 14:17:11.92
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   d5ad0a2..b4a780e  main -> main
+[03-Aug-26 14:17:16.48] Xong 
+============================================================ 
+[03-Aug-26 15:00:02.58] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 135 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 15:00
+So dong chi tiet: 7,015
+So Channel: 11 | MLA: 38 | Item: 990
+Tong Gross : 74,851,306,881
+[KAM] Net 60,730,655,737 | SGM% 27.58%
+[FIN] Net 60,440,297,331 | SGM% 38.10%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main e67e31e] Auto update KAM 03-Aug-26 15:00:36.89
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   b4a780e..e67e31e  main -> main
+[03-Aug-26 15:00:41.04] Xong 
+============================================================ 
+[03-Aug-26 16:00:02.61] Bat dau 
+^C============================================================ 
+[03-Aug-26 17:00:06.36] Bat dau 
+^C============================================================ 
+[03-Aug-26 18:00:02.28] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 25 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 78 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,896 dong | SO: 126 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 24 dong
+
+============================================================
+As of: 03-Aug-2026 18:00
+So dong chi tiet: 7,006
+So Channel: 11 | MLA: 38 | Item: 989
+Tong Gross : 74,843,356,577
+[KAM] Net 60,724,696,694 | SGM% 27.58%
+[FIN] Net 60,434,338,288 | SGM% 38.10%
+  ! Co 4 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 38b945d] Auto update KAM 03-Aug-26 18:00:23.48
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[03-Aug-26 18:00:24.41] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[03-Aug-26 18:00:25.31] Xong 
+============================================================ 
+[04-Aug-26  9:00:03.78] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[04-Aug-26  9:00:09.12] Khong co thay doi data - khong push 
+============================================================ 
+[04-Aug-26 10:00:02.31] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 379 dong | SO: 125 dong | SQ: 8 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 5 dong
+
+============================================================
+As of: 04-Aug-2026 10:00
+So dong chi tiet: 507
+So Channel: 5 | MLA: 16 | Item: 302
+Tong Gross : 757,386,750
+[KAM] Net 707,488,253 | SGM% 42.74%
+[FIN] Net 707,488,253 | SGM% 51.59%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main db2ed0e] Auto update KAM 04-Aug-26 10:00:09.25
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   e67e31e..db2ed0e  main -> main
+[04-Aug-26 10:00:15.29] Xong 
+============================================================ 
+[04-Aug-26 11:00:02.18] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 379 dong | SO: 170 dong | SQ: 111 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 04-Aug-2026 11:00
+So dong chi tiet: 660
+So Channel: 6 | MLA: 16 | Item: 298
+Tong Gross : 1,231,624,006
+[KAM] Net 1,049,384,915 | SGM% 28.76%
+[FIN] Net 1,049,358,696 | SGM% 40.13%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 953c6de] Auto update KAM 04-Aug-26 11:00:07.82
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   db2ed0e..953c6de  main -> main
+[04-Aug-26 11:00:11.97] Xong 
+============================================================ 
+[04-Aug-26 12:00:02.17] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 404 dong | SO: 189 dong | SQ: 115 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 04-Aug-2026 12:00
+So dong chi tiet: 708
+So Channel: 6 | MLA: 16 | Item: 305
+Tong Gross : 1,371,204,355
+[KAM] Net 1,168,031,548 | SGM% 39.07%
+[FIN] Net 1,168,011,288 | SGM% 48.65%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 346730d] Auto update KAM 04-Aug-26 12:00:07.58
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   953c6de..346730d  main -> main
+[04-Aug-26 12:00:11.85] Xong 
+============================================================ 
+[04-Aug-26 13:00:01.79] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 404 dong | SO: 189 dong | SQ: 115 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 04-Aug-2026 13:00
+So dong chi tiet: 708
+So Channel: 6 | MLA: 16 | Item: 305
+Tong Gross : 1,371,204,355
+[KAM] Net 1,168,031,548 | SGM% 39.07%
+[FIN] Net 1,168,011,288 | SGM% 48.65%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main a9388cf] Auto update KAM 04-Aug-26 13:00:06.66
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   346730d..a9388cf  main -> main
+[04-Aug-26 13:00:10.94] Xong 
+============================================================ 
+[04-Aug-26 14:00:01.82] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 404 dong | SO: 209 dong | SQ: 77 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 04-Aug-2026 14:00
+So dong chi tiet: 690
+So Channel: 6 | MLA: 16 | Item: 304
+Tong Gross : 1,370,090,520
+[KAM] Net 1,167,218,449 | SGM% 39.10%
+[FIN] Net 1,167,198,188 | SGM% 48.67%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 260ae43] Auto update KAM 04-Aug-26 14:00:07.35
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   a9388cf..260ae43  main -> main
+[04-Aug-26 14:00:11.48] Xong 
+============================================================ 
+[04-Aug-26 15:09:50.29] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 404 dong | SO: 221 dong | SQ: 71 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 04-Aug-2026 15:09
+So dong chi tiet: 696
+So Channel: 6 | MLA: 16 | Item: 304
+Tong Gross : 1,386,575,190
+[KAM] Net 1,181,378,154 | SGM% 39.00%
+[FIN] Net 1,181,357,893 | SGM% 48.63%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main c90bc3b] Auto update KAM 04-Aug-26 15:09:58.53
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   260ae43..c90bc3b  main -> main
+[04-Aug-26 15:10:02.47] Xong 
+============================================================ 
+[04-Aug-26 16:00:01.90] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 404 dong | SO: 221 dong | SQ: 81 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 04-Aug-2026 16:00
+So dong chi tiet: 706
+So Channel: 7 | MLA: 18 | Item: 308
+Tong Gross : 1,806,109,453
+[KAM] Net 1,409,339,613 | SGM% 38.45%
+[FIN] Net 1,390,303,432 | SGM% 47.67%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 5c7ee62] Auto update KAM 04-Aug-26 16:00:07.41
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   c90bc3b..5c7ee62  main -> main
+[04-Aug-26 16:00:11.85] Xong 
+============================================================ 
+[04-Aug-26 17:00:01.84] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 404 dong | SO: 224 dong | SQ: 104 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 04-Aug-2026 17:00
+So dong chi tiet: 732
+So Channel: 7 | MLA: 18 | Item: 313
+Tong Gross : 1,964,731,685
+[KAM] Net 1,537,472,807 | SGM% 37.80%
+[FIN] Net 1,518,436,626 | SGM% 47.06%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main b51031b] Auto update KAM 04-Aug-26 17:00:06.56
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[04-Aug-26 17:00:07.33] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[04-Aug-26 17:00:08.25] Xong 
+============================================================ 
+[04-Aug-26 18:00:01.89] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 404 dong | SO: 257 dong | SQ: 60 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 04-Aug-2026 18:00
+So dong chi tiet: 720
+So Channel: 7 | MLA: 18 | Item: 310
+Tong Gross : 1,929,839,101
+[KAM] Net 1,516,892,669 | SGM% 37.56%
+[FIN] Net 1,497,856,488 | SGM% 46.68%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 450e17a] Auto update KAM 04-Aug-26 18:00:06.89
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[04-Aug-26 18:00:07.64] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[04-Aug-26 18:00:08.53] Xong 
+============================================================ 
+[05-Aug-26 10:00:02.58] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 426 dong | SO: 252 dong | SQ: 59 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 2 dong
+
+============================================================
+As of: 05-Aug-2026 10:00
+So dong chi tiet: 735
+So Channel: 8 | MLA: 19 | Item: 313
+Tong Gross : 2,149,754,289
+[KAM] Net 1,689,504,633 | SGM% 36.97%
+[FIN] Net 1,670,468,452 | SGM% 46.03%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main afa6a21] Auto update KAM 05-Aug-26 10:00:10.83
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   5c7ee62..afa6a21  main -> main
+[05-Aug-26 10:00:17.26] Xong 
+============================================================ 
+[05-Aug-26 11:00:02.26] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 498 dong | SO: 195 dong | SQ: 53 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 2 dong
+
+============================================================
+As of: 05-Aug-2026 11:00
+So dong chi tiet: 744
+So Channel: 8 | MLA: 19 | Item: 314
+Tong Gross : 2,360,455,954
+[KAM] Net 1,854,902,055 | SGM% 33.94%
+[FIN] Net 1,835,865,873 | SGM% 43.88%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main b099793] Auto update KAM 05-Aug-26 11:00:16.64
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   afa6a21..b099793  main -> main
+[05-Aug-26 11:00:21.45] Xong 
+============================================================ 
+[05-Aug-26 12:00:02.98] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 649 dong | SO: 125 dong | SQ: 103 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 05-Aug-2026 12:00
+So dong chi tiet: 876
+So Channel: 8 | MLA: 19 | Item: 344
+Tong Gross : 3,036,912,612
+[KAM] Net 2,422,901,938 | SGM% 32.25%
+[FIN] Net 2,403,865,756 | SGM% 42.90%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main c388aa2] Auto update KAM 05-Aug-26 12:00:10.05
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   b099793..c388aa2  main -> main
+[05-Aug-26 12:00:14.44] Xong 
+============================================================ 
+[05-Aug-26 13:00:02.21] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 649 dong | SO: 125 dong | SQ: 126 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 05-Aug-2026 13:00
+So dong chi tiet: 899
+So Channel: 8 | MLA: 19 | Item: 349
+Tong Gross : 3,177,901,784
+[KAM] Net 2,539,375,607 | SGM% 31.88%
+[FIN] Net 2,520,339,425 | SGM% 42.55%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 8a6e87c] Auto update KAM 05-Aug-26 13:00:08.27
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   c388aa2..8a6e87c  main -> main
+[05-Aug-26 13:00:12.13] Xong 
+============================================================ 
+[05-Aug-26 14:00:02.30] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 667 dong | SO: 187 dong | SQ: 228 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 05-Aug-2026 14:00
+So dong chi tiet: 1,081
+So Channel: 8 | MLA: 19 | Item: 353
+Tong Gross : 4,938,239,757
+[KAM] Net 3,927,632,655 | SGM% 27.76%
+[FIN] Net 3,908,596,474 | SGM% 39.20%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main c8600fb] Auto update KAM 05-Aug-26 14:00:16.94
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   8a6e87c..c8600fb  main -> main
+[05-Aug-26 14:00:21.47] Xong 
+============================================================ 
+[05-Aug-26 15:00:02.28] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 3 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 677 dong | SO: 279 dong | SQ: 90 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 05-Aug-2026 15:00
+So dong chi tiet: 1,045
+So Channel: 8 | MLA: 19 | Item: 367
+Tong Gross : 4,122,074,807
+[KAM] Net 3,284,311,371 | SGM% 30.77%
+[FIN] Net 3,265,275,189 | SGM% 41.35%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 5256626] Auto update KAM 05-Aug-26 15:00:18.25
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   c8600fb..5256626  main -> main
+[05-Aug-26 15:00:23.98] Xong 
+============================================================ 
+[05-Aug-26 16:00:01.81] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 21 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 683 dong | SO: 309 dong | SQ: 79 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 05-Aug-2026 16:00
+So dong chi tiet: 1,070
+So Channel: 9 | MLA: 20 | Item: 374
+Tong Gross : 4,164,600,959
+[KAM] Net 3,315,679,185 | SGM% 30.63%
+[FIN] Net 3,296,643,003 | SGM% 41.22%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 88e7ea9] Auto update KAM 05-Aug-26 16:00:16.54
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   5256626..88e7ea9  main -> main
+[05-Aug-26 16:00:22.18] Xong 
+============================================================ 
+[05-Aug-26 17:00:01.82] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 21 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 691 dong | SO: 318 dong | SQ: 70 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 05-Aug-2026 17:00
+So dong chi tiet: 1,078
+So Channel: 9 | MLA: 20 | Item: 384
+Tong Gross : 4,160,126,751
+[KAM] Net 3,313,172,865 | SGM% 30.62%
+[FIN] Net 3,294,136,683 | SGM% 41.22%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 08139c3] Auto update KAM 05-Aug-26 17:00:16.74
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   88e7ea9..08139c3  main -> main
+[05-Aug-26 17:00:23.46] Xong 
+============================================================ 
+[05-Aug-26 18:00:01.87] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 26 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 691 dong | SO: 318 dong | SQ: 71 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 1 dong
+
+============================================================
+As of: 05-Aug-2026 18:00
+So dong chi tiet: 1,079
+So Channel: 9 | MLA: 20 | Item: 382
+Tong Gross : 4,198,501,464
+[KAM] Net 3,343,857,409 | SGM% 30.10%
+[FIN] Net 3,324,821,227 | SGM% 40.81%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 6f6da56] Auto update KAM 05-Aug-26 18:00:07.26
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   08139c3..6f6da56  main -> main
+[05-Aug-26 18:00:11.89] Xong 
