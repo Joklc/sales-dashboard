@@ -1358,3 +1358,148 @@ Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
 To https://github.com/Joklc/sales-dashboard.git
    08139c3..6f6da56  main -> main
 [05-Aug-26 18:00:11.89] Xong 
+============================================================ 
+[07-Aug-26 10:35:28.95] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 37 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 911 dong | SO: 247 dong | SQ: 361 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 3 dong
+
+============================================================
+As of: 07-Aug-2026 10:35
+So dong chi tiet: 1,516
+So Channel: 9 | MLA: 23 | Item: 433
+Tong Gross : 7,305,163,528
+[KAM] Net 5,844,218,151 | SGM% 28.46%
+[FIN] Net 5,824,278,760 | SGM% 38.82%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 7d242d5] Auto update KAM 07-Aug-26 10:35:39.52
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 10:35:40.78] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 10:35:42.00] Xong 
+============================================================ 
+[07-Aug-26 11:05:40.38] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 37 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 912 dong | SO: 273 dong | SQ: 392 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 3 dong
+
+============================================================
+As of: 07-Aug-2026 11:06
+So dong chi tiet: 1,574
+So Channel: 10 | MLA: 24 | Item: 441
+Tong Gross : 8,132,917,528
+[KAM] Net 6,589,697,449 | SGM% 31.02%
+[FIN] Net 6,569,758,057 | SGM% 40.94%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main b69b61f] Auto update KAM 07-Aug-26 11:06:10.19
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 11:06:11.53] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 11:06:44.31] Xong 
+============================================================ 
+[07-Aug-26 12:00:01.95] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 37 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 998 dong | SO: 240 dong | SQ: 395 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 3 dong
+
+============================================================
+As of: 07-Aug-2026 12:00
+So dong chi tiet: 1,630
+So Channel: 10 | MLA: 24 | Item: 450
+Tong Gross : 8,259,780,998
+[KAM] Net 6,713,119,750 | SGM% 31.62%
+[FIN] Net 6,693,180,358 | SGM% 41.46%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main c2bdf60] Auto update KAM 07-Aug-26 12:00:07.05
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 12:00:07.77] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 12:00:08.60] Xong 
+============================================================ 
+[07-Aug-26 13:00:02.01] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 37 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 998 dong | SO: 240 dong | SQ: 338 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 3 dong
+
+============================================================
+As of: 07-Aug-2026 13:00
+So dong chi tiet: 1,573
+So Channel: 9 | MLA: 23 | Item: 442
+Tong Gross : 7,432,026,998
+[KAM] Net 5,967,640,452 | SGM% 29.19%
+[FIN] Net 5,947,701,060 | SGM% 39.45%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 026e586] Auto update KAM 07-Aug-26 13:00:08.77
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 13:00:09.48] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 13:00:10.26] Xong 
+============================================================ 
+[07-Aug-26 14:00:01.82] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 37 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 998 dong | SO: 240 dong | SQ: 396 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 3 dong
+
+============================================================
+As of: 07-Aug-2026 14:00
+So dong chi tiet: 1,631
+So Channel: 10 | MLA: 24 | Item: 459
+Tong Gross : 8,254,522,964
+[KAM] Net 6,708,856,508 | SGM% 26.00%
+[FIN] Net 6,688,917,116 | SGM% 36.52%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 5af6fe6] Auto update KAM 07-Aug-26 14:00:08.68
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 14:00:09.40] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[07-Aug-26 14:00:10.31] Xong 
