@@ -392,11 +392,30 @@ with tab4:
                               template="seb_dark")
         st.plotly_chart(fig_biz, use_container_width=True)
 
-        st.dataframe(
-            biz_pivot.reset_index().style.format(
-                {"Sales":"{:,.0f}","Gross Margin":"{:,.0f}","ROPA":"{:,.0f}"}),
-            use_container_width=True, hide_index=True
-        )
+        # Them cot % of Sales (ty trong Sales tung Business Type / tong Sales)
+        tbl = biz_pivot.reset_index()
+        total_sales = tbl["Sales"].sum()
+        tbl["% of Sales"] = tbl["Sales"] / total_sales * 100 if total_sales else 0
+        tbl = tbl.sort_values("Sales", ascending=False)
+
+        col_a, col_b = st.columns([1, 1])
+        with col_a:
+            fig_donut_biz = go.Figure(go.Pie(
+                labels=tbl["Business Type"], values=tbl["Sales"], hole=0.5,
+                textinfo="percent",
+                marker=dict(colors=["#3b82f6", "#f59e0b", "#16a34a", "#22d3ee",
+                                    "#a78bfa", "#9ca3af", "#ef4444"])
+            ))
+            fig_donut_biz.update_layout(height=360, margin=dict(t=30, b=10),
+                                        template="seb_dark", title="Sales Proportion")
+            st.plotly_chart(fig_donut_biz, use_container_width=True)
+        with col_b:
+            st.dataframe(
+                tbl[["Business Type", "Sales", "% of Sales", "Gross Margin", "ROPA"]]
+                .style.format({"Sales":"{:,.0f}", "% of Sales":"{:.1f}%",
+                               "Gross Margin":"{:,.0f}", "ROPA":"{:,.0f}"}),
+                use_container_width=True, hide_index=True, height=360
+            )
     else:
         st.info("Không có cột Business Type.")
 
