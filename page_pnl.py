@@ -263,8 +263,8 @@ st.markdown("<br>", unsafe_allow_html=True)
 # TABS
 # ==================================================
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📋 P&L Statement", "💧 Waterfall", "📦 By Category", "🏢 By Business Type",
+tab1, tab2, tab4, tab5 = st.tabs([
+    "📋 P&L Statement", "💧 Waterfall", "🏢 By Business Type",
     "🔀 Local vs Allocated"
 ])
 
@@ -365,34 +365,6 @@ with tab2:
     fig_wf.update_layout(height=520, margin=dict(t=30, b=80), template="seb_dark",
                          xaxis_tickangle=-35)
     st.plotly_chart(fig_wf, use_container_width=True)
-
-# ---- TAB 3: By Product Line / Key CAT ----
-with tab3:
-    dim = st.radio("Phân tích theo:", ["Product Line", "Key CAT"], horizontal=True)
-    metric_line = st.selectbox("Chọn dòng P&L:",
-                               ["Sales", "Gross Margin", "ROPA", "Standard Gross Margin"])
-
-    sub = dff[dff["PnL lines"] == metric_line]
-    by = (sub.groupby(dim, observed=True)
-          .agg(ACT=("Actual N","sum"), BUD=("Budget N","sum"), LY=("Actual N-1","sum"))
-          .sort_values("ACT", ascending=False).reset_index())
-
-    fig_cat = go.Figure()
-    fig_cat.add_bar(y=by[dim], x=by["ACT"], name="Actual N",
-                    orientation="h", marker_color=COLORS["ACT"])
-    fig_cat.add_bar(y=by[dim], x=by["BUD"], name="Budget N",
-                    orientation="h", marker_color=COLORS["BUD"])
-    fig_cat.add_bar(y=by[dim], x=by["LY"], name="Actual N-1",
-                    orientation="h", marker_color=COLORS["LY"])
-    fig_cat.update_layout(barmode="group", height=max(360, len(by)*40),
-                          margin=dict(t=20,b=20), template="seb_dark",
-                          title=f"{metric_line} by {dim}")
-    st.plotly_chart(fig_cat, use_container_width=True)
-
-    st.dataframe(
-        by.style.format({"ACT":"{:,.0f}","BUD":"{:,.0f}","LY":"{:,.0f}"}),
-        use_container_width=True, hide_index=True
-    )
 
 # ---- TAB 4: By Business Type ----
 with tab4:

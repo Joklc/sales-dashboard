@@ -2255,3 +2255,57 @@ Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
 To https://github.com/Joklc/sales-dashboard.git
    359e5f8..63acd6a  main -> main
 [08-Aug-26 11:20:12.30] Xong 
+============================================================ 
+[08-Aug-26 11:30:02.17] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 37 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 14 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 1,356 dong | SO: 328 dong | SQ: 75 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 4 dong
+
+============================================================
+As of: 08-Aug-2026 11:30
+So dong chi tiet: 1,755
+So Channel: 10 | MLA: 24 | Item: 481
+Tong Gross : 10,146,395,437
+[KAM] Net 8,091,521,961 | SGM% 30.78%
+[FIN] Net 8,044,599,085 | SGM% 40.42%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 1acd69e] Auto update KAM 08-Aug-26 11:30:12.54
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   4a543ad..1acd69e  main -> main
+[08-Aug-26 11:30:17.09] Xong 
+============================================================ 
+[08-Aug-26 11:40:01.82] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 37 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 14 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 1,356 dong | SO: 328 dong | SQ: 75 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 4 dong
+
+============================================================
+As of: 08-Aug-2026 11:40
+So dong chi tiet: 1,755
+So Channel: 10 | MLA: 24 | Item: 481
+Tong Gross : 10,146,395,437
+[KAM] Net 8,091,521,961 | SGM% 30.78%
+[FIN] Net 8,044,599,085 | SGM% 40.42%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main acb96f2] Auto update KAM 08-Aug-26 11:40:12.55
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   1acd69e..acb96f2  main -> main
+[08-Aug-26 11:40:17.47] Xong 
