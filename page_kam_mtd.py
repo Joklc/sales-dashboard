@@ -266,37 +266,64 @@ tab1, tab2, tab3, tab5, tab4 = st.tabs([
 with tab1:
     by_ch = agg_by(dff, "Channel")
     fig = go.Figure()
-    fig.add_bar(x=by_ch["Channel"], y=by_ch["Gross"], name="Gross", marker_color=COLORS["BUD"])
-    fig.add_bar(x=by_ch["Channel"], y=by_ch["Net"], name="Net", marker_color=COLORS["ACT"])
+    fig.add_bar(x=by_ch["Channel"], y=by_ch["Net"], name="Net Sales",
+                marker_color=COLORS["ACT"],
+                text=by_ch["Net"].apply(lambda v: f"{v/1e9:.1f}B"),
+                textposition="outside")
     fig.add_scatter(x=by_ch["Channel"], y=by_ch["SGM%"], name="SGM%",
                     mode="lines+markers+text",
                     text=by_ch["SGM%"].round(1).astype(str) + "%",
                     textposition="top center",
                     line=dict(color="#22d3ee", width=2), yaxis="y2")
-    fig.update_layout(barmode="group", height=440, margin=dict(t=20, b=20),
-                      template="seb_dark", yaxis=dict(title="Sales"),
+    fig.update_layout(height=460, margin=dict(t=30, b=80), template="seb_dark",
+                      yaxis=dict(title="Net Sales"),
                       yaxis2=dict(title="SGM%", overlaying="y", side="right",
                                   ticksuffix="%", showgrid=False),
-                      legend=dict(orientation="h", y=-0.2), xaxis_tickangle=-30)
+                      legend=dict(orientation="h", y=-0.25), xaxis_tickangle=-30,
+                      title=f"Net Sales & SGM% by Channel ({view})")
     st.plotly_chart(fig, use_container_width=True)
-    st.dataframe(by_ch[["Channel", "Gross", "Net", "Deduction", "Deduct%", "SGM", "SGM%"]]
-                 .style.format(fmt), use_container_width=True, hide_index=True)
+
+    col_a, col_b = st.columns([1, 1])
+    with col_a:
+        fig_donut_ch = go.Figure(go.Pie(
+            labels=by_ch["Channel"], values=by_ch["Net"], hole=0.5, textinfo="percent",
+            marker=dict(colors=["#3b82f6", "#22d3ee", "#a78bfa", "#f59e0b",
+                                "#16a34a", "#9ca3af", "#ef4444", "#8b5cf6", "#14b8a6", "#f97316"])
+        ))
+        fig_donut_ch.update_layout(height=380, margin=dict(t=30, b=10),
+                                   template="seb_dark", title="Net Sales Proportion")
+        st.plotly_chart(fig_donut_ch, use_container_width=True)
+    with col_b:
+        st.dataframe(by_ch[["Channel", "Gross", "Net", "Deduction", "Deduct%", "SGM", "SGM%"]]
+                     .style.format(fmt), use_container_width=True, hide_index=True, height=380)
 
 # ---- By MLA ----
 with tab2:
     top_n = st.slider("Show top MLA by Net Sales:", 5, 35, 15, key="kam_mla_top")
     by_mla = agg_by(dff, "MLA").head(top_n)
     fig_mla = go.Figure()
-    fig_mla.add_bar(y=by_mla["MLA"], x=by_mla["Net"], orientation="h",
+    fig_mla.add_bar(x=by_mla["MLA"], y=by_mla["Net"], name="Net Sales",
                     marker_color=COLORS["ACT"],
-                    text=by_mla["Net"].apply(lambda v: f"{v:,.0f}"),
+                    text=by_mla["Net"].apply(lambda v: f"{v/1e9:.2f}B"),
                     textposition="outside")
-    fig_mla.update_layout(height=max(400, top_n * 32), margin=dict(t=20, b=20),
-                          template="seb_dark", title="Net Sales by MLA",
-                          yaxis=dict(autorange="reversed"))
+    fig_mla.add_scatter(x=by_mla["MLA"], y=by_mla["SGM%"], name="SGM%",
+                        mode="lines+markers+text",
+                        text=by_mla["SGM%"].round(1).astype(str) + "%",
+                        textposition="top center",
+                        line=dict(color="#22d3ee", width=2), yaxis="y2")
+    fig_mla.update_layout(height=460, margin=dict(t=30, b=110), template="seb_dark",
+                          yaxis=dict(title="Net Sales"),
+                          yaxis2=dict(title="SGM%", overlaying="y", side="right",
+                                      ticksuffix="%", showgrid=False),
+                          legend=dict(orientation="h", y=-0.35), xaxis_tickangle=-40,
+                          title=f"Net Sales & SGM% by MLA ({view})")
     st.plotly_chart(fig_mla, use_container_width=True)
-    st.dataframe(by_mla[["MLA", "Gross", "Net", "Deduction", "Deduct%", "SGM", "SGM%"]]
-                 .style.format(fmt), use_container_width=True, hide_index=True)
+
+    # Bang nho o duoi (nua ben trai)
+    col_t, _ = st.columns([1.4, 1])
+    with col_t:
+        st.dataframe(by_mla[["MLA", "Gross", "Net", "Deduction", "Deduct%", "SGM", "SGM%"]]
+                     .style.format(fmt), use_container_width=True, hide_index=True, height=400)
 
 # ---- By Product Line ----
 with tab3:
