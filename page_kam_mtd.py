@@ -319,9 +319,26 @@ with tab2:
                           title=f"Net Sales & SGM% by MLA ({view})")
     st.plotly_chart(fig_mla, use_container_width=True)
 
-    # Bang nho o duoi (nua ben trai)
-    col_t, _ = st.columns([1.4, 1])
-    with col_t:
+    # Duoi: treemap ty trong Net (trai) + bang nho (phai)
+    col_tree, col_tbl = st.columns([1, 1])
+    with col_tree:
+        fig_tree_mla = go.Figure(go.Treemap(
+            labels=by_mla["MLA"],
+            parents=[""] * len(by_mla),
+            values=by_mla["Net"],
+            textinfo="label+value+percent root",
+            marker=dict(
+                colors=by_mla["Net"],
+                colorscale=[[0, "#93c5fd"], [0.5, "#3b82f6"], [1, "#1e3a8a"]],
+                line=dict(width=2, color="#ffffff"),
+            ),
+            texttemplate="<b>%{label}</b><br>%{value:,.0f}<br>%{percentRoot}",
+            hovertemplate="<b>%{label}</b><br>Net: %{value:,.0f}<br>%{percentRoot} of total<extra></extra>",
+        ))
+        fig_tree_mla.update_layout(height=400, margin=dict(t=36, b=10, l=0, r=0),
+                                   template="seb_dark", title="Net Sales Proportion")
+        st.plotly_chart(fig_tree_mla, use_container_width=True)
+    with col_tbl:
         st.dataframe(by_mla[["MLA", "Gross", "Net", "Deduction", "Deduct%", "SGM", "SGM%"]]
                      .style.format(fmt), use_container_width=True, hide_index=True, height=400)
 

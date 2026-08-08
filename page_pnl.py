@@ -263,8 +263,8 @@ st.markdown("<br>", unsafe_allow_html=True)
 # TABS
 # ==================================================
 
-tab1, tab2, tab4, tab5 = st.tabs([
-    "📋 P&L Statement", "💧 Waterfall", "🏢 By Business Type",
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📋 P&L Statement", "💧 Waterfall", "📦 By Category", "🏢 By Business Type",
     "🔀 Local vs Allocated"
 ])
 
@@ -366,6 +366,66 @@ with tab2:
                          xaxis_tickangle=-35)
     st.plotly_chart(fig_wf, use_container_width=True)
 
+# ---- TAB 3: By Category (Product Line / Key CAT) ----
+with tab3:
+    dim = st.radio("Phân tích theo:", ["Product Line", "Key CAT"], horizontal=True)
+
+    if dim in dff.columns:
+        sub = dff[dff["PnL lines"].isin(["Sales", "Gross Margin", "ROPA",
+                                         "Standard Gross Margin"])]
+        cat = (sub.groupby([dim, "PnL lines"], observed=True)["Actual N"]
+               .sum().reset_index())
+        cat_pivot = cat.pivot(index=dim, columns="PnL lines",
+                              values="Actual N").fillna(0)
+        for c in ["Sales", "Gross Margin", "ROPA", "Standard Gross Margin"]:
+            if c not in cat_pivot.columns:
+                cat_pivot[c] = 0
+        cat_pivot = cat_pivot[["Sales", "Gross Margin", "ROPA",
+                               "Standard Gross Margin"]].reset_index()
+
+        # % GM = GM/Sales ; % SGM = Standard GM/Sales ; % ROPA = ROPA/Sales
+        def _pct(n, d):
+            return (n / d * 100) if d else 0
+        cat_pivot["GM%"] = cat_pivot.apply(lambda r: _pct(r["Gross Margin"], r["Sales"]), axis=1)
+        cat_pivot["SGM%"] = cat_pivot.apply(lambda r: _pct(r["Standard Gross Margin"], r["Sales"]), axis=1)
+        cat_pivot["% ROPA"] = cat_pivot.apply(lambda r: _pct(r["ROPA"], r["Sales"]), axis=1)
+        cat_pivot = cat_pivot.sort_values("Sales", ascending=False)
+
+        col_a, col_b = st.columns([1, 1])
+        with col_a:
+            # Treemap ty trong Sales (chi lay dong Sales > 0 cho dep)
+            pos = cat_pivot[cat_pivot["Sales"] > 0]
+            fig_tree_cat = go.Figure(go.Treemap(
+                labels=pos[dim],
+                parents=[""] * len(pos),
+                values=pos["Sales"],
+                textinfo="label+value+percent root",
+                marker=dict(
+                    colors=pos["Sales"],
+                    colorscale=[[0, "#93c5fd"], [0.5, "#3b82f6"], [1, "#1e3a8a"]],
+                    line=dict(width=2, color="#ffffff"),
+                ),
+                texttemplate="<b>%{label}</b><br>%{value:,.0f}<br>%{percentRoot}",
+                hovertemplate="<b>%{label}</b><br>Sales: %{value:,.0f}<br>%{percentRoot} of total<extra></extra>",
+            ))
+            fig_tree_cat.update_layout(height=420, margin=dict(t=36, b=10, l=0, r=0),
+                                       template="seb_dark",
+                                       title=f"Sales Proportion by {dim}")
+            st.plotly_chart(fig_tree_cat, use_container_width=True)
+        with col_b:
+            st.dataframe(
+                cat_pivot[[dim, "Sales", "Gross Margin", "GM%",
+                           "Standard Gross Margin", "SGM%", "ROPA", "% ROPA"]]
+                .rename(columns={"Standard Gross Margin": "Std GM"})
+                .style.format({"Sales": "{:,.0f}", "Gross Margin": "{:,.0f}",
+                               "GM%": "{:.1f}%", "Std GM": "{:,.0f}", "SGM%": "{:.1f}%",
+                               "ROPA": "{:,.0f}", "% ROPA": "{:.1f}%"}),
+                use_container_width=True, hide_index=True, height=420
+            )
+    else:
+        st.info(f"Không có cột {dim}.")
+
+
 # ---- TAB 4: By Business Type ----
 with tab4:
     st.subheader("P&L by Business Type")
@@ -380,17 +440,6 @@ with tab4:
             if c not in biz_pivot.columns:
                 biz_pivot[c] = 0
         biz_pivot = biz_pivot[["Sales","Gross Margin","ROPA"]]
-
-        fig_biz = go.Figure()
-        fig_biz.add_bar(x=biz_pivot.index, y=biz_pivot["Sales"], name="Sales",
-                        marker_color=COLORS["ACT"])
-        fig_biz.add_bar(x=biz_pivot.index, y=biz_pivot["Gross Margin"], name="Gross Margin",
-                        marker_color=COLORS["LY"])
-        fig_biz.add_bar(x=biz_pivot.index, y=biz_pivot["ROPA"], name="ROPA",
-                        marker_color=COLORS["POS"])
-        fig_biz.update_layout(barmode="group", height=440, margin=dict(t=20,b=20),
-                              template="seb_dark")
-        st.plotly_chart(fig_biz, use_container_width=True)
 
         # Them cot % of Sales (ty trong Sales tung Business Type / tong Sales)
         tbl = biz_pivot.reset_index()
