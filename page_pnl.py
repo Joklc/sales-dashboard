@@ -278,6 +278,9 @@ with tab1:
         disp = pnl.reset_index()
         disp.columns = ["P&L Line", "Actual N", "Budget N", "Actual N-1",
                         "% Sales", "Var vs BUD", "Var vs LY"]
+        # Dua cot % Sales len ngay sau Actual N
+        disp = disp[["P&L Line", "Actual N", "% Sales", "Budget N", "Actual N-1",
+                     "Var vs BUD", "Var vs LY"]]
 
         def highlight_subtotal(row):
             if row["P&L Line"] in SUBTOTAL_LINES:

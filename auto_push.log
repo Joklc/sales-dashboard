@@ -10012,3 +10012,87 @@ fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv fa
 fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
 fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
 [26-Aug-26 10:00:38.22] Xong 
+============================================================ 
+[26-Aug-26 11:00:02.04] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 27 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 366 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 5,317 dong | SO: 766 dong | SQ: 355 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 28 dong
+
+============================================================
+As of: 26-Aug-2026 11:00
+So dong chi tiet: 6,410
+So Channel: 11 | MLA: 34 | Item: 876
+Tong Gross : 57,321,100,717
+[KAM] Net 44,652,366,726 | SGM% 25.89%
+[FIN] Net 44,459,477,802 | SGM% 36.58%
+  ! Co 52 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 2163d42] Auto update KAM 26-Aug-26 11:00:29.12
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   2213574..2163d42  main -> main
+[26-Aug-26 11:00:33.95] Xong 
+============================================================ 
+[26-Aug-26 12:00:01.94] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 27 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 366 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 5,338 dong | SO: 695 dong | SQ: 337 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 28 dong
+
+============================================================
+As of: 26-Aug-2026 12:00
+So dong chi tiet: 6,342
+So Channel: 11 | MLA: 34 | Item: 877
+Tong Gross : 58,755,775,509
+[KAM] Net 45,372,131,101 | SGM% 26.11%
+[FIN] Net 45,178,772,220 | SGM% 36.82%
+  ! Co 52 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main 4e55606] Auto update KAM 26-Aug-26 12:00:26.15
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   2163d42..4e55606  main -> main
+[26-Aug-26 12:00:31.38] Xong 
+============================================================ 
+[26-Aug-26 13:00:01.90] Bat dau 
+Doc cac bang tra cuu...
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 27 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 366 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 5,339 dong | SO: 697 dong | SQ: 363 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 28 dong
+
+============================================================
+As of: 26-Aug-2026 13:00
+So dong chi tiet: 6,371
+So Channel: 11 | MLA: 34 | Item: 877
+Tong Gross : 60,008,123,618
+[KAM] Net 46,446,280,675 | SGM% 26.37%
+[FIN] Net 46,252,921,795 | SGM% 37.03%
+  ! Co 52 dong khong map duoc MLA (kiem tra Customer map)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+[main cdd0463] Auto update KAM 26-Aug-26 13:00:24.54
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   4e55606..cdd0463  main -> main
+[26-Aug-26 13:00:29.52] Xong 
