@@ -379,77 +379,41 @@ with tab3:
 
 # ---- By Family Level 2 ----
 with tab6:
-    MTD_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mtd_cache.parquet")
-    if not os.path.exists(MTD_FILE):
-        st.info("Chua co mtd_cache.parquet. Chay convert_mtd.py truoc.")
+    if "Family 2" not in dff.columns:
+        st.info("kam_cache chua co cot Family 2. Chay lai convert_kam.py (ban moi) de bo sung.")
     else:
-        mtd = pd.read_parquet(MTD_FILE)
-        for c in ["Gross", "Rebate", "Net", "SGM"]:
-            if c in mtd.columns:
-                mtd[c] = pd.to_numeric(mtd[c], errors="coerce").fillna(0)
+        by_f2 = agg_by(dff, "Family 2")
+        by_f2 = by_f2.rename(columns={"Family 2": "Family Level 2"})
+        by_f2 = by_f2[by_f2["Net"] > 0]   # bo family Net <= 0 cho treemap sach
 
-        # Filter rieng cho tab nay (loc duoc theo Channel / MLA / Product Line)
-        fc1, fc2, fc3 = st.columns(3)
-        ch_opts = ["All"] + sorted([x for x in mtd["Channel"].dropna().unique() if x])
-        mla_opts = ["All"] + sorted([x for x in mtd["MLA"].dropna().unique() if x])
-        pl_opts = ["All"] + sorted([x for x in mtd["Product Line"].dropna().unique() if x])
-        sel_ch = fc1.selectbox("Channel", ch_opts, key="f2_ch")
-        sel_mla = fc2.selectbox("MLA", mla_opts, key="f2_mla")
-        sel_pl = fc3.selectbox("Product Line", pl_opts, key="f2_pl")
+        top_f2 = st.slider("Show top Family Level 2 by Net Sales:", 5, 30, 18, key="f2_top")
+        show_f2 = by_f2.head(top_f2)
 
-        mf = mtd.copy()
-        if sel_ch != "All":
-            mf = mf[mf["Channel"] == sel_ch]
-        if sel_mla != "All":
-            mf = mf[mf["MLA"] == sel_mla]
-        if sel_pl != "All":
-            mf = mf[mf["Product Line"] == sel_pl]
+        # Treemap: o to nho theo Net, mau theo SGM% (do thap -> xanh cao)
+        fig_tree = go.Figure(go.Treemap(
+            labels=show_f2["Family Level 2"],
+            parents=[""] * len(show_f2),
+            values=show_f2["Net"],
+            customdata=show_f2["SGM%"],
+            marker=dict(
+                colors=show_f2["SGM%"],
+                colorscale=[[0, "#dbeafe"], [0.5, "#60a5fa"], [1, "#1e3a8a"]],
+                colorbar=dict(title="SGM%", ticksuffix="%"),
+                line=dict(width=2, color="#ffffff"),
+            ),
+            texttemplate="<b>%{label}</b><br>%{value:,.0f}<br>SGM %{customdata:.1f}%",
+            textfont=dict(color="#ffffff"),
+            hovertemplate="<b>%{label}</b><br>Net: %{value:,.0f}<br>SGM%: %{customdata:.1f}%<extra></extra>",
+        ))
+        fig_tree.update_layout(height=520, margin=dict(t=40, b=10, l=0, r=0),
+                               template="seb_dark",
+                               title=f"Net Sales & SGM% by Family Level 2 ({view}) — o lon = Net cao, mau = SGM%")
+        st.plotly_chart(fig_tree, use_container_width=True)
 
-        if mf.empty:
-            st.info("Khong co du lieu voi bo loc hien tai.")
-        else:
-            # Groupby theo Family 2
-            f2 = (mf.groupby("Family 2").agg(
-                    Gross=("Gross", "sum"), Deduction=("Rebate", "sum"),
-                    Net=("Net", "sum"), SGM=("SGM", "sum")).reset_index())
-            f2["SGM%"] = f2.apply(lambda r: r["SGM"] / r["Net"] * 100 if r["Net"] else 0, axis=1)
-            f2 = f2.rename(columns={"Family 2": "Family Level 2"})
-            f2 = f2.sort_values("Net", ascending=False)
-
-            fig_f2 = go.Figure()
-            fig_f2.add_bar(x=f2["Family Level 2"], y=f2["Net"], name="Net Sales",
-                           marker_color=COLORS["ACT"],
-                           text=f2["Net"].apply(lambda v: f"{v/1e9:.1f}B"),
-                           textposition="outside")
-            fig_f2.add_scatter(x=f2["Family Level 2"], y=f2["SGM%"], name="SGM%",
-                               mode="lines+markers+text",
-                               text=f2["SGM%"].round(1).astype(str) + "%",
-                               textposition="top center",
-                               line=dict(color="#22d3ee", width=2), yaxis="y2")
-            fig_f2.update_layout(height=480, margin=dict(t=30, b=130), template="seb_dark",
-                                 yaxis=dict(title="Net Sales"),
-                                 yaxis2=dict(title="SGM%", overlaying="y", side="right",
-                                             ticksuffix="%", showgrid=False),
-                                 legend=dict(orientation="h", y=-0.45), xaxis_tickangle=-40,
-                                 title="Net Sales & SGM% by Family Level 2")
-            st.plotly_chart(fig_f2, use_container_width=True)
-
-            col_a, col_b = st.columns([1, 1])
-            with col_a:
-                fig_donut2 = go.Figure(go.Pie(
-                    labels=f2["Family Level 2"], values=f2["Net"], hole=0.5, textinfo="percent",
-                    marker=dict(colors=["#3b82f6", "#22d3ee", "#a78bfa", "#f59e0b", "#16a34a",
-                                        "#9ca3af", "#ef4444", "#8b5cf6", "#14b8a6", "#f97316"])
-                ))
-                fig_donut2.update_layout(height=400, margin=dict(t=30, b=10),
-                                         template="seb_dark", title="Net Sales Proportion")
-                st.plotly_chart(fig_donut2, use_container_width=True)
-            with col_b:
-                st.dataframe(
-                    f2[["Family Level 2", "Gross", "Deduction", "Net", "SGM", "SGM%"]]
-                    .style.format({"Gross": "{:,.0f}", "Deduction": "{:,.0f}", "Net": "{:,.0f}",
-                                   "SGM": "{:,.0f}", "SGM%": "{:.1f}%"}),
-                    use_container_width=True, hide_index=True, height=400)
+        st.dataframe(
+            show_f2[["Family Level 2", "Gross", "Net", "Deduction", "Deduct%", "SGM", "SGM%"]]
+            .style.format(fmt),
+            use_container_width=True, hide_index=True, height=400)
 
 
 # ---- Contribution Mix ----

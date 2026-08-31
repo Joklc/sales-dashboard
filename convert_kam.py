@@ -106,6 +106,21 @@ ded["K"] = ded["DEALER NAME"].astype(str).str.strip().str.upper()
 DED_K = ded.drop_duplicates("K").set_index("K")["KAM"]
 DED_F = ded.drop_duplicates("K").set_index("K")["FIN"]
 
+# Bang tra Family 2 (Item code -> Family 2), lay tu mtd_cache.parquet neu co.
+# mtd_cache co san cot Item code + Family 2. Dung de gan Family 2 cho tab By Family Level 2.
+FAM2_MAP = None
+_mtd_path = os.path.join(DASHBOARD_DIR, "mtd_cache.parquet")
+if os.path.exists(_mtd_path):
+    try:
+        _m = pd.read_parquet(_mtd_path, columns=["Item code", "Family 2"])
+        _m["K"] = clean_code(_m["Item code"])
+        FAM2_MAP = _m.drop_duplicates("K").set_index("K")["Family 2"]
+        print(f"  Doc bang tra Family 2 tu mtd_cache: {len(FAM2_MAP)} item")
+    except Exception as e:
+        print(f"  ! Khong doc duoc Family 2 tu mtd_cache: {e}")
+else:
+    print("  ! Chua co mtd_cache.parquet - Family 2 se de trong (chay convert_mtd.py truoc)")
+
 
 # ==================================================
 # HAM XU LY 1 FILE NGUON
@@ -234,6 +249,18 @@ out = pd.DataFrame({
     "SGM_FIN":      df["SGM_FIN"],
 })
 
+# Family 2: map theo Item code; item nao chua co -> dung tam Product Line
+if FAM2_MAP is not None:
+    out["Family 2"] = clean_code(out["Item code"]).map(FAM2_MAP)
+    # Thieu Family 2 -> dien tam bang Product Line
+    miss = out["Family 2"].isna() | (out["Family 2"].astype(str).str.strip() == "")
+    out.loc[miss, "Family 2"] = out.loc[miss, "Product Line"]
+    out["Family 2"] = out["Family 2"].astype(str).replace("nan", "")
+    n_fam_tam = int(miss.sum())
+else:
+    out["Family 2"] = out["Product Line"]  # fallback: chua co mtd_cache
+    n_fam_tam = len(out)
+
 as_of = pd.Timestamp.now()
 out["As_of"] = as_of
 
@@ -260,6 +287,8 @@ if n_no_mla:
     print(f"  ! Co {n_no_mla} dong khong map duoc MLA (kiem tra Customer map)")
 if n_no_pl:
     print(f"  ! Co {n_no_pl} dong khong map duoc Product Line (kiem tra CMMF MAP)")
+if FAM2_MAP is not None and n_fam_tam:
+    print(f"  ! Co {n_fam_tam} dong Family 2 dung tam Product Line (item chua co trong mtd_cache)")
 
 # ==================================================
 # LUU

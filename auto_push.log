@@ -11230,3 +11230,131 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 Everything up-to-date
 [31-Aug-26 11:01:08.19] Xong 
+============================================================ 
+[31-Aug-26 12:00:01.91] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 27 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 370 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,562 dong | SO: 196 dong | SQ: 334 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 19 dong
+
+============================================================
+As of: 31-Aug-2026 12:00
+So dong chi tiet: 7,073
+So Channel: 11 | MLA: 37 | Item: 936
+Tong Gross : 76,961,285,513
+[KAM] Net 59,096,255,826 | SGM% 25.30%
+[FIN] Net 58,837,543,868 | SGM% 36.32%
+  ! Co 52 dong khong map duoc MLA (kiem tra Customer map)
+  ! Co 534 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 31-Aug-2026 12:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 5ad81a9] Auto update KAM + MTD 31-Aug-26 12:00:47.52
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   e45c267..5ad81a9  main -> main
+[31-Aug-26 12:00:52.67] Xong 
+============================================================ 
+[31-Aug-26 14:41:32.31] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+Traceback (most recent call last):
+  File "C:\AI_Dashboard\convert_kam.py", line 195, in <module>
+    ACT = build_source(
+        F_ACT, "Sales detail with COGS", 3,
+        dict(cust="Customer code", item="Item code", comm="Comm. code",
+             name="Item name", qty="Quantity", gross="Line Totalafter All DC"),
+        net_gt0=False, cancel_col="CANCELED")
+  File "C:\AI_Dashboard\convert_kam.py", line 131, in build_source
+    df = pd.read_excel(P(fname), sheet_name=sheet, header=header)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 494, in read_excel
+    data = io.parse(
+        sheet_name=sheet_name,
+    ...<20 lines>...
+        dtype_backend=dtype_backend,
+    )
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 1780, in parse
+    return self._reader.parse(
+           ~~~~~~~~~~~~~~~~~~^
+        sheet_name=sheet_name,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<16 lines>...
+        **kwds,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 758, in parse
+    data = self.get_sheet_data(sheet, file_rows_needed)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 622, in get_sheet_data
+    for row_number, row in enumerate(sheet.rows):
+                           ~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_read_only.py", line 85, in _cells_by_row
+    for idx, row in parser.parse():
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_reader.py", line 156, in parse
+    for _, element in it:
+                      ^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\xml\etree\ElementTree.py", line 1262, in iterator
+    data = source.read(16 * 1024)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1105, in read
+    data = self._read1(n)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1173, in _read1
+    data += self._read2(n - len(data))
+            ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1205, in _read2
+    data = self._fileobj.read(n)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 924, in read
+    data = self._file.read(n)
+FileNotFoundError: [Errno 2] No such file or directory
+[31-Aug-26 18:59:30.03] LOI convert_kam.py - bo qua lan nay 
+============================================================ 
+[31-Aug-26 18:59:40.56] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Dashboard\AI_MTD_rawdata
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[31-Aug-26 18:59:44.48] Khong co thay doi data - khong push 
+============================================================ 
+[31-Aug-26 19:00:03.50] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Dashboard\AI_MTD_rawdata
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[31-Aug-26 19:00:20.44] Khong co thay doi data - khong push 
