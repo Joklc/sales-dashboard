@@ -24,6 +24,29 @@ Logic:
 """
 import pandas as pd
 import os
+import time
+import zipfile
+import xml.etree.ElementTree
+
+
+def read_excel_retry(path, retries=3, wait=5, **kwargs):
+    """Doc file Excel, tu dong thu lai neu file dang duoc SQL ghi do dang.
+    Cac loi thuong gap khi file chua ghi xong: BadZipFile, EOFError, ParseError.
+    Thu lai toi da 'retries' lan, moi lan cach 'wait' giay."""
+    last_err = None
+    for attempt in range(1, retries + 1):
+        try:
+            return pd.read_excel(path, **kwargs)
+        except (zipfile.BadZipFile, EOFError,
+                xml.etree.ElementTree.ParseError) as e:
+            last_err = e
+            if attempt < retries:
+                print(f"    ! File dang ghi do ({os.path.basename(path)}), "
+                      f"thu lai lan {attempt+1}/{retries} sau {wait}s...")
+                time.sleep(wait)
+            else:
+                print(f"    ! File {os.path.basename(path)} van loi sau {retries} lan thu.")
+    raise last_err
 
 # ==================================================
 # DUONG DAN
@@ -83,25 +106,25 @@ print("Doc cac bang tra cuu...")
 # ==================================================
 # BANG TRA CUU
 # ==================================================
-cust = pd.read_excel(P(F_CUST), header=0)
+cust = read_excel_retry(P(F_CUST), header=0)
 cust["K"] = clean_code(cust["Customer code"])
 CUST_MLA = cust.drop_duplicates("K").set_index("K")["MLA NAME"]
 CUST_CH  = cust.drop_duplicates("K").set_index("K")["CHANNEL NAME"]
 
-cmmf = pd.read_excel(P(F_CMMF), header=0)
+cmmf = read_excel_retry(P(F_CMMF), header=0)
 cmmf.columns = [str(c).strip() for c in cmmf.columns]
 cmmf["K"] = clean_code(cmmf["Item Code"])
 CMMF_PL = cmmf.drop_duplicates("K").set_index("K")["Product Line"]
 
-pk = pd.read_excel(P(F_PRSC_KAM), sheet_name="PRSC_KAM", header=0)
+pk = read_excel_retry(P(F_PRSC_KAM), sheet_name="PRSC_KAM", header=0)
 pk["K"] = clean_code(pk["Item code"])
 PRSC_K = pk.drop_duplicates("K").set_index("K")["PRSC -KAM"]
 
-pf = pd.read_excel(P(F_PRSC_FIN), sheet_name="PRSC_FIN", header=0)
+pf = read_excel_retry(P(F_PRSC_FIN), sheet_name="PRSC_FIN", header=0)
 pf["K"] = clean_code(pf["Item code"])
 PRSC_F = pf.drop_duplicates("K").set_index("K")["PRSC - FIN"]
 
-ded = pd.read_excel(DED_PATH, sheet_name="MAPPING", header=1)
+ded = read_excel_retry(DED_PATH, sheet_name="MAPPING", header=1)
 ded["K"] = ded["DEALER NAME"].astype(str).str.strip().str.upper()
 DED_K = ded.drop_duplicates("K").set_index("K")["KAM"]
 DED_F = ded.drop_duplicates("K").set_index("K")["FIN"]
@@ -128,7 +151,7 @@ else:
 def build_source(fname, sheet, header, col, net_gt0, cancel_col=None):
     """Doc 1 file nguon, gom nhom, map, tra ve bang chuan.
     cancel_col: neu co, chi giu dong co gia tri = 'N' (bo CANCELED Y/C)."""
-    df = pd.read_excel(P(fname), sheet_name=sheet, header=header)
+    df = read_excel_retry(P(fname), sheet_name=sheet, header=header)
     df.columns = [str(c).strip() for c in df.columns]
 
     # Bo dong Grand Total / dong tong / dong rong:

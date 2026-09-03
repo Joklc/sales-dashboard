@@ -11358,3 +11358,667 @@ Duong dan: X:\Finance 2.Controlling\Dashboard\AI_MTD_rawdata
 Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
 ============================================================
 [31-Aug-26 19:00:20.44] Khong co thay doi data - khong push 
+============================================================ 
+[31-Aug-26 20:00:02.00] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 22 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 374 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 7,042 dong | SO: 120 dong | SQ: 43 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 19 dong
+
+============================================================
+As of: 31-Aug-2026 20:01
+So dong chi tiet: 7,186
+So Channel: 11 | MLA: 37 | Item: 952
+Tong Gross : 77,938,514,612
+[KAM] Net 59,848,396,559 | SGM% 25.28%
+[FIN] Net 59,584,000,061 | SGM% 36.28%
+  ! Co 52 dong khong map duoc MLA (kiem tra Customer map)
+  ! Co 562 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 31-Aug-2026 20:01
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 0c6b0d7] Auto update KAM + MTD 31-Aug-26 20:01:09.58
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   ef92f8e..0c6b0d7  main -> main
+[31-Aug-26 20:01:15.37] Xong 
+============================================================ 
+[31-Aug-26 21:00:01.97] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 22 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 374 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 7,078 dong | SO: 20 dong | SQ: 29 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 19 dong
+
+============================================================
+As of: 31-Aug-2026 21:02
+So dong chi tiet: 7,108
+So Channel: 10 | MLA: 36 | Item: 938
+Tong Gross : 77,600,635,536
+[KAM] Net 59,682,823,615 | SGM% 25.51%
+[FIN] Net 59,418,427,117 | SGM% 36.48%
+  ! Co 52 dong khong map duoc MLA (kiem tra Customer map)
+  ! Co 528 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 31-Aug-2026 21:02
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 423fddb] Auto update KAM + MTD 31-Aug-26 21:02:45.35
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   0c6b0d7..423fddb  main -> main
+[31-Aug-26 21:02:53.45] Xong 
+============================================================ 
+[31-Aug-26 22:00:02.00] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 22 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 374 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 7,090 dong | SO: 20 dong | SQ: 20 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 19 dong
+
+============================================================
+As of: 31-Aug-2026 22:00
+So dong chi tiet: 7,111
+So Channel: 10 | MLA: 36 | Item: 938
+Tong Gross : 76,891,192,030
+[KAM] Net 59,135,696,794 | SGM% 25.27%
+[FIN] Net 58,871,300,295 | SGM% 36.24%
+  ! Co 52 dong khong map duoc MLA (kiem tra Customer map)
+  ! Co 530 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 31-Aug-2026 22:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 5fa1bc0] Auto update KAM + MTD 31-Aug-26 22:00:58.68
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   423fddb..5fa1bc0  main -> main
+[31-Aug-26 22:01:04.88] Xong 
+============================================================ 
+[01-Sep-26 17:06:15.76] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 22 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 374 dong CANCELED (giu CANCELED = N)
+  ACT: 7,090 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 15 dong
+
+============================================================
+As of: 01-Sep-2026 17:07
+So dong chi tiet: 7,075
+So Channel: 10 | MLA: 35 | Item: 937
+Tong Gross : 76,790,934,888
+[KAM] Net 58,962,016,869 | SGM% 25.17%
+[FIN] Net 58,693,752,752 | SGM% 36.15%
+  ! Co 523 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 01-Sep-2026 17:07
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main c174e8a] Auto update KAM + MTD 01-Sep-26 17:07:21.58
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   5fa1bc0..c174e8a  main -> main
+[01-Sep-26 17:07:28.10] Xong 
+============================================================ 
+[03-Sep-26  8:57:22.81] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 22 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 374 dong CANCELED (giu CANCELED = N)
+  ACT: 7,090 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 15 dong
+
+============================================================
+As of: 03-Sep-2026 08:58
+So dong chi tiet: 7,075
+So Channel: 10 | MLA: 35 | Item: 937
+Tong Gross : 76,790,934,888
+[KAM] Net 58,962,016,869 | SGM% 25.17%
+[FIN] Net 58,693,752,752 | SGM% 36.15%
+  ! Co 523 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 08:58
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main f298a26] Auto update KAM + MTD 03-Sep-26  8:59:00.20
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   c174e8a..f298a26  main -> main
+[03-Sep-26  8:59:07.47] Xong 
+============================================================ 
+[03-Sep-26  9:00:02.50] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Dashboard\AI_MTD_rawdata
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[03-Sep-26  9:01:07.16] Khong co thay doi data - khong push 
+============================================================ 
+[03-Sep-26  9:06:15.51] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 22 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 374 dong CANCELED (giu CANCELED = N)
+  ACT: 7,090 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 15 dong
+
+============================================================
+As of: 03-Sep-2026 09:07
+So dong chi tiet: 7,075
+So Channel: 10 | MLA: 35 | Item: 937
+Tong Gross : 76,790,934,888
+[KAM] Net 58,962,016,869 | SGM% 25.17%
+[FIN] Net 58,693,752,752 | SGM% 36.15%
+  ! Co 523 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 09:07
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 925c8cc] Auto update KAM + MTD 03-Sep-26  9:07:55.33
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   f298a26..925c8cc  main -> main
+[03-Sep-26  9:08:03.88] Xong 
+============================================================ 
+[03-Sep-26 10:00:02.43] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+Traceback (most recent call last):
+  File "C:\AI_Dashboard\convert_kam.py", line 195, in <module>
+    ACT = build_source(
+        F_ACT, "Sales detail with COGS", 3,
+        dict(cust="Customer code", item="Item code", comm="Comm. code",
+             name="Item name", qty="Quantity", gross="Line Totalafter All DC"),
+        net_gt0=False, cancel_col="CANCELED")
+  File "C:\AI_Dashboard\convert_kam.py", line 131, in build_source
+    df = pd.read_excel(P(fname), sheet_name=sheet, header=header)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 494, in read_excel
+    data = io.parse(
+        sheet_name=sheet_name,
+    ...<20 lines>...
+        dtype_backend=dtype_backend,
+    )
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 1780, in parse
+    return self._reader.parse(
+           ~~~~~~~~~~~~~~~~~~^
+        sheet_name=sheet_name,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<16 lines>...
+        **kwds,
+        ^^^^^^^
+    )
+    ^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_base.py", line 758, in parse
+    data = self.get_sheet_data(sheet, file_rows_needed)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 622, in get_sheet_data
+    for row_number, row in enumerate(sheet.rows):
+                           ~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_read_only.py", line 85, in _cells_by_row
+    for idx, row in parser.parse():
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\openpyxl\worksheet\_reader.py", line 156, in parse
+    for _, element in it:
+                      ^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\xml\etree\ElementTree.py", line 1262, in iterator
+    data = source.read(16 * 1024)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1105, in read
+    data = self._read1(n)
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1173, in _read1
+    data += self._read2(n - len(data))
+            ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\klcnguyen\AppData\Local\Python\pythoncore-3.14-64\Lib\zipfile\__init__.py", line 1208, in _read2
+    raise EOFError
+EOFError
+[03-Sep-26 10:00:31.40] LOI convert_kam.py - bo qua lan nay 
+============================================================ 
+[03-Sep-26 11:00:01.82] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+  ACT: 2 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 03-Sep-2026 11:00
+So dong chi tiet: 2
+So Channel: 1 | MLA: 1 | Item: 2
+Tong Gross : 679,630
+[KAM] Net 679,630 | SGM% 0.49%
+[FIN] Net 679,630 | SGM% 17.05%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 11:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main d1eb435] Auto update KAM + MTD 03-Sep-26 11:00:14.41
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   925c8cc..d1eb435  main -> main
+[03-Sep-26 11:00:19.55] Xong 
+============================================================ 
+[03-Sep-26 12:00:01.89] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+  ACT: 2 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 03-Sep-2026 12:00
+So dong chi tiet: 2
+So Channel: 1 | MLA: 1 | Item: 2
+Tong Gross : 679,630
+[KAM] Net 679,630 | SGM% 0.49%
+[FIN] Net 679,630 | SGM% 17.05%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 12:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 9a5f042] Auto update KAM + MTD 03-Sep-26 12:00:13.34
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   d1eb435..9a5f042  main -> main
+[03-Sep-26 12:00:18.52] Xong 
+============================================================ 
+[03-Sep-26 13:00:01.88] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+  ACT: 2 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 03-Sep-2026 13:00
+So dong chi tiet: 2
+So Channel: 1 | MLA: 1 | Item: 2
+Tong Gross : 679,630
+[KAM] Net 679,630 | SGM% 0.49%
+[FIN] Net 679,630 | SGM% 17.05%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 13:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 281e275] Auto update KAM + MTD 03-Sep-26 13:00:09.22
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   9a5f042..281e275  main -> main
+[03-Sep-26 13:00:14.32] Xong 
+============================================================ 
+[03-Sep-26 14:00:01.90] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+  ACT: 2 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 03-Sep-2026 14:00
+So dong chi tiet: 2
+So Channel: 1 | MLA: 1 | Item: 2
+Tong Gross : 679,630
+[KAM] Net 679,630 | SGM% 0.49%
+[FIN] Net 679,630 | SGM% 17.05%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 14:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 38e8eb4] Auto update KAM + MTD 03-Sep-26 14:00:16.41
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   281e275..38e8eb4  main -> main
+[03-Sep-26 14:00:25.49] Xong 
+============================================================ 
+[03-Sep-26 15:00:33.66] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+  ACT: 20 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 03-Sep-2026 15:00
+So dong chi tiet: 20
+So Channel: 2 | MLA: 3 | Item: 16
+Tong Gross : 133,791,378
+[KAM] Net 113,423,513 | SGM% 30.46%
+[FIN] Net 113,423,513 | SGM% 39.52%
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 15:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main bf5acb8] Auto update KAM + MTD 03-Sep-26 15:00:42.26
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   38e8eb4..bf5acb8  main -> main
+[03-Sep-26 15:00:47.91] Xong 
+============================================================ 
+[03-Sep-26 16:11:19.05] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+  ACT: 29 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 03-Sep-2026 16:11
+So dong chi tiet: 29
+So Channel: 2 | MLA: 4 | Item: 25
+Tong Gross : 134,910,658
+[KAM] Net 114,542,793 | SGM% 30.42%
+[FIN] Net 114,542,793 | SGM% 39.48%
+  ! Co 1 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 16:11
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 77c5318] Auto update KAM + MTD 03-Sep-26 16:11:36.75
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   bf5acb8..77c5318  main -> main
+[03-Sep-26 16:11:41.81] Xong 
+============================================================ 
+[03-Sep-26 17:00:01.92] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 1 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 0 dong CANCELED (giu CANCELED = N)
+  ACT: 46 dong | SO: 0 dong | SQ: 0 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 0 dong
+
+============================================================
+As of: 03-Sep-2026 17:00
+So dong chi tiet: 46
+So Channel: 2 | MLA: 4 | Item: 42
+Tong Gross : 138,545,617
+[KAM] Net 118,177,752 | SGM% 29.93%
+[FIN] Net 118,177,752 | SGM% 39.04%
+  ! Co 9 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 03-Sep-2026 17:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main cfe13af] Auto update KAM + MTD 03-Sep-26 17:00:36.71
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   77c5318..cfe13af  main -> main
+[03-Sep-26 17:00:42.85] Xong 
