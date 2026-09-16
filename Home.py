@@ -25,7 +25,8 @@ def check_password():
     st.markdown("<br><br>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
-        st.markdown("### 🔒 Groupe SEB — Sales & P&L Dashboard")
+        st.markdown("<h3 style='color:#dc2626;'>🔒 Business overview</h3>",
+                    unsafe_allow_html=True)
         st.text_input("Please enter password to access:", type="password",
                       key="pwd_input", on_change=password_entered)
         if "authenticated" in st.session_state and not st.session_state["authenticated"]:
