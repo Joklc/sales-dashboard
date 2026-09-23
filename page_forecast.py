@@ -84,6 +84,7 @@ FAMILY_MAP = {
     "CONVIVIAL COOKG":      "CONVIVIAL COOKING",
     "DAILY ING.PROCESSOR":  "DAILY INGREDIENTS PROCESSOR",
     "ELECT.PRES.CK&MULTI":  "ELECTRIC PRESSURE COOKER & MULTICOOKER",
+    "EPC & MULTICOOKER":    "ELECTRIC PRESSURE COOKER & MULTICOOKER",
     "HANDSTICK VAC.CLEAN.": "HANDSTICK VACUUM CLEANER",
     "P&P FIXED HANDLES AL": "P&P FIXED HANDLES ALUMINIUM",
     "P&P FIXED HANDLES OT": "P&P FIXED HANDLES OTHER",
@@ -97,8 +98,13 @@ FAMILY_MAP = {
 
 
 def norm_family(s):
-    """Chuan hoa ten Family: chu hoa, bo khoang trang thua, roi ap bang anh xa."""
+    """Chuan hoa ten Family: chu hoa, bo khoang trang thua, bo tien to ma
+    (vd 'H01 FAN' -> 'FAN', 'C08 RICE COOKER' -> 'RICE COOKER'), roi ap bang anh xa.
+    Tien to ma xuat hien o file forecast kieu moi (F8+4): 1 chu cai + 2 chu so + khoang trang."""
+    import re as _re
     s = " ".join(str(s).strip().upper().split())
+    # Bo tien to ma dau ten: 1 chu + 2 so + space  (H01 , C08 , S02 , ...)
+    s = _re.sub(r"^[A-Z]\d{2}\s+", "", s)
     return FAMILY_MAP.get(s, s)
 
 
