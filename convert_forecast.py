@@ -58,16 +58,34 @@ def parse_forecast_file(path, fc_name):
     months_row = raw.iloc[0]
     kind_row   = raw.iloc[1]
 
-    # Xac dinh vi tri cot cho tung thang
+    # Xac dinh vi tri cot cho tung thang.
+    # Ho tro 2 dinh dang:
+    #   Kieu cu (F5+7): loai = "Sales" / "COS" / "SGM%"
+    #   Kieu moi (F8+4): loai = "YTD Sales"/"YTD SGM%" (thang actual)
+    #                          "YTG Sales Sim"/"YTG SGM% Sim" (thang forecast)
+    # Chuan hoa moi loai ve 3 nhan chung: Sales / COS / SGM%
+    def norm_kind(k):
+        k = str(k).strip().lower()
+        if k in ("sales",): return "Sales"
+        if k in ("cos",): return "COS"
+        if k in ("sgm%", "sgm %"): return "SGM%"
+        # Kieu YTD / YTG
+        if "sgm%" in k or "sgm %" in k:      # "ytd sgm%", "ytg sgm% sim"
+            return "SGM%"
+        if "sales" in k:                      # "ytd sales", "ytg sales sim"
+            return "Sales"
+        return None
+
     col_map = {}
     for c in range(raw.shape[1]):
         m, k = months_row[c], kind_row[c]
         if pd.isna(m) or pd.isna(k):
             continue
         m3 = str(m).strip()[:3]
-        k = str(k).strip()
-        if m3 in MONTH_ORDER and k in ("Sales", "COS", "SGM%"):
-            col_map.setdefault(m3, {})[k] = c
+        kk = norm_kind(k)
+        # Bo qua cot Grand Total (m3 = "Gra")
+        if m3 in MONTH_ORDER and kk in ("Sales", "COS", "SGM%"):
+            col_map.setdefault(m3, {})[kk] = c
 
     if not col_map:
         print(f"    ! Khong doc duoc cot thang trong {fc_name}, bo qua file nay.")
@@ -104,21 +122,31 @@ def parse_forecast_file(path, fc_name):
             cos = pd.to_numeric(cos, errors="coerce")
             sgm_pct = pd.to_numeric(sgm_pct, errors="coerce")
 
-            # Bo dong rong hoan toan
-            if pd.isna(ns) and pd.isna(cos):
+            # Bo dong rong (khong co Sales)
+            if pd.isna(ns):
                 continue
 
             ns  = 0.0 if pd.isna(ns)  else float(ns)
-            cos = 0.0 if pd.isna(cos) else float(cos)
-
-            # SGM tien = Sales + COS  (COS trong file la so am)
-            sgm_amt = ns + cos
 
             # SGM% trong file la dang 45.02 (khong phai 0.4502)
-            if pd.isna(sgm_pct):
-                sgm_pct = (sgm_amt / ns * 100) if ns else 0.0
-            else:
+            has_sgmpct = pd.notna(sgm_pct)
+            if has_sgmpct:
                 sgm_pct = float(sgm_pct)
+
+            if pd.notna(cos):
+                # Co cot COS (kieu cu F5+7): SGM tien = Sales + COS (COS am)
+                cos = float(cos)
+                sgm_amt = ns + cos
+                if not has_sgmpct:
+                    sgm_pct = (sgm_amt / ns * 100) if ns else 0.0
+            else:
+                # Khong co COS (kieu F8+4): tinh SGM tien tu SGM%
+                cos = 0.0
+                if has_sgmpct:
+                    sgm_amt = ns * sgm_pct / 100.0
+                else:
+                    sgm_amt = 0.0
+                    sgm_pct = 0.0
 
             rows.append({
                 "Forecast":       fc_name,
