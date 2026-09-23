@@ -31,7 +31,6 @@ def check_password():
                       key="pwd_input", on_change=password_entered)
         if "authenticated" in st.session_state and not st.session_state["authenticated"]:
             st.error("❌ Incorrect password. Please try again.")
-        st.caption("Please contact the Finance team if you don't have the password.")
     return False
 
 if not check_password():
