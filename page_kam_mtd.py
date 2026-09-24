@@ -440,145 +440,179 @@ with tab5:
         use_container_width=True, height=460
     )
 
-    # ===== So sanh Product Line: Actual vs F5+7 =====
+    # ===== So sanh Actual vs Forecast: theo Product Line / Family Level 2 =====
     st.markdown("---")
-    st.markdown("#### Actual vs Forecast — by Product Line")
+    st.markdown("#### Actual vs Forecast")
 
     FC_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "forecast_cache.parquet")
 
     if not os.path.exists(FC_FILE):
-        st.info("Chua co forecast_cache.parquet. Chay convert_forecast.py de so voi F5+7.")
+        st.info("Chua co forecast_cache.parquet. Chay convert_forecast.py de so voi forecast.")
     else:
+        import re
         df_fc = pd.read_parquet(FC_FILE)
         MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-        # Bang anh xa ten Product Line: Forecast (AND) -> Actual (&)
+        # ---- Chuan hoa ten Product Line ----
+        # F8+4 co tien to 1 chu cai: "B Electrical Cooking", "S Cookware And Bakeware"
         PL_MAP = {
-            "COOKWARE AND BAKEWARE":      "COOKWARE & BAKEWARE",
-            "KITCHENWARE AND DINNERWARE": "KITCHENWARE & DINNER",
-            "SPARE PARTS AND OTHERS":     "SPARE PARTS & OTHERS",
+            "KITCHENWARE & DINNERWARE": "KITCHENWARE & DINNER",
         }
 
         def norm_pl(s):
             s = " ".join(str(s).strip().upper().split())
+            s = re.sub(r"^[A-Z]\s+", "", s)          # bo tien to "B ", "S "...
+            s = s.replace(" AND ", " & ")
             return PL_MAP.get(s, s)
+
+        # ---- Chuan hoa ten Family Level 2 (giong page_forecast) ----
+        # F8+4 co tien to ma: "H01 FAN", "C08 RICE COOKER"
+        FAMILY_MAP = {
+            "EPC & MULTICOOKER": "ELECTRIC PRESSURE COOKER & MULTICOOKER",
+        }
+
+        def norm_family(s):
+            s = " ".join(str(s).strip().upper().split())
+            s = re.sub(r"^[A-Z]\d{2}\s+", "", s)     # bo tien to "H01 ", "C08 "...
+            s = s.replace(" AND ", " & ")
+            return FAMILY_MAP.get(s, s)
 
         fc_rounds = sorted(df_fc["Forecast"].dropna().unique())
         fc_months = [m for m in MONTH_ORDER if m in df_fc["MONTH"].unique()]
 
-        c1, c2 = st.columns(2)
+        c1, c2, c3 = st.columns([1, 1, 1])
         sel_round = c1.selectbox("Forecast round", fc_rounds,
-                                 index=fc_rounds.index("F5+7") if "F5+7" in fc_rounds else 0)
-        # Mac dinh thang moi nhat co forecast
+                                 index=len(fc_rounds) - 1 if fc_rounds else 0)
         sel_m = c2.selectbox("Month (so Actual MTD voi thang nay cua forecast)",
                              fc_months, index=len(fc_months) - 1 if fc_months else 0)
+        sel_dim = c3.radio("So sanh theo", ["Product Line", "Family Level 2"],
+                           horizontal=True, key="fc_dim")
 
-        fc = df_fc[(df_fc["Forecast"] == sel_round) & (df_fc["MONTH"] == sel_m)].copy()
-        # F5+7 theo KVND (nghin VND), KAM theo VND day du -> nhan forecast x 1000
-        FC_UNIT = 1000
-        fc_pl = (fc.groupby("Product Line", as_index=False, observed=True)
-                 .agg(NS_FC=("NS_FC", "sum"), SGM_FC=("SGM_FC", "sum")))
-        fc_pl["NS_FC"] = fc_pl["NS_FC"] * FC_UNIT
-        fc_pl["SGM_FC"] = fc_pl["SGM_FC"] * FC_UNIT
-        fc_pl["KEY"] = fc_pl["Product Line"].map(norm_pl)
-        # Gop lai neu nhieu ten forecast tro ve cung 1 ten chuan
-        fc_pl = fc_pl.groupby("KEY", as_index=False).agg(
-            NS_FC=("NS_FC", "sum"), SGM_FC=("SGM_FC", "sum"))
+        if sel_dim == "Product Line":
+            act_col, fc_col, norm_fn = "Product Line", "Product Line", norm_pl
+        else:
+            act_col, fc_col, norm_fn = "Family 2", "Family Level 2", norm_family
 
-        # Actual theo Product Line (tu KAM dang loc)
-        act_pl = (dff.groupby("Product Line", as_index=False, observed=True)
-                  .agg(NS_ACT=("Net", "sum"), SGM_ACT=("SGM", "sum")))
-        act_pl["KEY"] = act_pl["Product Line"].map(norm_pl)
-        act_pl = act_pl.groupby("KEY", as_index=False).agg(
-            NS_ACT=("NS_ACT", "sum"), SGM_ACT=("SGM_ACT", "sum"))
+        if act_col not in dff.columns or fc_col not in df_fc.columns:
+            st.info(f"Thieu cot {act_col} (kam_cache) hoac {fc_col} (forecast_cache).")
+        else:
+            fc = df_fc[(df_fc["Forecast"] == sel_round) & (df_fc["MONTH"] == sel_m)].copy()
+            # Forecast theo KVND, KAM theo VND -> nhan forecast x 1000
+            FC_UNIT = 1000
+            fc["KEY"] = fc[fc_col].map(norm_fn)
+            fc_g = fc.groupby("KEY", as_index=False).agg(
+                NS_FC=("NS_FC", "sum"), SGM_FC=("SGM_FC", "sum"),
+                FC_NAME=(fc_col, "first"))
+            fc_g["NS_FC"] = fc_g["NS_FC"] * FC_UNIT
+            fc_g["SGM_FC"] = fc_g["SGM_FC"] * FC_UNIT
 
-        cmp = act_pl.merge(fc_pl, on="KEY", how="outer")
-        cmp["Product Line"] = cmp["KEY"].str.title()
-        for c in ["NS_ACT", "SGM_ACT", "NS_FC", "SGM_FC"]:
-            cmp[c] = pd.to_numeric(cmp[c], errors="coerce").fillna(0)
-        cmp = cmp[(cmp["NS_ACT"] != 0) | (cmp["NS_FC"] != 0)]
+            act = dff[[act_col, "Net", "SGM"]].copy()
+            act["KEY"] = act[act_col].map(norm_fn)
+            act_g = act.groupby("KEY", as_index=False).agg(
+                NS_ACT=("Net", "sum"), SGM_ACT=("SGM", "sum"),
+                ACT_NAME=(act_col, "first"))
 
-        cmp["GAP"] = cmp["NS_ACT"] - cmp["NS_FC"]
-        cmp["VAR_%"] = cmp.apply(lambda r: safe_pct(r["NS_ACT"] - r["NS_FC"], r["NS_FC"]), axis=1)
-        cmp["SGM%_ACT"] = cmp.apply(lambda r: safe_pct(r["SGM_ACT"], r["NS_ACT"]), axis=1)
-        cmp["SGM%_FC"] = cmp.apply(lambda r: safe_pct(r["SGM_FC"], r["NS_FC"]), axis=1)
-        cmp = cmp.sort_values("NS_ACT", ascending=False)
+            cmp = act_g.merge(fc_g, on="KEY", how="outer")
+            # Ten hien thi: uu tien ten ben Actual
+            cmp[sel_dim] = cmp["ACT_NAME"].fillna(cmp["KEY"].str.title())
+            for c in ["NS_ACT", "SGM_ACT", "NS_FC", "SGM_FC"]:
+                cmp[c] = pd.to_numeric(cmp[c], errors="coerce").fillna(0)
+            cmp = cmp[(cmp["NS_ACT"] != 0) | (cmp["NS_FC"] != 0)]
 
-        show_cmp = cmp[["Product Line", "NS_ACT", "NS_FC", "GAP", "VAR_%",
-                        "SGM%_ACT", "SGM%_FC"]].copy()
-        show_cmp["SGM_GAP"] = show_cmp["SGM%_ACT"] - show_cmp["SGM%_FC"]
-        show_cmp.columns = ["Product Line", "NS Actual", f"NS {sel_round}", "Gap", "Var %",
-                            "SGM% Act", "SGM% FC", "SGM% gap"]
+            cmp["GAP"] = cmp["NS_ACT"] - cmp["NS_FC"]
+            cmp["VAR_%"] = cmp.apply(lambda r: safe_pct(r["NS_ACT"] - r["NS_FC"], r["NS_FC"]), axis=1)
+            cmp["SGM%_ACT"] = cmp.apply(lambda r: safe_pct(r["SGM_ACT"], r["NS_ACT"]), axis=1)
+            cmp["SGM%_FC"] = cmp.apply(lambda r: safe_pct(r["SGM_FC"], r["NS_FC"]), axis=1)
+            cmp = cmp.sort_values("NS_ACT", ascending=False)
 
-        # ----- Dong Grand Total -----
-        t_act = cmp["NS_ACT"].sum()
-        t_fc  = cmp["NS_FC"].sum()
-        t_sgm_act = cmp["SGM_ACT"].sum()
-        t_sgm_fc  = cmp["SGM_FC"].sum()
-        gt_sgm_act = safe_pct(t_sgm_act, t_act)
-        gt_sgm_fc  = safe_pct(t_sgm_fc, t_fc)
-        grand = {
-            "Product Line": "GRAND TOTAL",
-            "NS Actual": t_act,
-            f"NS {sel_round}": t_fc,
-            "Gap": t_act - t_fc,
-            "Var %": safe_pct(t_act - t_fc, t_fc),
-            "SGM% Act": gt_sgm_act,
-            "SGM% FC": gt_sgm_fc,
-            "SGM% gap": gt_sgm_act - gt_sgm_fc,
-        }
-        show_cmp = pd.concat([show_cmp, pd.DataFrame([grand])], ignore_index=True)
+            show_cmp = cmp[[sel_dim, "NS_ACT", "NS_FC", "GAP", "VAR_%",
+                            "SGM%_ACT", "SGM%_FC"]].copy()
+            show_cmp["SGM_GAP"] = show_cmp["SGM%_ACT"] - show_cmp["SGM%_FC"]
+            show_cmp.columns = [sel_dim, "NS Actual", f"NS {sel_round}", "Gap", "Var %",
+                                "SGM% Act", "SGM% FC", "SGM% gap"]
 
-        def color_pn(v):
-            try:
-                v = float(v)
-            except (TypeError, ValueError):
+            # ----- Dong Grand Total -----
+            t_act = cmp["NS_ACT"].sum()
+            t_fc  = cmp["NS_FC"].sum()
+            gt_sgm_act = safe_pct(cmp["SGM_ACT"].sum(), t_act)
+            gt_sgm_fc  = safe_pct(cmp["SGM_FC"].sum(), t_fc)
+            grand = {
+                sel_dim: "GRAND TOTAL",
+                "NS Actual": t_act,
+                f"NS {sel_round}": t_fc,
+                "Gap": t_act - t_fc,
+                "Var %": safe_pct(t_act - t_fc, t_fc),
+                "SGM% Act": gt_sgm_act,
+                "SGM% FC": gt_sgm_fc,
+                "SGM% gap": gt_sgm_act - gt_sgm_fc,
+            }
+            show_cmp = pd.concat([show_cmp, pd.DataFrame([grand])], ignore_index=True)
+
+            def color_pn(v):
+                try:
+                    v = float(v)
+                except (TypeError, ValueError):
+                    return ""
+                if v > 0: return "color: #16a34a; font-weight: 700;"
+                if v < 0: return "color: #dc2626; font-weight: 700;"
                 return ""
-            if v > 0: return "color: #16a34a; font-weight: 700;"
-            if v < 0: return "color: #dc2626; font-weight: 700;"
-            return ""
 
-        def bold_total(row):
-            if str(row["Product Line"]).strip().upper() == "GRAND TOTAL":
-                return ["font-weight: 800; border-top: 2px solid #94a3b8;"] * len(row)
-            return [""] * len(row)
+            def bold_total(row):
+                if str(row[sel_dim]).strip().upper() == "GRAND TOTAL":
+                    return ["font-weight: 800; border-top: 2px solid #94a3b8;"] * len(row)
+                return [""] * len(row)
 
-        # ===== Bo tri 2 cot: bang trai, chart Gap ngang phai =====
-        col_tbl, col_chart = st.columns([1.25, 1])
+            n_rows = len(cmp)
+            h = max(430, min(900, 35 * (n_rows + 2)))
 
-        with col_tbl:
-            st.dataframe(
-                show_cmp.style.format({
-                    "NS Actual": "{:,.0f}", f"NS {sel_round}": "{:,.0f}", "Gap": "{:,.0f}",
-                    "Var %": "{:+.1f}%", "SGM% Act": "{:.2f}%", "SGM% FC": "{:.2f}%",
-                    "SGM% gap": "{:+.2f}",
-                }).apply(bold_total, axis=1)
-                  .map(color_pn, subset=["Gap", "Var %", "SGM% gap"]),
-                use_container_width=True, hide_index=True, height=430
-            )
+            # ===== Bo tri 2 cot: bang trai, chart Gap ngang phai =====
+            col_tbl, col_chart = st.columns([1.25, 1])
 
-        with col_chart:
-            gap_df = cmp.sort_values("GAP")   # am truoc, duong sau
-            bar_colors = [COLORS["POS"] if g >= 0 else COLORS["NEG"] for g in gap_df["GAP"]]
-            fig_gap = go.Figure(go.Bar(
-                y=gap_df["Product Line"], x=gap_df["GAP"], orientation="h",
-                marker_color=bar_colors,
-                text=[f"{g/1e9:+.1f}B" for g in gap_df["GAP"]],
-                textposition="outside", cliponaxis=False,
-            ))
-            fig_gap.add_vline(x=0, line_color="#94a3b8", line_width=1)
-            fig_gap.update_layout(
-                template="seb_dark", height=430,
-                margin=dict(t=40, b=20, l=10, r=60),
-                xaxis_title="Gap vs Forecast (Actual − F5+7)",
-                showlegend=False,
-                title=f"Gap vs {sel_round} ({sel_m}) by Product Line",
-            )
-            st.plotly_chart(fig_gap, use_container_width=True)
+            with col_tbl:
+                st.dataframe(
+                    show_cmp.style.format({
+                        "NS Actual": "{:,.0f}", f"NS {sel_round}": "{:,.0f}", "Gap": "{:,.0f}",
+                        "Var %": "{:+.1f}%", "SGM% Act": "{:.2f}%", "SGM% FC": "{:.2f}%",
+                        "SGM% gap": "{:+.2f}",
+                    }).apply(bold_total, axis=1)
+                      .map(color_pn, subset=["Gap", "Var %", "SGM% gap"]),
+                    use_container_width=True, hide_index=True, height=h
+                )
 
-        st.caption("Luu y: Forecast F5+7 khong chia theo MLA, nen phan so sanh nay gom ve Product Line.  "
-                   "Chart Gap: xanh = vuot forecast, do = hut forecast.")
+            with col_chart:
+                gap_df = cmp.sort_values("GAP")   # am truoc, duong sau
+                bar_colors = [COLORS["POS"] if g >= 0 else COLORS["NEG"] for g in gap_df["GAP"]]
+                fig_gap = go.Figure(go.Bar(
+                    y=gap_df[sel_dim], x=gap_df["GAP"], orientation="h",
+                    marker_color=bar_colors,
+                    text=[f"{g/1e9:+.1f}B" for g in gap_df["GAP"]],
+                    textposition="outside", cliponaxis=False,
+                ))
+                fig_gap.add_vline(x=0, line_color="#94a3b8", line_width=1)
+                fig_gap.update_layout(
+                    template="seb_dark", height=h,
+                    margin=dict(t=40, b=20, l=10, r=60),
+                    xaxis_title=f"Gap vs Forecast (Actual − {sel_round})",
+                    showlegend=False,
+                    title=f"Gap vs {sel_round} ({sel_m}) by {sel_dim}",
+                )
+                st.plotly_chart(fig_gap, use_container_width=True)
+
+            # ----- Kiem tra ten chua khop 2 ben -----
+            only_act = cmp[(cmp["NS_FC"] == 0) & (cmp["NS_ACT"] != 0)][sel_dim].tolist()
+            only_fc = cmp[(cmp["NS_ACT"] == 0) & (cmp["NS_FC"] != 0)]["FC_NAME"].tolist()
+            if only_act or only_fc:
+                with st.expander(f"⚠️ Ten chua khop: {len(only_act)} chi co Actual, "
+                                 f"{len(only_fc)} chi co {sel_round}"):
+                    e1, e2 = st.columns(2)
+                    e1.markdown("**Chi co Actual:**\n\n" + "\n".join(f"- {x}" for x in only_act))
+                    e2.markdown(f"**Chi co {sel_round}:**\n\n" + "\n".join(f"- {x}" for x in only_fc))
+                    st.caption("Neu 2 ben la cung 1 muc nhung khac ten -> bo sung PL_MAP / FAMILY_MAP.")
+
+            st.caption(f"Luu y: Forecast {sel_round} khong chia theo MLA, nen phan so sanh nay gom ve {sel_dim}.  "
+                       "Chart Gap: xanh = vuot forecast, do = hut forecast.")
+
 
 # ---- Detail Table ----
 with tab4:
