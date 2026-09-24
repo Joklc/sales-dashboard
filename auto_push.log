@@ -19293,3 +19293,68 @@ Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
 To https://github.com/Joklc/sales-dashboard.git
    2f16a0c..86736d7  main -> main
 [23-Sep-26 17:00:29.11] Xong 
+============================================================ 
+[23-Sep-26 18:00:01.88] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 29 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 12 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 5,181 dong | SO: 904 dong | SQ: 376 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 13 dong
+
+============================================================
+As of: 23-Sep-2026 18:00
+So dong chi tiet: 6,448
+So Channel: 11 | MLA: 34 | Item: 836
+Tong Gross : 58,322,545,795
+[KAM] Net 43,751,409,506 | SGM% 25.19%
+[FIN] Net 43,488,970,446 | SGM% 36.11%
+  ! Co 5 dong khong map duoc MLA (kiem tra Customer map)
+  ! Co 478 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 23-Sep-2026 18:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main 3e72e98] Auto update KAM + MTD 23-Sep-26 18:00:28.65
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   3b50f73..3e72e98  main -> main
+[23-Sep-26 18:00:33.88] Xong 
+============================================================ 
+[24-Sep-26  9:00:03.84] Bat dau 
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Monthly Reporting\2025\4. Monthly sale vs SGM report\auto data
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+============================================================
+KHONG TRUY CAP DUOC O MANG X!
+Duong dan: X:\Finance 2.Controlling\Dashboard\AI_MTD_rawdata
+Kiem tra: 1) O X da ket noi chua?  2) Mo This PC xem co thay o X khong?
+============================================================
+[main 56a9cb2] Auto update KAM + MTD 24-Sep-26  9:00:15.56
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+To https://github.com/Joklc/sales-dashboard.git
+   3e72e98..56a9cb2  main -> main
+[24-Sep-26  9:00:22.45] Xong 
