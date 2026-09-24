@@ -468,15 +468,41 @@ with tab5:
 
         # ---- Chuan hoa ten Family Level 2 (giong page_forecast) ----
         # F8+4 co tien to ma: "H01 FAN", "C08 RICE COOKER"
-        FAMILY_MAP = {
-            "EPC & MULTICOOKER": "ELECTRIC PRESSURE COOKER & MULTICOOKER",
-        }
-
-        def norm_family(s):
+        def _clean_fam(s):
             s = " ".join(str(s).strip().upper().split())
             s = re.sub(r"^[A-Z]\d{2}\s+", "", s)     # bo tien to "H01 ", "C08 "...
             s = s.replace(" AND ", " & ")
+            s = re.sub(r"\s*&\s*", " & ", s)
+            return s
+
+        # FAMILY_MAP: doc tu page_forecast.py (1 noi sua, 2 trang dung chung) + mac dinh
+        def load_family_map():
+            fmap = {"EPC & MULTICOOKER": "ELECTRIC PRESSURE COOKER & MULTICOOKER"}
+            try:
+                import ast
+                p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "page_forecast.py")
+                tree = ast.parse(open(p, encoding="utf-8").read())
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.Assign) and any(
+                            isinstance(t, ast.Name) and t.id == "FAMILY_MAP" for t in node.targets):
+                        fmap.update(ast.literal_eval(node.value))
+                        break
+            except Exception:
+                pass
+            return {_clean_fam(k): _clean_fam(v) for k, v in fmap.items()}
+
+        FAMILY_MAP = load_family_map()
+
+        def norm_family(s):
+            s = _clean_fam(s)
             return FAMILY_MAP.get(s, s)
+
+        # Khoa "gon" de so: bo dau/khoang trang, bo AND, bo so nhieu -S
+        def compact_key(s):
+            words = re.findall(r"[A-Z0-9]+", str(s).upper())
+            words = [w[:-1] if len(w) > 3 and w.endswith("S") else w
+                     for w in words if w != "AND"]
+            return "".join(words)
 
         fc_rounds = sorted(df_fc["Forecast"].dropna().unique())
         fc_months = [m for m in MONTH_ORDER if m in df_fc["MONTH"].unique()]
@@ -507,15 +533,48 @@ with tab5:
             fc_g["NS_FC"] = fc_g["NS_FC"] * FC_UNIT
             fc_g["SGM_FC"] = fc_g["SGM_FC"] * FC_UNIT
 
-            act = dff[[act_col, "Net", "SGM"]].copy()
+            cols = [act_col, "Net", "SGM"] + (["Product Line"] if act_col == "Family 2" else [])
+            act = dff[cols].copy()
             act["KEY"] = act[act_col].map(norm_fn)
+            act["NAME"] = act[act_col].astype(str)
+            if act_col == "Family 2":
+                # Item chua co Family 2 (convert_kam tam dung Product Line) -> gom rieng, khong ep khop
+                no_f2 = act[act_col].map(norm_pl) == act["Product Line"].map(norm_pl)
+                act.loc[no_f2, "KEY"] = "~NOFL2~" + act.loc[no_f2, "Product Line"].map(norm_pl)
+                act.loc[no_f2, "NAME"] = "(chua co FL2) " + act.loc[no_f2, "Product Line"].astype(str)
             act_g = act.groupby("KEY", as_index=False).agg(
                 NS_ACT=("Net", "sum"), SGM_ACT=("SGM", "sum"),
-                ACT_NAME=(act_col, "first"))
+                ACT_NAME=("NAME", "first"))
 
-            cmp = act_g.merge(fc_g, on="KEY", how="outer")
-            # Ten hien thi: uu tien ten ben Actual
-            cmp[sel_dim] = cmp["ACT_NAME"].fillna(cmp["KEY"].str.title())
+            # --- Khop 2 lop: (1) ten da chuan hoa, (2) khoa gon + gan dung ---
+            auto_pairs = []
+            if act_col == "Family 2":
+                import difflib
+                act_g["MKEY"] = act_g["KEY"].map(
+                    lambda k: k if k.startswith("~NOFL2~") else compact_key(k))
+                fc_g["MKEY"] = fc_g["KEY"].map(compact_key)
+                fc_g = fc_g.groupby("MKEY", as_index=False).agg(
+                    NS_FC=("NS_FC", "sum"), SGM_FC=("SGM_FC", "sum"),
+                    FC_NAME=("FC_NAME", "first"), KEY=("KEY", "first"))
+                free_fc = [m for m in fc_g["MKEY"] if m not in set(act_g["MKEY"])]
+                for i, r in act_g.iterrows():
+                    m = r["MKEY"]
+                    if m.startswith("~NOFL2~") or m in set(fc_g["MKEY"]) or not free_fc:
+                        continue
+                    hit = difflib.get_close_matches(m, free_fc, n=1, cutoff=0.85)
+                    if hit:
+                        act_g.at[i, "MKEY"] = hit[0]
+                        free_fc.remove(hit[0])
+                        fc_name = fc_g.loc[fc_g["MKEY"] == hit[0], "FC_NAME"].iloc[0]
+                        auto_pairs.append((r["ACT_NAME"], fc_name))
+                act_g = act_g.groupby("MKEY", as_index=False).agg(
+                    NS_ACT=("NS_ACT", "sum"), SGM_ACT=("SGM_ACT", "sum"),
+                    ACT_NAME=("ACT_NAME", "first"))
+                cmp = act_g.merge(fc_g.drop(columns="KEY"), on="MKEY", how="outer")
+                cmp[sel_dim] = cmp["ACT_NAME"].fillna(cmp["FC_NAME"].map(_clean_fam).str.title())
+            else:
+                cmp = act_g.merge(fc_g, on="KEY", how="outer")
+                cmp[sel_dim] = cmp["ACT_NAME"].fillna(cmp["KEY"].str.title())
             for c in ["NS_ACT", "SGM_ACT", "NS_FC", "SGM_FC"]:
                 cmp[c] = pd.to_numeric(cmp[c], errors="coerce").fillna(0)
             cmp = cmp[(cmp["NS_ACT"] != 0) | (cmp["NS_FC"] != 0)]
@@ -602,13 +661,18 @@ with tab5:
             # ----- Kiem tra ten chua khop 2 ben -----
             only_act = cmp[(cmp["NS_FC"] == 0) & (cmp["NS_ACT"] != 0)][sel_dim].tolist()
             only_fc = cmp[(cmp["NS_ACT"] == 0) & (cmp["NS_FC"] != 0)]["FC_NAME"].tolist()
-            if only_act or only_fc:
-                with st.expander(f"⚠️ Ten chua khop: {len(only_act)} chi co Actual, "
-                                 f"{len(only_fc)} chi co {sel_round}"):
+            if only_act or only_fc or auto_pairs:
+                with st.expander(f"⚠️ Kiem tra khop ten: {len(only_act)} chi co Actual, "
+                                 f"{len(only_fc)} chi co {sel_round}, {len(auto_pairs)} tu khop gan dung"):
                     e1, e2 = st.columns(2)
                     e1.markdown("**Chi co Actual:**\n\n" + "\n".join(f"- {x}" for x in only_act))
                     e2.markdown(f"**Chi co {sel_round}:**\n\n" + "\n".join(f"- {x}" for x in only_fc))
-                    st.caption("Neu 2 ben la cung 1 muc nhung khac ten -> bo sung PL_MAP / FAMILY_MAP.")
+                    if auto_pairs:
+                        st.markdown("**Tu khop gan dung (Actual → Forecast) — kiem tra lai:**\n\n"
+                                    + "\n".join(f"- {a} → {f}" for a, f in auto_pairs))
+                    st.caption("'(chua co FL2)' = item chua co Family 2 trong mtd_cache, tam gom theo Product Line. "
+                               "Cap nhat get_data.xlsx / chay convert_mtd + convert_kam de bo sung. "
+                               "Cap ten khac nhau nhung cung 1 muc -> them vao FAMILY_MAP trong page_forecast.py.")
 
             st.caption(f"Luu y: Forecast {sel_round} khong chia theo MLA, nen phan so sanh nay gom ve {sel_dim}.  "
                        "Chart Gap: xanh = vuot forecast, do = hut forecast.")
