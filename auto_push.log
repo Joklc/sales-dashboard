@@ -21183,3 +21183,101 @@ Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
 To https://github.com/Joklc/sales-dashboard.git
    5498fdb..9e166e6  main -> main
 [30-Sep-26 13:00:54.33] Xong 
+============================================================ 
+[30-Sep-26 14:00:01.93] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 35 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 50 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,692 dong | SO: 487 dong | SQ: 231 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 14 dong
+
+============================================================
+As of: 30-Sep-2026 14:00
+So dong chi tiet: 7,396
+So Channel: 11 | MLA: 33 | Item: 915
+Tong Gross : 77,642,200,186
+[KAM] Net 58,377,696,174 | SGM% 24.79%
+[FIN] Net 58,147,481,297 | SGM% 35.84%
+  ! Co 675 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 30-Sep-2026 14:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main c51e972] Auto update KAM + MTD 30-Sep-26 14:00:39.31
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[30-Sep-26 14:00:40.70] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[30-Sep-26 14:00:42.40] Xong 
+============================================================ 
+[30-Sep-26 15:00:01.93] Bat dau 
+Doc cac bang tra cuu...
+  Doc bang tra Family 2 tu mtd_cache: 818 item
+Doc & xu ly 3 file nguon (ACT + SO + SQ)...
+    Sales detail with COGS.xlsx: bo 33 dong Grand Total / rong
+    Sales detail with COGS.xlsx: bo 50 dong CANCELED (giu CANCELED = N)
+    Sales Order Follow Up.xlsx: bo 1 dong Grand Total / rong
+  ACT: 6,726 dong | SO: 520 dong | SQ: 183 dong
+  Bo Channel = SEB / MLA = SEB (noi bo): 14 dong
+
+============================================================
+As of: 30-Sep-2026 15:00
+So dong chi tiet: 7,415
+So Channel: 11 | MLA: 33 | Item: 917
+Tong Gross : 79,423,387,951
+[KAM] Net 59,664,187,123 | SGM% 24.85%
+[FIN] Net 59,423,626,420 | SGM% 35.89%
+  ! Co 676 dong Family 2 dung tam Product Line (item chua co trong mtd_cache)
+
+  -> Da luu: C:\AI_Dashboard\kam_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) git add/commit/push (neu muon cap nhat cloud)
+Doc file get_data tu o X...
+Da tim thay file: get_data.xlsx
+
+As of: 30-Sep-2026 15:00
+So dong chi tiet: 3674
+So Channel : 35
+So MLA     : 35
+So Item    : 818
+Tong Gross : 22,697,081,142
+Tong Net   : 18,099,948,593
+Deduction  : 4,597,132,549  (20.3%)
+Tong SGM   : 7,461,934,676  (SGM% = 41.2%)
+
+  -> Da luu: C:\AI_Dashboard\mtd_cache.parquet
+
+XONG!
+Buoc tiep: 1) Restart app  2) Upload mtd_cache.parquet len GitHub
+(Khong con can mtd_productline.parquet / mtd_family2.parquet)
+[main b46a253] Auto update KAM + MTD 30-Sep-26 15:00:34.54
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[30-Sep-26 15:00:35.79] LOI khi push - thu pull roi push lai 
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+fatal: unable to access 'https://github.com/Joklc/sales-dashboard.git/': Recv failure: Connection was reset
+[30-Sep-26 15:00:37.59] Xong 
