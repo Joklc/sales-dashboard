@@ -12,14 +12,14 @@ echo ============================================================ >> auto_push.l
 echo [%date% %time%] Bat dau >> auto_push.log
 
 REM 1a. Chay convert KAM (tao kam_cache.parquet)
-python convert_kam.py >> auto_push.log 2>&1
+py convert_kam.py >> auto_push.log 2>&1
 if errorlevel 1 (
     echo [%date% %time%] LOI convert_kam.py - bo qua lan nay >> auto_push.log
     goto :end
 )
 
 REM 1b. Chay convert MTD (tao mtd_cache.parquet - dung cho tab Family Level 2)
-python convert_mtd.py >> auto_push.log 2>&1
+py convert_mtd.py >> auto_push.log 2>&1
 if errorlevel 1 (
     echo [%date% %time%] LOI convert_mtd.py - van tiep tuc push kam >> auto_push.log
 )
