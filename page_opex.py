@@ -221,15 +221,66 @@ def opex_sort_key(pnl_line):
         return len(OPEX_ORDER)  # dong la xep cuoi
 
 
-def period_selector(key):
-    """O chon ky: YTD hoac 1 thang. Tra ve list ma thang (MM) hoac None = YTD."""
-    opts = ["YTD"] + [MONTH_NUM_NAME.get(m, m) for m in _opex_2026]
-    sel = st.radio("Kỳ:", opts, horizontal=True, key=key)
-    if sel == "YTD":
-        return None
-    # doi ten thang -> so
-    name_to_num = {v: k for k, v in MONTH_NUM_NAME.items()}
-    return [name_to_num.get(sel, sel)]
+# Thang Actual moi nhat (de YTD chi tinh toi thang da co Actual, khong lay thang chi co Budget)
+_act_2026 = sorted([str(p)[-2:] for p in df.loc[df["Type"] == "ACT_26", "Period"].unique()
+                    if str(p).startswith("2026-")])
+LAST_ACT_MONTH = MONTH_NUM_NAME.get(_act_2026[-1]) if _act_2026 else None
+
+
+def period_selector(key, months=None, last_month=None):
+    """O chon ky dung chung cac tab.
+    3 che do: YTD (Jan -> thang Actual moi nhat) / 1 thang / Luy ke tu thang - den thang.
+    months: list ten thang (Jan, Feb...) co the chon; mac dinh = cac thang OPEX 2026.
+    Tra ve (list ten thang da chon, nhan ky)."""
+    if months is None:
+        months = [MONTH_NUM_NAME[m] for m in _opex_2026 if m in MONTH_NUM_NAME]
+    months = [m for m in MONTH_ORDER if m in months]
+    if not months:
+        return [], ""
+    if last_month not in months:
+        last_month = LAST_ACT_MONTH if LAST_ACT_MONTH in months else months[-1]
+    i_last = months.index(last_month)
+
+    c_mode, c_pick = st.columns([1.1, 2])
+    mode = c_mode.radio("Kỳ:", ["YTD", "1 tháng", "Lũy kế (từ – đến)"],
+                        horizontal=True, key=f"{key}_mode")
+    if mode == "YTD":
+        sel = months[:i_last + 1]
+        label = f"YTD {sel[0]}–{sel[-1]}"
+        c_pick.markdown(f"<div style='padding-top:30px;color:#64748b'>"
+                        f"Cộng dồn <b>{sel[0]} → {sel[-1]}</b> (tháng Actual mới nhất)</div>",
+                        unsafe_allow_html=True)
+    elif mode == "1 tháng":
+        m = c_pick.select_slider("Tháng", options=months, value=last_month, key=f"{key}_one")
+        sel = [m]
+        label = m
+    else:
+        a, b = c_pick.select_slider("Từ tháng → đến tháng", options=months,
+                                    value=(months[0], last_month), key=f"{key}_rng")
+        sel = months[months.index(a):months.index(b) + 1]
+        label = sel[0] if len(sel) == 1 else f"{sel[0]}–{sel[-1]} ({len(sel)} tháng)"
+    return sel, label
+
+
+def to_nums(month_names):
+    """['Jan','Feb'] -> ['01','02'] (ma thang theo Period OPEX)."""
+    return [MONTH_TO_NUM[m] for m in month_names if m in MONTH_TO_NUM]
+
+
+def var_pct(a, b):
+    return safe_pct(a - b, b)
+
+
+def style_total_rows(first_col):
+    """In dam dong subtotal ('Total ...') va dong tong ('TOTAL OPEX')."""
+    def _f(row):
+        v = str(row[first_col])
+        if v == "TOTAL OPEX":
+            return ["font-weight: 800; background-color: #cbd5e1; border-top: 2px solid #475569;"] * len(row)
+        if v.startswith("Total "):
+            return ["font-weight: 700; background-color: #dbeafe;"] * len(row)
+        return [""] * len(row)
+    return _f
 
 
 def color_pn(v):
@@ -278,10 +329,10 @@ def render_compare(w, dim_label):
 
 
 with tab1:
-    m1 = period_selector("pnl_period")
+    m1_names, m1_label = period_selector("pnl_period")
+    m1 = to_nums(m1_names)
     src1 = dff[dff["Type"].isin(["ACT_26", "BUD_26", "F5+7"])]
-    if m1:
-        src1 = src1[src1["Period"].isin([f"2026-{x}" for x in m1])]
+    src1 = src1[src1["Period"].isin([f"2026-{x}" for x in m1])]
 
     if src1.empty:
         st.info("Khong co du lieu voi bo loc hien tai.")
@@ -303,15 +354,28 @@ with tab1:
         # Doi ten PnL Line hien thi cho dep
         w["PnL Line"] = w["PnL Line"].map(lambda x: OPEX_DISPLAY.get(x, x))
 
+        # Bang hien thi: tung sub_PnL Line -> dong "Total <PnL Line>" -> cuoi cung TOTAL OPEX
+        rows = []
+        for pl in w["PnL Line"].drop_duplicates():
+            grp = w[w["PnL Line"] == pl]
+            for _, r in grp.iterrows():
+                rows.append([r["PnL Line"], r["sub_PnL Line"], r["ACT_26"], r["BUD_26"]])
+            rows.append([f"Total {pl}", "", grp["ACT_26"].sum(), grp["BUD_26"].sum()])
+        rows.append(["TOTAL OPEX", "", w["ACT_26"].sum(), w["BUD_26"].sum()])
+        show = pd.DataFrame(rows, columns=["PnL Line", "sub_PnL Line", "Actual 26", "Budget 26"])
+        show["Var vs BUD"] = show["Actual 26"] - show["Budget 26"]
+        show["Var %"] = [var_pct(a, b) for a, b in zip(show["Actual 26"], show["Budget 26"])]
+        h1 = max(520, min(1100, 35 * (len(show) + 1) + 3))
+
+        st.caption(f"Kỳ: **{m1_label}**")
         col_tbl, col_chart = st.columns([1.25, 1])
         with col_tbl:
-            show = w[["PnL Line", "sub_PnL Line", "ACT_26", "BUD_26", "Var vs BUD", "Var %"]].copy()
-            show.columns = ["PnL Line", "sub_PnL Line", "Actual 26", "Budget 26", "Var vs BUD", "Var %"]
             st.dataframe(
-                show.style.format({"Actual 26": "{:,.0f}", "Budget 26": "{:,.0f}",
-                                   "Var vs BUD": "{:,.0f}", "Var %": "{:+.1f}%"})
+                show.style.apply(style_total_rows("PnL Line"), axis=1)
+                    .format({"Actual 26": "{:,.0f}", "Budget 26": "{:,.0f}",
+                             "Var vs BUD": "{:,.0f}", "Var %": "{:+.1f}%"})
                     .map(color_pn, subset=["Var vs BUD", "Var %"]),
-                use_container_width=True, hide_index=True, height=520
+                use_container_width=True, hide_index=True, height=h1
             )
         with col_chart:
             # Chart theo PnL Line (gom sub lai), diverging Var
@@ -325,28 +389,32 @@ with tab1:
                 textposition="outside", cliponaxis=False,
             ))
             fig.add_vline(x=0, line_color="#94a3b8", line_width=1)
-            fig.update_layout(height=520, template="seb_dark",
+            fig.update_layout(height=h1, template="seb_dark",
                               margin=dict(t=30, b=20, l=10, r=60),
                               xaxis_title="Var vs Budget", showlegend=False,
-                              title="Variance vs Budget by PnL Line")
+                              title=f"Variance vs Budget by PnL Line — {m1_label}")
             st.plotly_chart(fig, use_container_width=True)
 
 with tab2:
-    m2 = period_selector("nature_period")
-    src2 = dff[dff["Type"].isin(["ACT_26", "BUD_26", "F5+7"])]
-    if m2:
-        src2 = src2[src2["Period"].isin([f"2026-{x}" for x in m2])]
-    w2 = compare_by("NATURE NAME", m2)
+    m2_names, m2_label = period_selector("nature_period")
+    m2 = to_nums(m2_names)
+    w2 = compare_by("NATURE NAME", m2) if m2 else pd.DataFrame()
     if w2.empty:
         st.info("Khong co du lieu voi bo loc hien tai.")
     else:
+        st.caption(f"Kỳ: **{m2_label}**")
         col_tbl, col_donut = st.columns([1, 1])
         with col_tbl:
             show = w2.copy()
             show.columns = ["NATURE NAME", "Actual 26", "Budget 26", "F5+7", "Var vs BUD", "Var %"]
+            t_a, t_b, t_f = show["Actual 26"].sum(), show["Budget 26"].sum(), show["F5+7"].sum()
+            total_row = {"NATURE NAME": "TOTAL OPEX", "Actual 26": t_a, "Budget 26": t_b,
+                         "F5+7": t_f, "Var vs BUD": t_a - t_b, "Var %": var_pct(t_a, t_b)}
+            show = pd.concat([show, pd.DataFrame([total_row])], ignore_index=True)
             st.dataframe(
-                show.style.format({"Actual 26": "{:,.0f}", "Budget 26": "{:,.0f}", "F5+7": "{:,.0f}",
-                                   "Var vs BUD": "{:,.0f}", "Var %": "{:+.1f}%"})
+                show.style.apply(style_total_rows("NATURE NAME"), axis=1)
+                    .format({"Actual 26": "{:,.0f}", "Budget 26": "{:,.0f}", "F5+7": "{:,.0f}",
+                             "Var vs BUD": "{:,.0f}", "Var %": "{:+.1f}%"})
                     .map(color_pn, subset=["Var vs BUD", "Var %"]),
                 use_container_width=True, hide_index=True, height=480
             )
@@ -361,14 +429,14 @@ with tab2:
             ))
             fig_d.update_layout(height=480, template="seb_dark",
                                 margin=dict(t=30, b=10),
-                                title="Actual Cost by NATURE NAME",
+                                title=f"Actual Cost by NATURE NAME — {m2_label}",
                                 legend=dict(orientation="h", y=-0.1))
             st.plotly_chart(fig_d, use_container_width=True)
 
 with tab5:
-    st.subheader("Primary Contribution — YTD (KVND)")
+    st.subheader("Primary Contribution (KVND)")
     st.caption("Net Sales → SGM (tu Sales Dashboard) − chi phi OPEX = Primary Contribution.  "
-               "OPEX tu dong khop ky voi thang cuoi cung cua Sales.")
+               "Sales va OPEX lay cung cac thang da chon.")
 
     if not os.path.exists(SALES_FILE):
         st.error("Chua co data_cache.parquet (Sales). Chay convert_to_parquet.py truoc.")
@@ -380,25 +448,13 @@ with tab5:
         if not sales_months:
             st.info("Sales khong co du lieu thang.")
         else:
-            # ----- O chon: YTD hoac 1 thang cu the -----
-            view_opts = ["YTD (tất cả)"] + sales_months
-            sel_view = st.radio("Kỳ xem:", view_opts, horizontal=True, key="pc_period")
-
-            if sel_view == "YTD (tất cả)":
-                use_months = sales_months
-                period_label = f"YTD (tới {sales_months[-1]})"
-            else:
-                use_months = [sel_view]
-                period_label = sel_view
-
-            last_num = MONTH_TO_NUM[use_months[-1]]
+            # ----- O chon ky: YTD / 1 thang / luy ke (theo cac thang Sales co) -----
+            use_months, period_label = period_selector("pc_period", months=sales_months,
+                                                       last_month=sales_months[-1])
 
             # Loc Sales theo thang chon
             sfilt = sales[sales["MONTH"].astype(str).isin(use_months)]
-            if sel_view == "YTD (tất cả)":
-                st.info(f"Sales YTD tới **{sales_months[-1]}**. OPEX lấy các tháng tương ứng để khớp kỳ.")
-            else:
-                st.info(f"Xem riêng tháng **{sel_view}**. Cả Sales và OPEX chỉ lấy tháng này.")
+            st.info(f"Kỳ: **{period_label}**. Cả Sales và OPEX lấy cùng các tháng này.")
 
             # ----- Phan tren: tu Sales (theo ky chon, KVND) -----
             def s_sum(prefix):
