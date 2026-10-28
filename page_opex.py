@@ -503,6 +503,10 @@ with tab5:
             tbl = pd.DataFrame(rows, columns=["Line", "Actual", "Budget", "_bold"])
             tbl["Var vs BUD"] = tbl["Actual"] - tbl["Budget"]
             tbl["% NS Act"] = tbl["Actual"] / s_act["NS"] * 100 if s_act["NS"] else 0
+            tbl["% NS Bud"] = tbl["Budget"] / s_bud["NS"] * 100 if s_bud["NS"] else 0
+            # Var % = Var / |Budget| -> cung dau voi Var vs BUD (xanh = tot, do = xau, ke ca dong chi phi)
+            tbl["Var %"] = [v / abs(b) * 100 if b else 0
+                            for v, b in zip(tbl["Var vs BUD"], tbl["Budget"])]
 
             # ----- KPI -----
             k1, k2, k3 = st.columns(3)
@@ -525,12 +529,14 @@ with tab5:
                         return ["font-weight: 800; background-color: #dbeafe;"] * len(row)
                     return [""] * len(row)
 
-                show = tbl[["Line", "Actual", "Budget", "Var vs BUD", "% NS Act"]].copy()
+                show = tbl[["Line", "Actual", "% NS Act", "Budget", "% NS Bud",
+                            "Var vs BUD", "Var %"]].copy()
                 st.dataframe(
                     show.style.apply(style_row, axis=1)
-                    .format({"Actual": "{:,.0f}", "Budget": "{:,.0f}",
-                             "Var vs BUD": "{:,.0f}", "% NS Act": "{:.1f}%"})
-                    .map(color_pn, subset=["Var vs BUD"]),
+                    .format({"Actual": "{:,.0f}", "% NS Act": "{:.1f}%",
+                             "Budget": "{:,.0f}", "% NS Bud": "{:.1f}%",
+                             "Var vs BUD": "{:,.0f}", "Var %": "{:+.1f}%"})
+                    .map(color_pn, subset=["Var vs BUD", "Var %"]),
                     use_container_width=True, hide_index=True, height=560
                 )
             with col_wf:
