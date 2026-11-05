@@ -608,13 +608,18 @@ if has_sgm:
 st.subheader("👤 MLA Analysis")
 
 mla_data = aggs["mla"].head(10).copy()
-mla_data["VAR_%"] = mla_data.apply(
-    lambda r: safe_pct(r.NS_ACT - r.NS_BUD, r.NS_BUD), axis=1
-)
+# Budget khong chia theo MLA -> chart Var vs BUD toan 0%. Khi do doi sang Growth vs LY.
+mla_has_bud = mla_data["NS_BUD"].abs().sum() > 0
+if mla_has_bud:
+    mla_data["VAR_%"] = mla_data.apply(lambda r: safe_pct(r.NS_ACT - r.NS_BUD, r.NS_BUD), axis=1)
+    mla_var_title = "Variance vs Budget (%)"
+else:
+    mla_data["VAR_%"] = mla_data.apply(lambda r: safe_pct(r.NS_ACT - r.NS_LY, r.NS_LY), axis=1)
+    mla_var_title = "Growth vs LY (%)"
 
 fig_mla = make_subplots(
     rows=1, cols=2,
-    subplot_titles=("Top 10 MLA — ACT vs BUD vs LY", "Variance vs Budget (%)"),
+    subplot_titles=("Top 10 MLA — ACT vs BUD vs LY", mla_var_title),
     horizontal_spacing=0.12
 )
 
@@ -640,6 +645,93 @@ fig_mla.add_trace(
 )
 fig_mla.update_layout(barmode="group", height=520, margin=dict(t=40,b=20), template="seb_dark")
 st.plotly_chart(fig_mla, use_container_width=True)
+
+# ----- Bang MLA theo Channel: Gross / Deduction / Net / SGM% — Actual vs LY -----
+_need = [f"{k}_{p}" for k in ["GS", "DEDUCT", "NS", "SGM"] for p in ["ACT", "LY"]]
+if all(c in df_filtered.columns for c in _need):
+    st.markdown(f"#### 📋 MLA by Channel — Actual vs LY ({period_label}, KVND)")
+
+    def pl_row(d):
+        """Tinh cac chi so cho 1 nhom (dict cac tong)."""
+        gs_a, gs_l = d["GS_ACT"], d["GS_LY"]
+        dd_a, dd_l = d["DEDUCT_ACT"], d["DEDUCT_LY"]
+        ns_a, ns_l = d["NS_ACT"], d["NS_LY"]
+        sg_a, sg_l = d["SGM_ACT"], d["SGM_LY"]
+        dr_a, dr_l = safe_pct(abs(dd_a), gs_a), safe_pct(abs(dd_l), gs_l)
+        sp_a, sp_l = safe_pct(sg_a, ns_a), safe_pct(sg_l, ns_l)
+        return [gs_a, gs_l, safe_pct(gs_a - gs_l, gs_l),
+                dd_a, dr_a, dr_l, dr_a - dr_l,
+                ns_a, ns_l, safe_pct(ns_a - ns_l, ns_l),
+                sp_a, sp_l, sp_a - sp_l]
+
+    ML_COLS = ["Channel", "MLA",
+               "GS Act", "GS LY", "GS vs LY %",
+               "Deduction Act", "Deduct% Act", "Deduct% LY", "Deduct% Δpp",
+               "NS Act", "NS LY", "NS vs LY %",
+               "SGM% Act", "SGM% LY", "SGM% Δpp"]
+
+    mc = (df_filtered.groupby(["Distribution Channel", "MLA name"], observed=True)[_need]
+          .sum().reset_index())
+    mc = mc[(mc[_need].abs().sum(axis=1)) != 0]
+
+    c_opt1, c_opt2 = st.columns([1, 3])
+    only_total = c_opt1.toggle("Chỉ xem tổng Channel", value=False, key="mla_ch_total")
+
+    ch_order = (mc.groupby("Distribution Channel", observed=True)["NS_ACT"].sum()
+                .sort_values(ascending=False).index.tolist())
+    rows = []
+    for ch in ch_order:
+        g = mc[mc["Distribution Channel"] == ch].sort_values("NS_ACT", ascending=False)
+        if not only_total:
+            for _, r in g.iterrows():
+                rows.append([ch, r["MLA name"]] + pl_row(r))
+        rows.append([f"Total {ch}", f"{len(g)} MLA"] + pl_row(g[_need].sum()))
+    rows.append(["GRAND TOTAL", f"{len(mc)} MLA"] + pl_row(mc[_need].sum()))
+    tbl_mc = pd.DataFrame(rows, columns=ML_COLS)
+
+    def style_mc(row):
+        v = str(row["Channel"])
+        if v == "GRAND TOTAL":
+            return ["font-weight: 800; background-color: #cbd5e1; border-top: 2px solid #475569;"] * len(row)
+        if v.startswith("Total "):
+            return ["font-weight: 700; background-color: #dbeafe;"] * len(row)
+        return [""] * len(row)
+
+    def pn(v):
+        try:
+            v = float(v)
+        except (TypeError, ValueError):
+            return ""
+        if v > 0.05: return "color: #16a34a; font-weight: 700;"
+        if v < -0.05: return "color: #dc2626; font-weight: 700;"
+        return ""
+
+    def pn_rev(v):
+        """Deduction tang = xau (do), giam = tot (xanh)."""
+        try:
+            v = float(v)
+        except (TypeError, ValueError):
+            return ""
+        if v > 0.05: return "color: #dc2626; font-weight: 700;"
+        if v < -0.05: return "color: #16a34a; font-weight: 700;"
+        return ""
+
+    st.dataframe(
+        tbl_mc.style.apply(style_mc, axis=1)
+        .format({
+            "GS Act": "{:,.0f}", "GS LY": "{:,.0f}", "GS vs LY %": "{:+.1f}%",
+            "Deduction Act": "{:,.0f}", "Deduct% Act": "{:.1f}%", "Deduct% LY": "{:.1f}%",
+            "Deduct% Δpp": "{:+.1f}",
+            "NS Act": "{:,.0f}", "NS LY": "{:,.0f}", "NS vs LY %": "{:+.1f}%",
+            "SGM% Act": "{:.1f}%", "SGM% LY": "{:.1f}%", "SGM% Δpp": "{:+.1f}",
+        })
+        .map(pn, subset=["GS vs LY %", "NS vs LY %", "SGM% Δpp"])
+        .map(pn_rev, subset=["Deduct% Δpp"]),
+        use_container_width=True, hide_index=True,
+        height=min(700, 35 * (len(tbl_mc) + 1) + 3),
+    )
+    st.caption("Deduct% = |Deduction| / Gross Sales. Δpp = Actual − LY (điểm %). "
+               "Deduct% tăng = đỏ (xấu), giảm = xanh. Bảng chạy theo filter ở sidebar.")
 
 # ==================================================
 # DRILL-DOWN — MLA hoặc Channel
