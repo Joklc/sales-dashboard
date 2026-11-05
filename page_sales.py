@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import os
 import io
 from plotly.subplots import make_subplots
@@ -607,44 +608,140 @@ if has_sgm:
 
 st.subheader("👤 MLA Analysis")
 
-mla_data = aggs["mla"].head(10).copy()
-# Budget khong chia theo MLA -> chart Var vs BUD toan 0%. Khi do doi sang Growth vs LY.
-mla_has_bud = mla_data["NS_BUD"].abs().sum() > 0
-if mla_has_bud:
-    mla_data["VAR_%"] = mla_data.apply(lambda r: safe_pct(r.NS_ACT - r.NS_BUD, r.NS_BUD), axis=1)
-    mla_var_title = "Variance vs Budget (%)"
+_need = [f"{k}_{p}" for k in ["GS", "DEDUCT", "NS", "SGM"] for p in ["ACT", "LY"]]
+
+if not all(c in df_filtered.columns for c in _need):
+    st.info("data_cache thieu cot GS_/DEDUCT_/NS_/SGM_ (ACT, LY). Chay lai convert_to_parquet.py.")
 else:
-    mla_data["VAR_%"] = mla_data.apply(lambda r: safe_pct(r.NS_ACT - r.NS_LY, r.NS_LY), axis=1)
-    mla_var_title = "Growth vs LY (%)"
+    c_dim, c_top = st.columns([1.2, 2])
+    mla_dim_lbl = c_dim.radio("Xem theo", ["Channel", "MLA"], horizontal=True, key="mla_dim")
+    mla_dim = "Distribution Channel" if mla_dim_lbl == "Channel" else "MLA name"
+    top_n_mla = (c_top.slider("Số MLA hiển thị (theo NS Actual)", 5, 30, 15, key="mla_topn")
+                 if mla_dim_lbl == "MLA" else None)
 
-fig_mla = make_subplots(
-    rows=1, cols=2,
-    subplot_titles=("Top 10 MLA — ACT vs BUD vs LY", mla_var_title),
-    horizontal_spacing=0.12
-)
+    ga = (df_filtered.groupby(mla_dim, observed=True)[_need].sum().reset_index()
+          .rename(columns={mla_dim: "DIM"}))
+    ga["DIM"] = ga["DIM"].astype(str)
+    ga = ga[ga["NS_ACT"].abs() + ga["NS_LY"].abs() > 0].sort_values("NS_ACT", ascending=False)
+    if mla_dim_lbl == "MLA":
+        # Gan Channel chinh cho tung MLA (de to mau bubble)
+        ch_of = (df_filtered.groupby(["MLA name", "Distribution Channel"], observed=True)["NS_ACT"]
+                 .sum().reset_index().sort_values("NS_ACT", ascending=False)
+                 .drop_duplicates("MLA name").set_index("MLA name")["Distribution Channel"].astype(str))
+        ga["CH"] = ga["DIM"].map(ch_of).fillna("Other")
+    else:
+        ga["CH"] = ga["DIM"]
 
-for col_name, color, row_label in [
-    ("NS_ACT", COLORS["ACT"], "ACT"),
-    ("NS_BUD", COLORS["BUD"], "BUD"),
-    ("NS_LY",  COLORS["LY"],  "LY"),
-]:
-    fig_mla.add_trace(
-        go.Bar(y=mla_data["MLA name"], x=mla_data[col_name],
-               name=row_label, orientation="h", marker_color=color,
-               showlegend=True),
-        row=1, col=1
-    )
+    def add_rates(d):
+        d["DED%_ACT"] = [safe_pct(abs(x), g) for x, g in zip(d["DEDUCT_ACT"], d["GS_ACT"])]
+        d["DED%_LY"]  = [safe_pct(abs(x), g) for x, g in zip(d["DEDUCT_LY"], d["GS_LY"])]
+        d["SGM%_ACT"] = [safe_pct(s, n) for s, n in zip(d["SGM_ACT"], d["NS_ACT"])]
+        d["SGM%_LY"]  = [safe_pct(s, n) for s, n in zip(d["SGM_LY"], d["NS_LY"])]
+        d["GR_LY"]    = [safe_pct(a - l, l) for a, l in zip(d["NS_ACT"], d["NS_LY"])]
+        return d
 
-mla_colors = [COLORS["POS"] if v >= 0 else COLORS["NEG"] for v in mla_data["VAR_%"]]
-fig_mla.add_trace(
-    go.Bar(y=mla_data["MLA name"], x=mla_data["VAR_%"],
-           orientation="h", marker_color=mla_colors, showlegend=False,
-           text=mla_data["VAR_%"].round(1).astype(str) + "%",
-           textposition="outside"),
-    row=1, col=2
-)
-fig_mla.update_layout(barmode="group", height=520, margin=dict(t=40,b=20), template="seb_dark")
-st.plotly_chart(fig_mla, use_container_width=True)
+    ga = add_rates(ga)
+    show_g = ga.head(top_n_mla) if top_n_mla else ga
+    tot = ga[_need].sum()
+    avg_ded = safe_pct(abs(tot["DEDUCT_ACT"]), tot["GS_ACT"])
+    avg_sgm = safe_pct(tot["SGM_ACT"], tot["NS_ACT"])
+    short = lambda s, n=22: s if len(s) <= n else s[:n - 1] + "…"
+
+    ch_tab1, ch_tab2 = st.tabs(["📊 Sales & Margin", "🎯 Profitability Matrix"])
+
+    # ---------- Tab 1: Combo (NS Act/LY + SGM% + Deduct%) + Donut mix ----------
+    with ch_tab1:
+        col_combo, col_pie = st.columns([2.1, 1])
+        with col_combo:
+            x_lbl = [short(s) for s in show_g["DIM"]]
+            fig_c = make_subplots(specs=[[{"secondary_y": True}]])
+            fig_c.add_trace(go.Bar(
+                x=x_lbl, y=show_g["NS_ACT"], name="NS Actual", marker_color=COLORS["ACT"],
+                customdata=np.stack([show_g["DIM"], show_g["GR_LY"]], axis=-1),
+                hovertemplate="<b>%{customdata[0]}</b><br>NS Act: %{y:,.0f}"
+                              "<br>vs LY: %{customdata[1]:+.1f}%<extra></extra>"),
+                secondary_y=False)
+            fig_c.add_trace(go.Bar(
+                x=x_lbl, y=show_g["NS_LY"], name="NS LY", marker_color="#cbd5e1",
+                hovertemplate="NS LY: %{y:,.0f}<extra></extra>"),
+                secondary_y=False)
+            fig_c.add_trace(go.Scatter(
+                x=x_lbl, y=show_g["SGM%_ACT"], name="SGM% Act", mode="lines+markers",
+                line=dict(color="#0891b2", width=2.5), marker=dict(size=8),
+                hovertemplate="SGM% Act: %{y:.1f}%<extra></extra>"),
+                secondary_y=True)
+            fig_c.add_trace(go.Scatter(
+                x=x_lbl, y=show_g["DED%_ACT"], name="Deduct% Act", mode="lines+markers",
+                line=dict(color="#dc2626", width=2, dash="dot"), marker=dict(size=7, symbol="diamond"),
+                hovertemplate="Deduct% Act: %{y:.1f}%<extra></extra>"),
+                secondary_y=True)
+            fig_c.update_layout(
+                template="seb_dark", barmode="group", height=480, bargap=0.25,
+                margin=dict(t=40, b=10, l=10, r=10),
+                title=f"Net Sales vs LY, SGM% & Deduct% — by {mla_dim_lbl} ({period_label})",
+                legend=dict(orientation="h", yanchor="top", y=-0.28, x=0), hovermode="x unified",
+                xaxis_tickangle=-35)
+            fig_c.update_yaxes(title_text="Net Sales (KVND)", secondary_y=False)
+            fig_c.update_yaxes(title_text="SGM% / Deduct%", ticksuffix="%", tickformat=".0f",
+                               showgrid=False, rangemode="tozero", secondary_y=True)
+            st.plotly_chart(fig_c, use_container_width=True)
+
+        with col_pie:
+            pie_d = show_g[["DIM", "NS_ACT"]].copy()
+            if top_n_mla and len(ga) > top_n_mla:
+                pie_d = pd.concat([pie_d, pd.DataFrame(
+                    [{"DIM": "Others", "NS_ACT": ga["NS_ACT"].iloc[top_n_mla:].sum()}])])
+            pie_d = pie_d[pie_d["NS_ACT"] > 0]
+            fig_p = go.Figure(go.Pie(
+                labels=pie_d["DIM"], values=pie_d["NS_ACT"], hole=0.55, sort=False,
+                textinfo="percent", textposition="inside",
+                marker=dict(colors=["#1e3a8a", "#2563eb", "#3b82f6", "#60a5fa", "#93c5fd",
+                                    "#0891b2", "#22d3ee", "#a78bfa", "#f59e0b", "#94a3b8"],
+                            line=dict(color="#ffffff", width=1.5)),
+                hovertemplate="<b>%{label}</b><br>NS: %{value:,.0f}<br>%{percent}<extra></extra>"))
+            fig_p.update_layout(
+                template="seb_dark", height=480, margin=dict(t=50, b=10, l=10, r=10),
+                title=f"Net Sales Mix by {mla_dim_lbl}", showlegend=True,
+                legend=dict(orientation="h", y=-0.05, font=dict(size=10)),
+                annotations=[dict(text=f"<b>{fmt_abbr(tot['NS_ACT'])}</b><br>NS Act",
+                                  x=0.5, y=0.5, showarrow=False, font=dict(size=14))])
+            st.plotly_chart(fig_p, use_container_width=True)
+
+    # ---------- Tab 2: Bubble — Deduct% (x) vs SGM% (y), size = NS ----------
+    with ch_tab2:
+        bub = show_g[show_g["NS_ACT"] > 0]
+        fig_b = go.Figure()
+        palette = ["#2563eb", "#0891b2", "#a78bfa", "#f59e0b", "#16a34a", "#dc2626",
+                   "#64748b", "#db2777", "#14b8a6", "#ea580c"]
+        size_ref = 2.0 * bub["NS_ACT"].max() / (60 ** 2) if len(bub) else 1
+        for i, ch in enumerate(bub["CH"].drop_duplicates()):
+            b = bub[bub["CH"] == ch]
+            fig_b.add_trace(go.Scatter(
+                x=b["DED%_ACT"], y=b["SGM%_ACT"], mode="markers+text", name=ch,
+                text=[short(s, 18) for s in b["DIM"]], textposition="top center",
+                textfont=dict(size=10),
+                marker=dict(size=b["NS_ACT"], sizemode="area", sizeref=size_ref, sizemin=6,
+                            color=palette[i % len(palette)], opacity=0.75,
+                            line=dict(color="#ffffff", width=1)),
+                customdata=np.stack([b["DIM"], b["NS_ACT"], b["GR_LY"],
+                                     b["SGM%_LY"], b["DED%_LY"]], axis=-1),
+                hovertemplate="<b>%{customdata[0]}</b><br>NS Act: %{customdata[1]:,.0f}"
+                              " (%{customdata[2]:+.1f}% vs LY)"
+                              "<br>SGM%: %{y:.1f}% (LY %{customdata[3]:.1f}%)"
+                              "<br>Deduct%: %{x:.1f}% (LY %{customdata[4]:.1f}%)<extra></extra>"))
+        fig_b.add_vline(x=avg_ded, line_dash="dash", line_color="#94a3b8",
+                        annotation_text=f"Avg Deduct {avg_ded:.1f}%", annotation_position="top")
+        fig_b.add_hline(y=avg_sgm, line_dash="dash", line_color="#94a3b8",
+                        annotation_text=f"Avg SGM {avg_sgm:.1f}%", annotation_position="top left")
+        fig_b.update_layout(
+            template="seb_dark", height=560, margin=dict(t=50, b=20, l=10, r=10),
+            title=f"Profitability Matrix by {mla_dim_lbl} — bubble size = Net Sales",
+            xaxis_title="Deduction rate (% Gross Sales)", yaxis_title="SGM% (% Net Sales)",
+            xaxis_ticksuffix="%", yaxis_ticksuffix="%",
+            legend=dict(orientation="h", y=-0.12))
+        st.plotly_chart(fig_b, use_container_width=True)
+        st.caption("Goc tren-trai = deduction thap, SGM% cao (tot nhat).  "
+                   "Goc duoi-phai = deduction cao, SGM% thap (can xem lai dieu kien thuong mai).")
 
 # ----- Bang MLA theo Channel: Gross / Deduction / Net / SGM% — Actual vs LY -----
 _need = [f"{k}_{p}" for k in ["GS", "DEDUCT", "NS", "SGM"] for p in ["ACT", "LY"]]
