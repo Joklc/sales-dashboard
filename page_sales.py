@@ -462,6 +462,9 @@ fig_trend.add_trace(go.Bar(
 fig_trend.add_trace(go.Bar(
     x=trend["MONTH"], y=trend["NS_BUD"], name="NS BUD",
     marker_color=COLORS["BUD"]), secondary_y=False)
+fig_trend.add_trace(go.Bar(
+    x=trend["MONTH"], y=trend["NS_LY"], name="NS LY",
+    marker_color=COLORS["LY"]), secondary_y=False)
 
 
 
