@@ -371,64 +371,6 @@ stat_card(q3, "💰", "#f3eefe", "#7c3aed", "SGM% Actual", f"{_sgm_pct:.1f}%" if
 stat_card(q4, "🧾", "#fef3e8", "#ea7a0c", "SGM Value (KVND)", fmt_full(_sgm_act) if has_sgm else "—")
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ==================================================
-# TOP MOVERS vs BUDGET — theo Product Line
-# ==================================================
-
-# ==================================================
-# TOP MOVERS vs BUDGET — theo Product Line (Above & Below)
-# ==================================================
-
-st.subheader("🚦 Top Movers vs Budget by Product Line (by value)")
-
-movers_pl = aggs["prod"][["Product Line", "NS_ACT", "NS_BUD"]].copy()
-movers_pl["GAP"] = movers_pl["NS_ACT"] - movers_pl["NS_BUD"]
-movers_pl["VAR_%"] = movers_pl.apply(
-    lambda r: safe_pct(r.NS_ACT - r.NS_BUD, r.NS_BUD), axis=1
-)
-
-def mover_label(gap, pct, bud):
-    """Nhãn trên thanh: giá trị gap + %. Nếu Budget = 0 thì ghi (no BUD) thay vì +0.0%."""
-    sign = "+" if gap >= 0 else ""
-    pct_txt = "no BUD" if bud == 0 else f"{pct:+.1f}%"
-    return f"{sign}{fmt_abbr(gap)} ({pct_txt})"
-
-def mover_chart(d, dim, color, side):
-    """Vẽ 1 chart horizontal bar cho top movers. side='up' hoặc 'down'."""
-    d = d.sort_values("GAP", ascending=(side == "up"))
-    labels = [mover_label(g, p, b) for g, p, b in zip(d["GAP"], d["VAR_%"], d["NS_BUD"])]
-    fig = go.Figure(go.Bar(
-        y=d[dim], x=d["GAP"], orientation="h",
-        marker_color=color, text=labels,
-        textposition="outside", cliponaxis=False,
-    ))
-    margin = dict(t=10, b=10, l=10, r=100) if side == "up" else dict(t=10, b=10, l=100, r=10)
-    fig.update_layout(template="seb_dark", height=280, margin=margin,
-                      xaxis_title="Gap vs Budget", showlegend=False)
-    return fig
-
-col_up, col_down = st.columns(2)
-
-with col_up:
-    st.markdown("#### 🟢 Top 5 Above Budget")
-    top_up_pl = movers_pl[movers_pl["GAP"] > 0].sort_values("GAP", ascending=False).head(5)
-    if top_up_pl.empty:
-        st.info("No Product Line above budget.")
-    else:
-        st.plotly_chart(mover_chart(top_up_pl, "Product Line", COLORS["POS"], "up"),
-                        use_container_width=True)
-
-with col_down:
-    st.markdown("#### 🔴 Top 5 Below Budget")
-    top_dn_pl = movers_pl[movers_pl["GAP"] < 0].sort_values("GAP", ascending=True).head(5)
-    if top_dn_pl.empty:
-        st.info("No Product Line below budget.")
-    else:
-        st.plotly_chart(mover_chart(top_dn_pl, "Product Line", COLORS["NEG"], "down"),
-                        use_container_width=True)
-
-net_gap = movers_pl["GAP"].sum()
-st.caption(f"Net gap vs Budget (all Product Lines): {fmt_abbr(net_gap)}")
 
 # ==================================================
 # TREND CHART — NS monthly + SGM% (dual axis)
