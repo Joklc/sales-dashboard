@@ -504,6 +504,13 @@ with tab5:
             tbl["Var vs BUD"] = tbl["Actual"] - tbl["Budget"]
             tbl["% NS Act"] = tbl["Actual"] / s_act["NS"] * 100 if s_act["NS"] else 0
             tbl["% NS Bud"] = tbl["Budget"] / s_bud["NS"] * 100 if s_bud["NS"] else 0
+            # Gross Sales & Sales Deductions: tinh % tren Gross Sales (deduction rate chuan),
+            # khong chia cho Net Sales. Deduction am -> lay tri tuyet doi de ra rate duong.
+            for _ln, _sign in [("Gross Sales", 1), ("Sales Deductions", -1)]:
+                _m = tbl["Line"] == _ln
+                tbl.loc[_m, "% NS Act"] = _sign * tbl.loc[_m, "Actual"] / s_act["GS"] * 100 if s_act["GS"] else 0
+                tbl.loc[_m, "% NS Bud"] = _sign * tbl.loc[_m, "Budget"] / s_bud["GS"] * 100 if s_bud["GS"] else 0
+            tbl.loc[tbl["Line"] == "Sales Deductions", "Line"] = "Sales Deductions (% of GS)"
             # Var % = Var / |Budget| -> cung dau voi Var vs BUD (xanh = tot, do = xau, ke ca dong chi phi)
             tbl["Var %"] = [v / abs(b) * 100 if b else 0
                             for v, b in zip(tbl["Var vs BUD"], tbl["Budget"])]
