@@ -82,6 +82,14 @@ def load_opex(path):
     return pd.read_parquet(path)
 
 
+@st.cache_data(show_spinner="Loading Sales data...")
+def load_sales(path):
+    # Chi doc cac cot can cho Primary Contribution (file Sales ~100k dong)
+    cols = ["MONTH"] + [f"{k}_{p}" for k in ["GS", "NS", "DEDUCT", "COGS", "SGM"]
+                        for p in ["ACT", "BUD"]]
+    return pd.read_parquet(path, columns=cols)
+
+
 if not os.path.exists(OPEX_FILE):
     st.error("Chua co opex_cache.parquet. Chay convert_opex.py truoc.")
     st.stop()
@@ -441,7 +449,7 @@ with tab5:
     if not os.path.exists(SALES_FILE):
         st.error("Chua co data_cache.parquet (Sales). Chay convert_to_parquet.py truoc.")
     else:
-        sales = pd.read_parquet(SALES_FILE)
+        sales = load_sales(SALES_FILE)
 
         # Thang cuoi cung Sales co (theo MONTH_ORDER)
         sales_months = [m for m in MONTH_ORDER if m in sales["MONTH"].astype(str).unique()]
@@ -572,7 +580,10 @@ with tab3:
                              "Cost Center Name", "PnL Line", "sub_PnL Line",
                              "NATURE NAME", "ME", "G/L Account Name", "Amount"]
                  if c in dff.columns]
-    st.dataframe(
-        dff[cols_show].style.format({"Amount": "{:,.0f}"}),
-        use_container_width=True, hide_index=True, height=600
-    )
+    # Bang 13k+ dong rat nang neu render moi lan -> chi hien khi bam
+    if st.toggle("Hiện bảng chi tiết", value=False, key="opex_detail_show"):
+        det = dff[cols_show].copy()
+        det["Amount"] = det["Amount"].map(lambda v: f"{v:,.0f}")   # format nhanh, khong dung Styler
+        st.dataframe(det, use_container_width=True, hide_index=True, height=600)
+    else:
+        st.caption("Bật nút trên để xem toàn bộ dòng chi tiết (tắt sẵn để trang load nhanh).")
