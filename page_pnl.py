@@ -1,6 +1,16 @@
 import streamlit as st
 import pandas as pd
 import os
+
+
+def file_ver(path):
+    """Phien ban file (gio sua + dung luong). Truyen vao ham cache de khi file
+    parquet moi duoc push len, cache tu nap lai thay vi giu du lieu cu."""
+    try:
+        s = os.stat(path)
+        return f"{s.st_mtime_ns}-{s.st_size}"
+    except OSError:
+        return "none"
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -110,7 +120,7 @@ def safe_pct(num, den):
 # ==================================================
 
 @st.cache_data(show_spinner="Loading P&L data...")
-def load_pnl(path):
+def load_pnl(path, ver=None):
     if not os.path.exists(path):
         return pd.DataFrame()
     df = pd.read_parquet(path)
@@ -125,7 +135,8 @@ def load_pnl(path):
 # Tieu de + KPI nam trong hero banner phia duoi
 
 try:
-    df = load_pnl(PNL_FILE)
+    PNL_VER = file_ver(PNL_FILE)
+    df = load_pnl(PNL_FILE, PNL_VER)
     if df.empty:
         st.error("Không tìm thấy file pnl_cache.parquet. Hãy chạy convert_pnl.py trước.")
         st.stop()
@@ -144,14 +155,17 @@ def opts(_df, n):
     def uniq(col):
         return sorted(_df[col].dropna().astype(str).unique()) if col in _df.columns else []
     return {
-        "month": sorted(_df["Month"].dropna().unique().tolist()) if "Month" in _df.columns else [],
+        # Sap theo nam roi thang (tranh "10.2026" dung truoc "2.2026" khi sap chu)
+        "month": sorted([str(m) for m in _df["Month"].dropna().unique()],
+                        key=lambda s: (s.split(".")[-1], int(s.split(".")[0]) if s.split(".")[0].isdigit() else 99))
+                 if "Month" in _df.columns else [],
         "biz": uniq("Business Type"),
         "pl": uniq("Product Line"),
         "cat": uniq("Key CAT"),
         "dist": uniq("Distributor"),
     }
 
-o = opts(df, len(df))
+o = opts(df, f"{len(df)}|{PNL_VER}")
 
 sel_month = st.sidebar.selectbox("Month", ["All"] + [str(m) for m in o["month"]])
 sel_biz   = st.sidebar.selectbox("Business Type", ["All"] + o["biz"])
@@ -207,7 +221,7 @@ def build_pnl(_d, key):
     t["Var LY"]  = t["ACT"] - t["LY"]
     return t
 
-cache_key = f"{sel_month}|{sel_biz}|{sel_pl}|{sel_cat}|{sel_dist}|{fx}"
+cache_key = f"{sel_month}|{sel_biz}|{sel_pl}|{sel_cat}|{sel_dist}|{fx}|{PNL_VER}"
 pnl = build_pnl(dff, cache_key)
 
 # ==================================================

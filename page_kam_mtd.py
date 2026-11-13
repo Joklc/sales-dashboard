@@ -3,6 +3,16 @@ import pandas as pd
 import os
 import sys
 import subprocess
+
+
+def file_ver(path):
+    """Phien ban file (gio sua + dung luong). Truyen vao ham cache de khi file
+    parquet moi duoc push len, cache tu nap lai thay vi giu du lieu cu."""
+    try:
+        s = os.stat(path)
+        return f"{s.st_mtime_ns}-{s.st_size}"
+    except OSError:
+        return "none"
 import plotly.graph_objects as go
 import plotly.io as pio
 
@@ -91,13 +101,13 @@ def safe_pct(num, den):
 # ==================================================
 
 @st.cache_data(show_spinner="Loading Sales MTD data...")
-def load_kam(path):
+def load_kam(path, ver=None):
     if not os.path.exists(path):
         return pd.DataFrame()
     return pd.read_parquet(path)
 
 try:
-    df = load_kam(KAM_FILE)
+    df = load_kam(KAM_FILE, file_ver(KAM_FILE))
     if df.empty:
         st.error("File kam_cache.parquet not found. Please run convert_kam.py first.")
         st.stop()

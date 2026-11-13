@@ -1,6 +1,16 @@
 import streamlit as st
 import pandas as pd
 import os
+
+
+def file_ver(path):
+    """Phien ban file (gio sua + dung luong). Truyen vao ham cache de khi file
+    parquet moi duoc push len, cache tu nap lai thay vi giu du lieu cu."""
+    try:
+        s = os.stat(path)
+        return f"{s.st_mtime_ns}-{s.st_size}"
+    except OSError:
+        return "none"
 import plotly.graph_objects as go
 import plotly.io as pio
 
@@ -128,14 +138,14 @@ def fmt_full(v):
 # ==================================================
 
 @st.cache_data(show_spinner="Loading data...")
-def load_parquet(path):
+def load_parquet(path, ver=None):
     if not os.path.exists(path):
         return pd.DataFrame()
     return pd.read_parquet(path)
 
 
-df_act = load_parquet(ACT_FILE)
-df_fc  = load_parquet(FC_FILE)
+df_act = load_parquet(ACT_FILE, file_ver(ACT_FILE))
+df_fc  = load_parquet(FC_FILE, file_ver(FC_FILE))
 
 if df_fc.empty:
     st.error("Chua co file forecast_cache.parquet. Vui long chay convert_forecast.py truoc.")

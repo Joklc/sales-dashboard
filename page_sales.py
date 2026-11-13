@@ -3,6 +3,16 @@ import pandas as pd
 import numpy as np
 import os
 import io
+
+
+def file_ver(path):
+    """Phien ban file (gio sua + dung luong). Truyen vao ham cache de khi file
+    parquet moi duoc push len, cache tu nap lai thay vi giu du lieu cu."""
+    try:
+        s = os.stat(path)
+        return f"{s.st_mtime_ns}-{s.st_size}"
+    except OSError:
+        return "none"
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -105,7 +115,7 @@ COLORS = {
 # ==================================================
 
 @st.cache_data(show_spinner="Loading data...")
-def load_data(parquet_file: str) -> pd.DataFrame:
+def load_data(parquet_file: str, ver: str = None) -> pd.DataFrame:
     """Đọc file parquet từ repo."""
     if not os.path.exists(parquet_file):
         return pd.DataFrame()
@@ -153,7 +163,8 @@ def export_summary(df_filtered: pd.DataFrame) -> bytes:
 # ==================================================
 
 try:
-    df = load_data(PARQUET_FILE)
+    DATA_VER = file_ver(PARQUET_FILE)
+    df = load_data(PARQUET_FILE, DATA_VER)
     if df.empty:
         st.error("Không tìm thấy file data_cache.parquet trong repo.")
         st.stop()
@@ -170,7 +181,7 @@ for _col in ["MONTH", "Distribution Channel", "MLA name", "Product Line", "Famil
 
 # Cache dropdown options (chỉ tính 1 lần, không tính lại mỗi rerun)
 @st.cache_data(show_spinner=False)
-def get_filter_options(_df: pd.DataFrame, n_rows: int) -> dict:
+def get_filter_options(_df: pd.DataFrame, n_rows) -> dict:
     return {
         "channel": sorted(_df["Distribution Channel"].dropna().astype(str).unique()),
         "mla":     sorted(_df["MLA name"].dropna().astype(str).unique()),
@@ -178,7 +189,7 @@ def get_filter_options(_df: pd.DataFrame, n_rows: int) -> dict:
         "family":  sorted(_df["Family Level 2"].dropna().astype(str).unique()),
     }
 
-opts = get_filter_options(df, len(df))
+opts = get_filter_options(df, f"{len(df)}|{DATA_VER}")
 
 # ==================================================
 # SIDEBAR
@@ -283,7 +294,7 @@ def compute_aggs(df_key: str, _df: pd.DataFrame, has_sgm: bool) -> dict:
         "sgm_ly":  _df["SGM_LY"].sum() if has_sgm else 0,
     }
 
-_cache_key = f"{selected_month}|{selected_channel}|{selected_mla}|{selected_product}|{selected_family}"
+_cache_key = f"{selected_month}|{selected_channel}|{selected_mla}|{selected_product}|{selected_family}|{DATA_VER}"
 has_sgm = all(c in df.columns for c in ["SGM_ACT","SGM_BUD","SGM_LY"])
 aggs = compute_aggs(_cache_key, df_filtered, has_sgm)
 
