@@ -1,6 +1,16 @@
 import streamlit as st
 import pandas as pd
 import os
+
+
+def file_ver(path):
+    """Phien ban file (gio sua + dung luong). Truyen vao ham cache de khi file
+    parquet moi duoc push len, cache tu nap lai thay vi giu du lieu cu."""
+    try:
+        s = os.stat(path)
+        return f"{s.st_mtime_ns}-{s.st_size}"
+    except OSError:
+        return "none"
 import plotly.graph_objects as go
 import plotly.io as pio
 
@@ -78,12 +88,12 @@ MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 
 @st.cache_data(show_spinner="Loading OPEX data...")
-def load_opex(path):
+def load_opex(path, ver=None):
     return pd.read_parquet(path)
 
 
 @st.cache_data(show_spinner="Loading Sales data...")
-def load_sales(path):
+def load_sales(path, ver=None):
     # Chi doc cac cot can cho Primary Contribution (file Sales ~100k dong)
     cols = ["MONTH"] + [f"{k}_{p}" for k in ["GS", "NS", "DEDUCT", "COGS", "SGM"]
                         for p in ["ACT", "BUD"]]
@@ -95,7 +105,7 @@ if not os.path.exists(OPEX_FILE):
     st.stop()
 
 try:
-    df = load_opex(OPEX_FILE)
+    df = load_opex(OPEX_FILE, file_ver(OPEX_FILE))
 except Exception as e:
     st.error(f"Error reading OPEX data: {e}")
     st.stop()
@@ -449,7 +459,7 @@ with tab5:
     if not os.path.exists(SALES_FILE):
         st.error("Chua co data_cache.parquet (Sales). Chay convert_to_parquet.py truoc.")
     else:
-        sales = load_sales(SALES_FILE)
+        sales = load_sales(SALES_FILE, file_ver(SALES_FILE))
 
         # Thang cuoi cung Sales co (theo MONTH_ORDER)
         sales_months = [m for m in MONTH_ORDER if m in sales["MONTH"].astype(str).unique()]
