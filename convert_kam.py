@@ -1,11 +1,12 @@
 """
-Convert 3 file Excel song tu SQL (ACT + SO + SQ) -> kam_cache.parquet
+Convert 2 file Excel song tu SQL (ACT + SO) -> kam_cache.parquet
+(Da bo SQ - bao gia - tu 16/11/2026: chi tinh ACT + SO)
 TU DONG hoa toan bo buoc mapping (thay cho Power Query lam tay truoc day).
 
 Nguon (3 file tu SQL subscription, cap nhat moi 15 phut, nam trong o mang):
   - Sales detail with COGS.xlsx   (ACT - da xuat hoa don)
   - Sales Order Follow Up.xlsx     (SO  - don da dat, chua giao)
-  - Sales Quotation Status.xlsx    (SQ  - bao gia)
+  - (Sales Quotation Status.xlsx - SQ bao gia: KHONG con dung)
 
 Bang tra cuu (cung folder):
   - Customer map.xlsx        : Customer code -> MLA NAME + CHANNEL NAME
@@ -17,8 +18,8 @@ Bang tra cuu (cung folder):
 Logic:
   1. Moi file: gom nhom theo Customer + Item + Product Line (nhu PivotTable)
   2. Map MLA/Channel (theo Customer), Product Line (theo Item), PRSC & deduction
-  3. SO & SQ: chi giu dong Net > 0 ; ACT: lay het
-  4. Ghep 3 file -> bo Channel = "SEB" (noi bo)
+  3. SO: chi giu dong Net > 0 ; ACT: lay het
+  4. Ghep ACT + SO -> bo Channel = "SEB" (noi bo)
   5. Tinh Net = Gross*(1-rate), COGS = PRSC*Qty, SGM = Net - COGS
   6. Xuat kam_cache.parquet
 """
@@ -94,7 +95,7 @@ def need(name):
 # Duong dan day du cua file deduction rate (o folder rieng)
 DED_PATH = os.path.join(DED_FOLDER, F_DED)
 
-for fn in [F_ACT, F_SO, F_SQ, F_CUST, F_CMMF, F_PRSC_KAM, F_PRSC_FIN]:
+for fn in [F_ACT, F_SO, F_CUST, F_CMMF, F_PRSC_KAM, F_PRSC_FIN]:
     need(fn)
 
 if not os.path.exists(DED_PATH):
@@ -213,7 +214,7 @@ def build_source(fname, sheet, header, col, net_gt0, cancel_col=None):
     return g
 
 
-print("Doc & xu ly 3 file nguon (ACT + SO + SQ)...")
+print("Doc & xu ly 2 file nguon (ACT + SO)...")
 
 ACT = build_source(
     F_ACT, "Sales detail with COGS", 3,
@@ -227,18 +228,14 @@ SO = build_source(
          name="Item name", qty="SO Open Qty", gross="SO Actual Open Sum"),
     net_gt0=True)
 
-SQ = build_source(
-    F_SQ, "Sales Quotation Status", 2,
-    dict(cust="Customer Code", item="Item Code", comm="Commerical code",
-         name="Item name", qty="Open Qty", gross="Actual Open Sum"),
-    net_gt0=True)
+# SQ (bao gia) da bo: chi tinh ACT + SO
 
-print(f"  ACT: {len(ACT):,} dong | SO: {len(SO):,} dong | SQ: {len(SQ):,} dong")
+print(f"  ACT: {len(ACT):,} dong | SO: {len(SO):,} dong")
 
 # ==================================================
 # GHEP 3 NGUON + BO CHANNEL = SEB
 # ==================================================
-df = pd.concat([ACT, SO, SQ], ignore_index=True)
+df = pd.concat([ACT, SO], ignore_index=True)
 
 before = len(df)
 df = df[df["Channel"].astype(str).str.strip().str.upper() != "SEB"]
