@@ -455,51 +455,145 @@ if has_sgm:
 st.plotly_chart(fig_trend, use_container_width=True)
 
 # ==================================================
-# PRODUCT LINE CHARTS (gộp 1 figure — nhanh hơn)
+# PRODUCT LINE ANALYSIS — Bullet chart (ACT vs target BUD, LY) + Portfolio Map
 # ==================================================
 
 st.subheader("📦 Product Line Analysis")
 
-prod_data = aggs["prod"].head(10).copy()
-prod_data["VAR_%"] = prod_data.apply(
-    lambda r: safe_pct(r.NS_ACT - r.NS_BUD, r.NS_BUD), axis=1
-)
-prod_data["Contribution %"] = safe_pct(prod_data["NS_ACT"], prod_data["NS_ACT"].sum())
 
-fig_prod = make_subplots(
-    rows=1, cols=2,
-    subplot_titles=("Top 10 Product Lines — ACT vs BUD vs LY",
-                    "Variance vs Budget (%)"),
-    horizontal_spacing=0.12
-)
+def _pct_html(v, has_base, label):
+    """Nhan % co mau (xanh/do) dung trong annotation plotly."""
+    if not has_base:
+        return f"<span style='color:#94a3b8'>no {label}</span>"
+    c = "#16a34a" if v >= 0 else "#dc2626"
+    arrow = "▲" if v >= 0 else "▼"
+    return f"<span style='color:{c}'><b>{arrow} {abs(v):.1f}%</b></span> <span style='color:#94a3b8'>{label}</span>"
 
-# Left: grouped bar
-for col_name, color, row_label in [
-    ("NS_ACT", COLORS["ACT"], "ACT"),
-    ("NS_BUD", COLORS["BUD"], "BUD"),
-    ("NS_LY",  COLORS["LY"],  "LY"),
-]:
-    fig_prod.add_trace(
-        go.Bar(y=prod_data["Product Line"], x=prod_data[col_name],
-               name=row_label, orientation="h", marker_color=color,
-               showlegend=True),
-        row=1, col=1
-    )
 
-# Right: variance waterfall-style
-bar_colors = [COLORS["POS"] if v >= 0 else COLORS["NEG"] for v in prod_data["VAR_%"]]
-fig_prod.add_trace(
-    go.Bar(y=prod_data["Product Line"], x=prod_data["VAR_%"],
-           orientation="h", marker_color=bar_colors, showlegend=False,
-           text=prod_data["VAR_%"].round(1).astype(str) + "%",
-           textposition="outside"),
-    row=1, col=2
-)
-fig_prod.update_layout(barmode="group", height=520, margin=dict(t=40,b=20), template="seb_dark")
-st.plotly_chart(fig_prod, use_container_width=True)
+def bullet_chart(d, dim, title):
+    """Bullet chart: thanh = Actual, vach den = Budget (target), kim cuong cam = LY.
+    Ben phai: % vs BUD va % vs LY. Gop 2 chart cu (gia tri + variance) thanh 1."""
+    d = d.sort_values("NS_ACT")                      # lon nhat nam tren cung
+    ymax = max(d[["NS_ACT", "NS_BUD", "NS_LY"]].max().max(), 1)
+    ach = [(a >= b) if b else True for a, b in zip(d["NS_ACT"], d["NS_BUD"])]
+
+    fig = go.Figure()
+    # Nen xam nhat full chieu dai (giup mat doc theo hang)
+    fig.add_trace(go.Bar(
+        y=d[dim], x=[ymax * 1.05] * len(d), orientation="h", width=0.72,
+        marker_color="#e2e8f0", hoverinfo="skip", showlegend=False))
+    # Actual: mau dam neu dat BUD, nhat hon neu hut
+    fig.add_trace(go.Bar(
+        y=d[dim], x=d["NS_ACT"], orientation="h", width=0.42, name="Actual",
+        marker_color=["#1e3a8a" if a else "#60a5fa" for a in ach],
+        customdata=np.stack([d["NS_BUD"], d["NS_LY"]], axis=-1),
+        hovertemplate="<b>%{y}</b><br>Actual: %{x:,.0f}<br>Budget: %{customdata[0]:,.0f}"
+                      "<br>LY: %{customdata[1]:,.0f}<extra></extra>"))
+    # Budget = vach dung (target)
+    db = d[d["NS_BUD"] > 0]
+    fig.add_trace(go.Scatter(
+        y=db[dim], x=db["NS_BUD"], mode="markers", name="Budget (target)",
+        marker=dict(symbol="line-ns", size=30, line=dict(width=4, color="#0f172a")),
+        hovertemplate="Budget: %{x:,.0f}<extra></extra>"))
+    # LY = kim cuong cam
+    fig.add_trace(go.Scatter(
+        y=d[dim], x=d["NS_LY"], mode="markers", name="Last Year",
+        marker=dict(symbol="diamond", size=12, color=COLORS["LY"],
+                    line=dict(width=1.5, color="#ffffff")),
+        hovertemplate="LY: %{x:,.0f}<extra></extra>"))
+
+    # Cot thong tin ben phai: gia tri Actual + % vs BUD + % vs LY
+    for y, a, b, l in zip(d[dim], d["NS_ACT"], d["NS_BUD"], d["NS_LY"]):
+        vb = safe_pct(a - b, b)
+        vl = safe_pct(a - l, l)
+        fig.add_annotation(
+            x=1.0, xref="paper", xanchor="left", y=y, yref="y", showarrow=False, align="left",
+            text=f"<b>{fmt_abbr(a)}</b>   {_pct_html(vb, b != 0, 'BUD')}"
+                 f"   {_pct_html(vl, l != 0, 'LY')}",
+            font=dict(size=12))
+    fig.update_layout(
+        template="seb_dark", barmode="overlay", height=max(380, 52 * len(d) + 90),
+        margin=dict(t=50, b=40, l=10, r=290), title=title,
+        xaxis=dict(range=[0, ymax * 1.05], title="Net Sales (KVND)", showgrid=True),
+        yaxis=dict(showgrid=False),
+        legend=dict(orientation="h", y=-0.08, x=0, yanchor="top"),
+        bargap=0.2)
+    return fig
+
+
+def portfolio_map(d, dim, title):
+    """Ma tran danh muc: X = tang truong NS vs LY, Y = SGM% Actual,
+    bong = Net Sales, mau = SGM% chenh vs Budget (pp). Duong cat = muc trung binh."""
+    d = d[d["NS_ACT"] > 0].copy()
+    d["GR"] = [safe_pct(a - l, l) for a, l in zip(d["NS_ACT"], d["NS_LY"])]
+    d["SGMP"] = [safe_pct(s, n) for s, n in zip(d["SGM_ACT"], d["NS_ACT"])]
+    d["SGMB"] = [safe_pct(s, n) for s, n in zip(d["SGM_BUD"], d["NS_BUD"])]
+    d["PP"] = [a - b if nb else 0 for a, b, nb in zip(d["SGMP"], d["SGMB"], d["NS_BUD"])]
+    d = d[d["NS_LY"] > 0]                              # can LY de tinh tang truong
+    if d.empty:
+        return None
+    gr_avg = safe_pct(d["NS_ACT"].sum() - d["NS_LY"].sum(), d["NS_LY"].sum())
+    sg_avg = safe_pct(d["SGM_ACT"].sum(), d["NS_ACT"].sum())
+    lim = max(3, d["PP"].abs().max())
+    size_ref = 2.0 * d["NS_ACT"].max() / (70 ** 2)
+
+    fig = go.Figure(go.Scatter(
+        x=d["GR"], y=d["SGMP"], mode="markers+text",
+        text=[s if len(s) <= 20 else s[:19] + "…" for s in d[dim].astype(str)],
+        textposition="top center", textfont=dict(size=11, color="#334155"),
+        marker=dict(size=d["NS_ACT"], sizemode="area", sizeref=size_ref, sizemin=8,
+                    color=d["PP"], cmin=-lim, cmax=lim,
+                    colorscale=[[0, "#dc2626"], [0.5, "#f1f5f9"], [1, "#16a34a"]],
+                    line=dict(color="#475569", width=1), opacity=0.9,
+                    colorbar=dict(title="SGM% vs<br>BUD (pp)", ticksuffix=" pp", thickness=12)),
+        customdata=np.stack([d[dim].astype(str), d["NS_ACT"], d["PP"]], axis=-1),
+        hovertemplate="<b>%{customdata[0]}</b><br>NS Act: %{customdata[1]:,.0f}"
+                      "<br>Growth vs LY: %{x:+.1f}%<br>SGM%: %{y:.1f}%"
+                      " (%{customdata[2]:+.1f} pp vs BUD)<extra></extra>"))
+    fig.add_vline(x=gr_avg, line_dash="dash", line_color="#94a3b8")
+    fig.add_hline(y=sg_avg, line_dash="dash", line_color="#94a3b8")
+    # Nhan 4 goc phan tu
+    for xa, ya, xan, yan, txt in [
+        (0.99, 0.99, "right", "top", "⭐ Grow & Profitable"),
+        (0.01, 0.99, "left", "top", "🛡️ Defend — margin cao, tăng chậm"),
+        (0.99, 0.01, "right", "bottom", "🔧 Fix margin — tăng nhanh, margin thấp"),
+        (0.01, 0.01, "left", "bottom", "⚠️ Review — tăng chậm, margin thấp")]:
+        fig.add_annotation(x=xa, y=ya, xref="paper", yref="paper", xanchor=xan, yanchor=yan,
+                           text=txt, showarrow=False, font=dict(size=11, color="#64748b"))
+    fig.update_layout(
+        template="seb_dark", height=560, margin=dict(t=50, b=30, l=10, r=10), title=title,
+        xaxis=dict(title="Net Sales growth vs LY", ticksuffix="%", zeroline=False,
+                   range=[d["GR"].min() - 8, d["GR"].max() + 8]),
+        yaxis=dict(title="SGM% Actual", ticksuffix="%", zeroline=False,
+                   range=[d["SGMP"].min() - 8, d["SGMP"].max() + 10]))
+    return fig, gr_avg, sg_avg
+
+
+pl_tab1, pl_tab2 = st.tabs(["🎯 Performance vs Target", "🗺️ Portfolio Map"])
+
+with pl_tab1:
+    st.plotly_chart(bullet_chart(aggs["prod"], "Product Line",
+                                 f"Net Sales by Product Line — Actual vs Budget vs LY ({period_label})"),
+                    use_container_width=True)
+    st.caption("Thanh xanh = Actual (đậm = đạt Budget, nhạt = hụt) • Vạch đen = Budget • "
+               "◆ cam = Last Year. Cột phải: giá trị Actual, % vs Budget, % vs LY.")
+
+with pl_tab2:
+    if has_sgm:
+        pm_dim = st.radio("Xem theo", ["Product Line", "Family Level 2"], horizontal=True, key="pm_dim")
+        pm_base = aggs["prod"] if pm_dim == "Product Line" else aggs["fl2"].head(25)
+        res = portfolio_map(pm_base, pm_dim, f"Portfolio Map — Growth vs Margin by {pm_dim}")
+        if res is None:
+            st.info("Chưa đủ dữ liệu LY để vẽ.")
+        else:
+            fig_pm, gr_avg, sg_avg = res
+            st.plotly_chart(fig_pm, use_container_width=True)
+            st.caption(f"Bong bóng to = Net Sales lớn • Màu = SGM% so với Budget (xanh tốt hơn, đỏ thấp hơn) • "
+                       f"Đường đứt = trung bình: growth {gr_avg:+.1f}%, SGM% {sg_avg:.1f}%."
+                       + (" Family Level 2: top 25 theo NS." if pm_dim != "Product Line" else ""))
 
 # ==================================================
-# SGM% ANALYSIS — by Product Line & Family Level 2
+# SGM% ANALYSIS — Dumbbell chart (LY -> ACT, Budget = target)
 # ==================================================
 
 if has_sgm:
@@ -513,37 +607,79 @@ if has_sgm:
         d["SGM%_BUD"] = d.apply(lambda r: safe_pct(r["SGM_BUD"], r["NS_BUD"]), axis=1)
         d["SGM%_LY"]  = d.apply(lambda r: safe_pct(r["SGM_LY"],  r["NS_LY"]),  axis=1)
         d["VAR_pp"]   = d["SGM%_ACT"] - d["SGM%_BUD"]
+        d["VAR_LY_pp"] = d["SGM%_ACT"] - d["SGM%_LY"]
         return d.sort_values("NS_ACT", ascending=False).head(12)
 
     def render_sgm(d: pd.DataFrame, dim: str):
-        # Chart: SGM% ACT vs BUD vs LY (grouped horizontal bar)
+        # Dumbbell: duong noi LY -> ACT (thay doi so voi nam truoc), vach = Budget
         dd = d.sort_values("SGM%_ACT")
+        ok = [(a >= b) if nb else True for a, b, nb in zip(dd["SGM%_ACT"], dd["SGM%_BUD"], dd["NS_BUD"])]
         fig = go.Figure()
-        fig.add_trace(go.Bar(
-            y=dd[dim], x=dd["SGM%_ACT"], name="ACT",
-            orientation="h", marker_color=COLORS["ACT"]))
-        fig.add_trace(go.Bar(
-            y=dd[dim], x=dd["SGM%_BUD"], name="BUD",
-            orientation="h", marker_color=COLORS["BUD"]))
-        fig.add_trace(go.Bar(
-            y=dd[dim], x=dd["SGM%_LY"], name="LY",
-            orientation="h", marker_color=COLORS["LY"]))
+        # Thanh xam noi LY -> ACT
+        xs, ys = [], []
+        for n, ly, act, has_ly in zip(dd[dim], dd["SGM%_LY"], dd["SGM%_ACT"], dd["NS_LY"] != 0):
+            if has_ly:
+                xs += [ly, act, None]
+                ys += [n, n, None]
+        fig.add_trace(go.Scatter(x=xs, y=ys, mode="lines", line=dict(color="#cbd5e1", width=6),
+                                 showlegend=False, hoverinfo="skip"))
+        db = dd[dd["NS_BUD"] != 0]
+        fig.add_trace(go.Scatter(
+            x=db["SGM%_BUD"], y=db[dim], mode="markers", name="Budget",
+            marker=dict(symbol="line-ns", size=24, line=dict(width=3, color="#0f172a")),
+            hovertemplate="Budget: %{x:.1f}%<extra></extra>"))
+        dl = dd[dd["NS_LY"] != 0]
+        fig.add_trace(go.Scatter(
+            x=dl["SGM%_LY"], y=dl[dim], mode="markers", name="Last Year",
+            marker=dict(size=12, color="#ffffff", line=dict(width=2.5, color=COLORS["LY"])),
+            hovertemplate="LY: %{x:.1f}%<extra></extra>"))
+        fig.add_trace(go.Scatter(
+            x=dd["SGM%_ACT"], y=dd[dim], mode="markers+text", name="Actual",
+            marker=dict(size=16, color=[COLORS["POS"] if g else COLORS["NEG"] for g in ok],
+                        line=dict(width=1.5, color="#ffffff")),
+            text=[f"{v:.1f}%" for v in dd["SGM%_ACT"]], textposition="top center",
+            textfont=dict(size=11, color="#0f172a"),
+            customdata=np.stack([dd["VAR_pp"], dd["VAR_LY_pp"]], axis=-1),
+            hovertemplate="<b>%{y}</b><br>Actual: %{x:.1f}%<br>vs BUD: %{customdata[0]:+.1f} pp"
+                          "<br>vs LY: %{customdata[1]:+.1f} pp<extra></extra>"))
+        # Cot pp ben phai
+        for n, vb, vl, hb, hl in zip(dd[dim], dd["VAR_pp"], dd["VAR_LY_pp"],
+                                     dd["NS_BUD"] != 0, dd["NS_LY"] != 0):
+            def pp(v, h, lbl):
+                if not h:
+                    return f"<span style='color:#94a3b8'>no {lbl}</span>"
+                c = "#16a34a" if v >= 0 else "#dc2626"
+                return f"<span style='color:{c}'><b>{v:+.1f}pp</b></span> <span style='color:#94a3b8'>{lbl}</span>"
+            fig.add_annotation(x=1.0, xref="paper", xanchor="left", y=n, yref="y", showarrow=False,
+                               text=f"{pp(vb, hb, 'BUD')}   {pp(vl, hl, 'LY')}", font=dict(size=12))
+        lo = min(dd[["SGM%_ACT", "SGM%_BUD", "SGM%_LY"]].replace(0, np.nan).min().min(), 100)
+        hi = dd[["SGM%_ACT", "SGM%_BUD", "SGM%_LY"]].max().max()
         fig.update_layout(
-            template="seb_dark",
-            barmode="group", height=max(360, len(dd) * 36),
-            margin=dict(t=10, b=10), xaxis_ticksuffix="%",
-            xaxis_title="SGM%", legend=dict(orientation="h", y=-0.12)
-        )
+            template="seb_dark", height=max(380, 46 * len(dd) + 90),
+            margin=dict(t=40, b=30, l=10, r=210),
+            xaxis=dict(title="SGM%", ticksuffix="%", range=[max(0, lo - 5), hi + 6]),
+            yaxis=dict(showgrid=True, gridcolor="#e2e8f0"),
+            legend=dict(orientation="h", y=1.02, x=0, yanchor="bottom"))
         st.plotly_chart(fig, use_container_width=True)
+        st.caption("● Actual (xanh = ≥ Budget, đỏ = < Budget) • ○ cam = Last Year • vạch đen = Budget • "
+                   "thanh xám = dịch chuyển từ LY sang Actual.")
 
         # Table
-        tbl = d[[dim, "NS_ACT", "SGM%_ACT", "SGM%_BUD", "SGM%_LY", "VAR_pp"]].copy()
-        tbl.columns = [dim, "NS ACT", "SGM% ACT", "SGM% BUD", "SGM% LY", "Var (pp)"]
+        tbl = d[[dim, "NS_ACT", "SGM%_ACT", "SGM%_BUD", "SGM%_LY", "VAR_pp", "VAR_LY_pp"]].copy()
+        tbl.columns = [dim, "NS ACT", "SGM% ACT", "SGM% BUD", "SGM% LY", "vs BUD (pp)", "vs LY (pp)"]
+
+        def _pn(v):
+            try:
+                v = float(v)
+            except (TypeError, ValueError):
+                return ""
+            return ("color: #16a34a; font-weight: 700;" if v > 0.05 else
+                    "color: #dc2626; font-weight: 700;" if v < -0.05 else "")
         st.dataframe(
             tbl.style.format({
-                "NS ACT": "{:,.0f}", "SGM% ACT": "{:.1f}%",
-                "SGM% BUD": "{:.1f}%", "SGM% LY": "{:.1f}%", "Var (pp)": "{:+.1f}"
-            }),
+                "NS ACT": "{:,.0f}", "SGM% ACT": "{:.1f}%", "SGM% BUD": "{:.1f}%",
+                "SGM% LY": "{:.1f}%", "vs BUD (pp)": "{:+.1f}", "vs LY (pp)": "{:+.1f}"
+            }).map(_pn, subset=["vs BUD (pp)", "vs LY (pp)"]),
             use_container_width=True, hide_index=True
         )
 
